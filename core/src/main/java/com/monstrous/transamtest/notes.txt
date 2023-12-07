@@ -1,4 +1,4 @@
 
-- to fix: front wheel sometimes turns very fast
+- to fix: front wheel sometimes turns very fast - fixed by removing stops on front wheels
 - to fix: car collision box is not well aligned
 - assert error at com.github.antzGames.gdx.ode4j.ode.internal.joints.DxJointHinge2.makeV1andV2(DxJointHinge2.java:260)

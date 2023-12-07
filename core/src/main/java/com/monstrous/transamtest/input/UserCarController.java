@@ -38,12 +38,10 @@ public class UserCarController extends CarState implements InputProcessor {
         if(leftPressed &&steerAngle<MAX_STEER_ANGLE)
         {
             steerAngle += 360f*deltaTime;
-            //Gdx.app.log("steerangle L:",""+steerAngle);
         }
         if(rightPressed &&steerAngle  >-MAX_STEER_ANGLE)
         {
             steerAngle -= 360f*deltaTime;
-           // Gdx.app.log("steerangle R:",""+steerAngle);
         }
         // Accelerator
         //braking = carController.backwardPressed;
