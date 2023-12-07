@@ -31,10 +31,9 @@ public class GameView implements Disposable {
 
     // if the view is an overlay, we don't clear screen on render, only depth buffer
     //
-    public GameView(World world, boolean overlay, float near, float far, float bobScale) {
+    public GameView(World world, boolean overlay, float near, float far) {
         this.world = world;
         this.isOverlay = overlay;
-        this.bobScale = bobScale;
 
         sceneManager = new SceneManager();
 

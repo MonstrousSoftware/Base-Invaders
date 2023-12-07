@@ -13,7 +13,7 @@ public class Car {
 
     public static int MAX_GEAR = 5;
 
-    public static float MAX_RPM = 6000;
+    public static float MAX_RPM = 26000;
     public static float RPM_REV = 2000f;     // rpm increase per second
     public static float SHAFT_LATENCY = 10f;
 
@@ -55,9 +55,10 @@ public class Car {
 
             if( i < 2) {
                 double curturn = j2.getAngle1();
-                double delta = (Math.toRadians(steerAngle) - curturn) * 0.8f;
-                //Gdx.app.log("steer delta", ""+(float)delta);
+                double delta = (Math.toRadians(steerAngle) - curturn);
+               // Gdx.app.log("steer delta", ""+(float)curturn);
                 j2.setParamVel(delta);      // ignored for non-steering wheels which are locked
+
             }
             j2.setParamVel2(wheelAngularVelocity);
 

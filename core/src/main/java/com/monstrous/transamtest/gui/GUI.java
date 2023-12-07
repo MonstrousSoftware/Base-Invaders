@@ -72,7 +72,7 @@ public class GUI implements Disposable {
     private void update( float deltaTime ){
         timer -= deltaTime;
         if(timer <= 0) {
-            //rpmValue.setText((int)car.rpm);
+            rpmValue.setText((int)carController.rpm);
             steerAngleValue.setText((int) carController.steerAngle);
             //car.transform.getTranslation(tmpVec);
             if(carController.gear == -1)
