@@ -1,10 +1,13 @@
 package com.monstrous.transamtest.physics;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
+import com.github.antzGames.gdx.ode4j.math.DVector3;
 import com.github.antzGames.gdx.ode4j.ode.*;
 import com.monstrous.transamtest.worlddata.GameObject;
 import com.monstrous.transamtest.Settings;
+import com.monstrous.transamtest.worlddata.GameObjectType;
 import com.monstrous.transamtest.worlddata.World;
 
 
@@ -60,6 +63,8 @@ public class PhysicsWorld implements Disposable {
         contactGroup.empty();
     }
 
+    private Vector3 dir1 = new Vector3();
+
     private final DGeom.DNearCallback nearCallback = new DGeom.DNearCallback() {
 
         @Override
@@ -74,17 +79,38 @@ public class PhysicsWorld implements Disposable {
 
             int n = OdeHelper.collide(o1, o2, N, contacts.getGeomBuffer());
             if (n > 0) {
-                gameWorld.onCollision((GameObject)o1.getData(), (GameObject)o2.getData());        // callback to world
+                GameObject go1, go2;
+                go1 = (GameObject)o1.getData();
+                go2 = (GameObject)o2.getData();
+
+                GameObject wheel = null;
+                if(go1.type == GameObjectType.TYPE_WHEEL) {
+                    wheel = go1;
+                }
+                else if(go2.type == GameObjectType.TYPE_WHEEL) {
+                    wheel = go2;
+                }
+                if(wheel != null) {
+                    //Gdx.app.log("cb", "collision with wheel, dir:"+ wheel.getDirection());
+                    dir1.set( wheel.getDirection() );
+                }
+
+
+                gameWorld.onCollision(go1, go2);        // callback to world
 
                 for (int i = 0; i < n; i++) {
                     DContact contact = contacts.get(i);
-                    contact.surface.mode = dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
+                    contact.fdir1.set(dir1.x, dir1.y, dir1.z);
+                    //contact.fdir1.set(1,0,0);
+                    //dContactSlip1 | dContactSlip2  |
+                    contact.surface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
                     if (o1 instanceof DSphere || o2 instanceof DSphere || o1 instanceof DCapsule || o2 instanceof DCapsule)
                         contact.surface.mu = 0.01;  // low friction for balls & capsules
                     else
-                        contact.surface.mu = 0.5;
-                    contact.surface.slip1 = 0.0;
-                    contact.surface.slip2 = 0.0;
+                        contact.surface.mu = Settings.mu;
+                    contact.surface.mu2 = Settings.mu2;
+                    contact.surface.slip1 = Settings.slip1;
+                    contact.surface.slip2 = Settings.slip2;
                     contact.surface.soft_erp = 0.8;
                     contact.surface.soft_cfm = 0.01;
 

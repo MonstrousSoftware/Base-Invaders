@@ -14,6 +14,7 @@ import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
+//import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
 
 public class GameView implements Disposable {
 
@@ -27,6 +28,7 @@ public class GameView implements Disposable {
     private SceneSkybox skybox;
     private final CameraController camController;
     private final boolean isOverlay;
+    //private final CascadeShadowMap csm;
 
 
     // if the view is an overlay, we don't clear screen on render, only depth buffer
@@ -47,9 +49,12 @@ public class GameView implements Disposable {
         sceneManager.setCamera(cam);
         camController = new CameraController(cam);
 
+//        csm = new CascadeShadowMap(2);
+//        sceneManager.setCascadeShadowMap(csm);
+
         // setup light
         DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
-            .setViewport(50,50,10f,100);
+            .setViewport(500,500,10f,100);
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
         light.intensity = 3f;

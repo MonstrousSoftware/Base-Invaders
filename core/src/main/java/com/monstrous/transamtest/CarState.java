@@ -5,6 +5,7 @@ public class CarState {
     public int gear; // -1, 0, 1, 2, 3, ... MAX_GEAR
     public float steerAngle;
     public float rpm;
+    public boolean braking;
 
     public CarState() {
         gear = 1;

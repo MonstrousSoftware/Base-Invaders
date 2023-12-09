@@ -44,11 +44,20 @@ public class Car {
             driveShaftRPM += SHAFT_LATENCY;
         else if (targetDriveshaftRPM < driveShaftRPM)
             driveShaftRPM -= SHAFT_LATENCY;
+        if(carState.braking)
+            driveShaftRPM = targetDriveshaftRPM;
 
-        updateJoints(-carState.steerAngle, 0.01f* driveShaftRPM);
+        float speed = chassisObject.body.getVelocity().len(); //?   is this local coord?
+        float rollAngVel = 2*speed / ((float)Math.PI *  Settings.wheelRadius); //??
+
+        float wav = 0.01f*driveShaftRPM;
+//        if(carState.braking)
+//            wav = 0;
+
+        updateJoints(-carState.steerAngle, wav, rollAngVel);
     }
 
-    private void updateJoints(float steerAngle, float wheelAngularVelocity) {
+    private void updateJoints(float steerAngle, float wheelAngularVelocity, float rollAngVel) {
         // joints chassis-wheel
         for(int i = 0; i < 4; i ++ ) {
             DHinge2Joint j2 = joints[i];
@@ -56,12 +65,25 @@ public class Car {
             if( i < 2) {
                 double curturn = j2.getAngle1();
                 double delta = (Math.toRadians(steerAngle) - curturn);
+                double max = 0.8f;
+                if(delta > max)
+                    delta = max;
+                if(delta < -max)
+                    delta = -max;
                // Gdx.app.log("steer delta", ""+(float)curturn);
                 j2.setParamVel(delta);      // ignored for non-steering wheels which are locked
 
-            }
-            j2.setParamVel2(wheelAngularVelocity);
+                // let front wheels roll and rear wheels slip
+                // (doesnt provide enough traction)
+                //j2.setParamVel2(wheelAngularVelocity);
 
+                j2.setParamVel2(rollAngVel);
+            }
+            if(i >= 2) {
+
+                j2.setParamVel2(wheelAngularVelocity);
+
+            }
             j2.getBody(0).enable();
             j2.getBody(1).enable();
         }

@@ -256,8 +256,9 @@ public class PhysicsBodyFactory implements Disposable {
         joint.setAxis1(0,1,0);      // up axis for steering
         joint.setAxis2(-1, 0, 0);    // roll axis for rolling
         joint.setParamVel2(0);
-        joint.setParamFMax2(25f);
-        joint.setParamFMax(25f);
+        joint.setParamFMax2(35f);
+        joint.setParamFMax(35f);
+        joint.setParamFudgeFactor(0.1f);
         joint.setParamSuspensionERP(Settings.suspensionERP);
         joint.setParamSuspensionCFM(Settings.suspensionCFM);
         float maxSteer = Settings.maxSteerAngle;

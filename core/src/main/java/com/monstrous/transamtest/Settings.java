@@ -7,6 +7,7 @@ public class Settings {
     static public boolean supportControllers = true;       // disable in case it causes issues
     static public float verticalReadjustSpeed = 4f;
 
+
     static public float eyeHeight = 2.5f;   // meters
 
     static public float walkSpeed = 10f;    // m/s
@@ -39,11 +40,16 @@ public class Settings {
     public static float wheelSide = 1.0f;           // offset from centre of chassis
     public static float wheelForward = 1.83f;    // as measured in Blender
     public static float wheelBack = 1.84f;   // as measured in Blender
-    public static float wheelDown = -0.7f;
+    public static float wheelDown = -0.7f;  // -0.7
     // wheel dimensions
     public static float wheelWidth = 0.2f;
     public static float wheelRadius = 0.37f; // as measured in Blender
 
+
+    public static float mu = 3.5f;
+    public static float mu2 = 3.5f;
+    public static float slip1 = 0.1f;
+    public static float slip2 = 0.1f;
 
 
     public static float suspensionCFM = 0.14f;
@@ -52,4 +58,6 @@ public class Settings {
     public static float maxSteerAngle = (float) (0.2f*Math.PI);
 
     static public final String GLTF_FILE = "models/transam.gltf";
+
+    static public float     worldSize = 256f;
 }

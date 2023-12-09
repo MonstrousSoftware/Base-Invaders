@@ -22,7 +22,7 @@ public class CameraController extends InputAdapter {
     }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY) {
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
        // Gdx.app.log("mouse moved","");
         // ignore big delta jump on start up or resize
         if(Math.abs(Gdx.input.getDeltaX()) >=100 && Math.abs(Gdx.input.getDeltaY()) >= 100)

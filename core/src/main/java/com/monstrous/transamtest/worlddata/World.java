@@ -14,6 +14,7 @@ import com.monstrous.transamtest.Settings;
 import com.monstrous.transamtest.input.PlayerController;
 import com.monstrous.transamtest.input.UserCarController;
 import com.monstrous.transamtest.physics.*;
+//import com.monstrous.transamtest.worlddata.Terrain;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
@@ -29,6 +30,8 @@ public class World implements Disposable {
     private final UserCarController userCarController;
     public final PhysicsRayCaster rayCaster;
     private Car theCar;
+    private Terrain terrain;
+    private Scenery scenery;
 
 
     public World() {
@@ -43,6 +46,8 @@ public class World implements Disposable {
         factory = new PhysicsBodyFactory(physicsWorld);
         rayCaster = new PhysicsRayCaster(physicsWorld);
         userCarController = new UserCarController();
+        terrain = new Terrain();
+        scenery = new Scenery(this);
 
     }
 
@@ -53,6 +58,8 @@ public class World implements Disposable {
         gameObjects.clear();
         cars.clear();
         player = null;
+        userCarController.reset();
+        scenery.populate();
     }
 
     public int getNumGameObjects() {
@@ -80,6 +87,9 @@ public class World implements Disposable {
 
 
     public GameObject spawnObject(GameObjectType type, String name, String proxyName, CollisionShapeType shapeType, boolean resetPosition, Vector3 position){
+        if(type == GameObjectType.TYPE_TERRAIN)
+            return spawnTerrain();
+
         Scene scene = loadNode( name, resetPosition, position );
         ModelInstance collisionInstance = scene.modelInstance;
         if(proxyName != null) {
@@ -87,14 +97,35 @@ public class World implements Disposable {
             collisionInstance = proxyScene.modelInstance;
         }
         PhysicsBody body = null;
-
-        body = factory.createBody(collisionInstance, shapeType, type.isStatic);
+        if(type != GameObjectType.TYPE_SCENERY)
+            body = factory.createBody(collisionInstance, shapeType, type.isStatic);
         GameObject go = new GameObject(type, scene, body);
         gameObjects.add(go);
         if(type.isCar)
             addWheels(go);
 
         return go;
+    }
+
+    private GameObject spawnTerrain() {
+        Scene scene = new Scene(terrain.getModelInstance());
+        PhysicsBody body = factory.createBody(scene.modelInstance,
+            CollisionShapeType.MESH, true);
+        GameObject go = new GameObject(GameObjectType.TYPE_TERRAIN, scene, body);
+        gameObjects.add(go);
+
+        return go;
+    }
+
+    private Vector3 tmpPosition = new Vector3();
+
+    // spawn an item at terrain heightScenery
+
+    public  GameObject dropItem( String name, float x, float z, float angle){
+        float y = terrain.getHeight(x, z);
+        //y = 3;
+        tmpPosition.set(x, y, z);
+        return spawnObject(GameObjectType.TYPE_SCENERY, name, null, CollisionShapeType.CYLINDER, true, tmpPosition);
     }
 
     private void addWheels(GameObject chassis) {
@@ -131,7 +162,7 @@ public class World implements Disposable {
         Vector3 wheelPos = new Vector3();
         wheelPos.set( chassisPos.x + dx, chassisPos.y + dy, chassisPos.z + dz);
 
-        GameObject go = spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.CYLINDER, true, wheelPos);
+        GameObject go = spawnObject(GameObjectType.TYPE_WHEEL, "wheel", null, CollisionShapeType.CYLINDER, true, wheelPos);
 
         // turn cylinder axis from Z to X axis, as the car is oriented towards Z, and cylinder by default points to Z
         Quaternion Q = new Quaternion();
@@ -252,5 +283,6 @@ public class World implements Disposable {
     public void dispose() {
         physicsWorld.dispose();
         rayCaster.dispose();
+        terrain.dispose();
     }
 }

@@ -22,7 +22,7 @@ public class GUI implements Disposable {
     private Label steerAngleValue;
     private Vector3 tmpVec = new Vector3();
     private float timer = 0;
-   // private CarSettingsWindow settingsWindow;
+    private CarSettingsWindow settingsWindow;
 
     public GUI(UserCarController carController, World world ) {
         Gdx.app.log("GUI constructor", "");
@@ -30,7 +30,7 @@ public class GUI implements Disposable {
         skin = new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
         stage = new Stage(new ScreenViewport());
 
-        //settingsWindow = new CarSettingsWindow("Car Settings", skin, world);
+        settingsWindow = new CarSettingsWindow("Car Settings", skin, world);
     }
 
     private void rebuild() {
@@ -63,10 +63,10 @@ public class GUI implements Disposable {
 
         stage.addActor(table);
 
-//        Table screenTable = new Table();
-//        screenTable.setFillParent(true);
-//        screenTable.add(settingsWindow).top().right().expand();
-//        stage.addActor(screenTable);
+        Table screenTable = new Table();
+        screenTable.setFillParent(true);
+        screenTable.add(settingsWindow).top().right().expand();
+        stage.addActor(screenTable);
     }
 
     private void update( float deltaTime ){

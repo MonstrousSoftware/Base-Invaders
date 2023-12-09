@@ -3,6 +3,8 @@ package com.monstrous.transamtest.worlddata;
 public class GameObjectType {
     public final static GameObjectType TYPE_STATIC = new GameObjectType("static", true, false, false, false, false, false, false, false);
     public final static GameObjectType TYPE_PLAYER = new GameObjectType("player", false, true, true, false, false, false, false, false);
+    public final static GameObjectType TYPE_PICKUP_FLAG = new GameObjectType("flag", false, false, false,true, false , false, false, false);
+
     public final static GameObjectType TYPE_PICKUP_COIN = new GameObjectType("coin", false, false, false,true, false , false, false, false);
     public final static GameObjectType TYPE_PICKUP_HEALTH = new GameObjectType("healthpack", false, false, false,true, false , false, false, false);
     public final static GameObjectType TYPE_PICKUP_GUN = new GameObjectType("gun", false, false, false,true, false , false, false, false);
@@ -11,6 +13,9 @@ public class GameObjectType {
     public final static GameObjectType TYPE_FRIENDLY_BULLET = new GameObjectType("bullet", false, false,false, false, false, true,false, false);
     public final static GameObjectType TYPE_ENEMY_BULLET = new GameObjectType("bullet", false, false,false, false, false,false, true, false);
     public final static GameObjectType TYPE_NAVMESH = new GameObjectType("NAVMESH", true, false, false,false, false,false, false, true);
+    public final static GameObjectType TYPE_WHEEL = new GameObjectType("wheel", false, false, false,false, false, false, false, false);
+    public final static GameObjectType TYPE_TERRAIN = new GameObjectType("static", true, false, false, false, false, false, false, false);
+    public final static GameObjectType TYPE_SCENERY = new GameObjectType("scenery", true, false, false, false, false, false, false, false);
 
 
     public String typeName;

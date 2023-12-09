@@ -36,15 +36,15 @@ public class GameScreen extends ScreenAdapter {
 
         InputMultiplexer im = new InputMultiplexer();
         Gdx.input.setInputProcessor(im);
-        //im.addProcessor(gui.stage);
+        im.addProcessor(gui.stage);
         im.addProcessor(gameView.getCameraController());
         im.addProcessor(world.getUserCarController());
 
         Gdx.app.log("No Controller enabled", "");
 
         // hide the mouse cursor and fix it to screen centre, so it doesn't go out the window canvas
-        Gdx.input.setCursorCatched(true);
-        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+//        Gdx.input.setCursorCatched(true);
+//        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
         Gdx.input.setCatchKey(Input.Keys.F1, true);
         Gdx.input.setCatchKey(Input.Keys.F2, true);
@@ -86,7 +86,7 @@ public class GameScreen extends ScreenAdapter {
         gameView.render(delta) ;
 
         if(debugRender) {
-            gridView.render(gameView.getCamera());
+            //gridView.render(gameView.getCamera());
             physicsView.render(gameView.getCamera());
         }
         gui.render(delta);
