@@ -123,9 +123,10 @@ public class World implements Disposable {
 
     public  GameObject dropItem( String name, float x, float z, float angle){
         float y = terrain.getHeight(x, z);
-        //y = 3;
         tmpPosition.set(x, y, z);
-        return spawnObject(GameObjectType.TYPE_SCENERY, name, null, CollisionShapeType.CYLINDER, true, tmpPosition);
+        GameObject go =  spawnObject(GameObjectType.TYPE_SCENERY, name, null, CollisionShapeType.CYLINDER, true, tmpPosition);
+        go.scene.modelInstance.transform.rotate(Vector3.Y, angle);
+        return go;
     }
 
     private void addWheels(GameObject chassis) {

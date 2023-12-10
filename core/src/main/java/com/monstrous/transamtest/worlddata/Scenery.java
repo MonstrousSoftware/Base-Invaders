@@ -21,6 +21,7 @@ public class Scenery  {
         placeRandom(world, "cactus", 300);
         placeRandom(world, "cactus.001", 200);
         placeRandom(world, "cactus.002", 200);
+        placeRandom(world, "warningSign", 20);
     }
 
     private void placeRandom(World world, String name, int count){
