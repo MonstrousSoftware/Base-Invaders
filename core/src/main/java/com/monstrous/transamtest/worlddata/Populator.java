@@ -27,14 +27,14 @@ public class Populator {
 
         world.spawnObject(GameObjectType.TYPE_STATIC, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(32, 8, 40));
 
-        world.spawnObject(GameObjectType.TYPE_STATIC, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(32, 2, 5));
+        world.spawnObject(GameObjectType.TYPE_PICKUP_ITEM, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(32, 2, 5));
 
         world.spawnObject(GameObjectType.TYPE_STATIC, "warningSign", null, CollisionShapeType.BOX, true, new Vector3(12, 2, 15));
 
 
         world.spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.CYLINDER, true,new Vector3(8,1,5));
 
-        Vector3 carPos = new Vector3(5,8,5);
+        Vector3 carPos = new Vector3(5,3,5);
 
         GameObject go = world.spawnObject(GameObjectType.TYPE_PLAYER, "mustang","mustangProxy", CollisionShapeType.MESH, true, carPos);
         world.setPlayer(go);

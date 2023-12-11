@@ -12,6 +12,7 @@ import com.monstrous.transamtest.CarState;
 // cannot extend InputAdapter because we're already extending CarController
 public class UserCarController extends CarState implements InputProcessor {
 
+    public static float STEER_SPEED = 150;
     public static float MAX_STEER_ANGLE =  45;        // degrees
     public static float BRAKE_RPM_SCALE = 5f;
 
@@ -33,7 +34,7 @@ public class UserCarController extends CarState implements InputProcessor {
         backwardPressed = false;
         gearShift = 0;
         gear = 1;
-        steerAngle = 0;
+        steerAngle = MAX_STEER_ANGLE;
         rpm = 0;
     }
 
@@ -42,11 +43,11 @@ public class UserCarController extends CarState implements InputProcessor {
         // Steering
         if(leftPressed &&steerAngle<MAX_STEER_ANGLE)
         {
-            steerAngle += 360f*deltaTime;
+            steerAngle += STEER_SPEED*deltaTime;
         }
         if(rightPressed &&steerAngle  >-MAX_STEER_ANGLE)
         {
-            steerAngle -= 360f*deltaTime;
+            steerAngle -= STEER_SPEED*deltaTime;
         }
         // Accelerator
         braking = backwardPressed;
@@ -57,7 +58,7 @@ public class UserCarController extends CarState implements InputProcessor {
             rpm-=BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
         }
         else if(rpm > 0) {  // coasting
-            rpm-= Car.RPM_REV * deltaTime;
+            rpm-= Car.RPM_REV * 3f * deltaTime;
         }
         rpm = MathUtils.clamp(rpm, 0, Car.MAX_RPM);
 

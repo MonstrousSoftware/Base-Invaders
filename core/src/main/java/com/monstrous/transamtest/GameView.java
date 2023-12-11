@@ -36,6 +36,7 @@ public class GameView implements Disposable {
     private ParticleEffects particleEffects = null;
     private FrameBuffer fbo;
     private PostFilter postFilter;
+    private boolean useFBO = false;
 
     // if the view is an overlay, we don't clear screen on render, only depth buffer
     //
@@ -62,7 +63,7 @@ public class GameView implements Disposable {
 //        DirectionalLightEx light = new DirectionalLightEx();
 
         DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
-            .setViewport(500,500,10f,100);
+            .setViewport(50,50,10f,100);
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
         light.intensity = 5f;
@@ -127,27 +128,29 @@ public class GameView implements Disposable {
     public void render(float delta ) {
 
         // animate camera
-        camController.update(delta, world.getPlayer());
+        if(!isOverlay) {
+            camController.update(delta, world.getPlayer());
 
 //        DirectionalShadowLight shadowLight = sceneManager.getFirstDirectionalShadowLight();
 //        csm.setCascades(sceneManager.camera, shadowLight, 400f, 3f);
 
-        refresh();
-        sceneManager.update(delta);
+            refresh();
+            sceneManager.update(delta);
+        }
         sceneManager.renderShadows();
 
-        fbo.begin();
+        if(useFBO)
+            fbo.begin();
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);   // clear depth buffer only
 
         sceneManager.renderColors();
 
-        fbo.end();
+        if(useFBO) {
+            fbo.end();
+            // post-processing of game screen content : vignette effect and underwater wavy effect
 
-
-        // post-processing of game screen content : vignette effect and underwater wavy effect
-
-        postFilter.render(fbo);
-
+            postFilter.render(fbo);
+        }
 
 
 

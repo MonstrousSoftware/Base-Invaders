@@ -15,11 +15,15 @@ public class Assets implements Disposable {
     public class AssetSounds {
 
         // constants for sounds in game
-//        public final Sound COIN;
+        public final Sound ENGINE;
+        public final Sound BRAKE;
+        public final Sound PICK_UP;
 
 
         public AssetSounds() {
-//            COIN = assets.get("sound/coin1.ogg");
+            ENGINE = assets.get("sound/engine-6000.ogg");
+            BRAKE = assets.get("sound/brake.ogg");
+            PICK_UP = assets.get("sound/pick-up-sfx.ogg");
 
         }
     }
@@ -41,9 +45,9 @@ public class Assets implements Disposable {
         assets.setLoader(SceneAsset.class, ".gltf", new GLTFAssetLoader());
         assets.load( Settings.GLTF_FILE, SceneAsset.class);
 
-//        assets.load("sound/coin1.ogg", Sound.class);
-//        assets.load("sound/fall1.ogg", Sound.class);
-//        assets.load("sound/gameover1.ogg", Sound.class);
+        assets.load("sound/engine-6000.ogg", Sound.class);
+        assets.load("sound/brake.ogg", Sound.class);
+        assets.load("sound/pick-up-sfx.ogg", Sound.class);
 //        assets.load("sound/hit1.ogg", Sound.class);
 //        assets.load("sound/jump1.ogg", Sound.class);
 //        assets.load("sound/secret1.ogg", Sound.class);

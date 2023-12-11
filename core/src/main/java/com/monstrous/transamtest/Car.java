@@ -13,16 +13,20 @@ public class Car {
 
     public static int MAX_GEAR = 5;
 
-    public static float MAX_RPM = 26000;
+    public static float MAX_RPM = 8000;
     public static float RPM_REV = 2000f;     // rpm increase per second
     public static float SHAFT_LATENCY = 10f;
 
+    public static float[] gearRatios = { -0.2f, 0, 1f, 3f, 4f, 5.5f, 7f };      // for testing, to tune
 
-    public static float[] gearRatios = { -0.2f, 0, 0.2f, 1, 3, 4, 5 };      // for testing, to tune
+    //public static float[] gearRatios = { -0.2f, 0, 0.2f, 1, 3, 4, 5 };      // for testing, to tune
 
     public float gearRatio;
     public float driveShaftRPM;
     private CarState carState;
+    private float prevRPM = -1;
+    private boolean brakeSound = false;
+    private long engineId;
 
     public DHinge2Joint[] joints;      // 4 for 4 wheels
     public GameObject chassisObject;
@@ -31,10 +35,48 @@ public class Car {
         this.carState = carState;
     }
 
+
+    private void startStopSound(){
+        if(carState.rpm > 0 && prevRPM == 0)
+            engineId = Main.assets.sounds.ENGINE.loop();
+        else if(carState.rpm == 0 && prevRPM > 0) {
+            Main.assets.sounds.ENGINE.stop();
+        }
+        if(!brakeSound && carState.braking && carState.rpm > 0) {
+            Main.assets.sounds.BRAKE.play();
+            brakeSound = true;
+        }
+        if(carState.rpm == 0)
+            brakeSound = false;
+        prevRPM = carState.rpm;
+
+        if(carState.rpm > 0) {
+            Main.assets.sounds.ENGINE.setPitch(engineId, carState.rpm / 6000f  );
+        }
+
+    }
+
+    // automatic gear shifts....
+    private void checkForGearChange(){
+        if(carState.rpm > 7000 && carState.gear < MAX_GEAR) {
+            carState.gear++;
+            carState.rpm = 1000;
+        }
+        if(carState.rpm < 1000 && carState.gear > 1) {
+            carState.gear--;
+            carState.rpm = 7000;
+        }
+
+    }
+
+
     public void update(float deltaTime ){
 
-        // perhaps should add automatic gear shifts....
-        carState.update(deltaTime);
+        startStopSound();
+        checkForGearChange();
+
+
+        //carState.update(deltaTime);
 
         gearRatio = gearRatios[carState.gear+1];     // +1 because of the reverse gear
 
@@ -51,8 +93,9 @@ public class Car {
         float rollAngVel = 2*speed / ((float)Math.PI *  Settings.wheelRadius); //??
 
         float wav = 0.01f*driveShaftRPM;
-//        if(carState.braking)
-//            wav = 0;
+
+        if(carState.braking)
+            rollAngVel = 0;
 
         updateJoints(-carState.steerAngle, wav, rollAngVel);
     }
@@ -65,13 +108,13 @@ public class Car {
             if( i < 2) {
                 double curturn = j2.getAngle1();
                 double delta = (Math.toRadians(steerAngle) - curturn);
-                double max = 0.8f;
-                if(delta > max)
-                    delta = max;
-                if(delta < -max)
-                    delta = -max;
+//                double max = 20.8f;
+//                if(delta > max)
+//                    delta = max;
+//                if(delta < -max)
+//                    delta = -max;
                // Gdx.app.log("steer delta", ""+(float)curturn);
-                j2.setParamVel(delta);      // ignored for non-steering wheels which are locked
+                j2.setParamVel(30f*delta);      // ignored for non-steering wheels which are locked
 
                 // let front wheels roll and rear wheels slip
                 // (doesnt provide enough traction)

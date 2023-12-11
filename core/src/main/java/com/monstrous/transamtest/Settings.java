@@ -38,8 +38,8 @@ public class Settings {
     public static float chassisLength = 6f;
     // positioning of wheels
     public static float wheelSide = 1.0f;           // offset from centre of chassis
-    public static float wheelForward = 1.83f;    // as measured in Blender
-    public static float wheelBack = 1.84f;   // as measured in Blender
+    public static float wheelForward = 1.98f;
+    public static float wheelBack = 1.70f;
     public static float wheelDown = -0.7f;  // -0.7
     // wheel dimensions
     public static float wheelWidth = 0.2f;

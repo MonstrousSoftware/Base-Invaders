@@ -254,6 +254,7 @@ public class World implements Disposable {
 
     private void pickup(GameObject character, GameObject pickup){
 
+        Main.assets.sounds.PICK_UP.play();
         removeObject(pickup);
 //        if(pickup.type == GameObjectType.TYPE_PICKUP_COIN) {
 //            stats.coinsCollected++;

@@ -263,9 +263,9 @@ public class PhysicsBodyFactory implements Disposable {
         joint.setParamSuspensionCFM(Settings.suspensionCFM);
         float maxSteer = Settings.maxSteerAngle;
         if(!steering) { // rear wheel?
-            maxSteer = 0f;
-            joint.setParam(DJoint.PARAM_N.dParamLoStop1, -maxSteer);            // put a stop at max steering angle
-            joint.setParam(DJoint.PARAM_N.dParamHiStop1, maxSteer);             // idem
+
+            joint.setParam(DJoint.PARAM_N.dParamLoStop1, 0);            // put a stop at max steering angle
+            joint.setParam(DJoint.PARAM_N.dParamHiStop1, 0);             // idem
         } // don't put stops on steering wheels but rely on the car controller input for this
 
         return joint;
