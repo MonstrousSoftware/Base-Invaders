@@ -3,6 +3,8 @@ package com.monstrous.transamtest;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.transamtest.input.CameraController;
 import com.monstrous.transamtest.worlddata.World;
@@ -29,7 +31,9 @@ public class GameView implements Disposable {
     private final CameraController camController;
     private final boolean isOverlay;
     //private final CascadeShadowMap csm;
-
+    private ParticleEffects particleEffects = null;
+    private FrameBuffer fbo;
+    private PostFilter postFilter;
 
     // if the view is an overlay, we don't clear screen on render, only depth buffer
     //
@@ -53,8 +57,10 @@ public class GameView implements Disposable {
 //        sceneManager.setCascadeShadowMap(csm);
 
         // setup light
+//        DirectionalLightEx light = new DirectionalLightEx();
+
         DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
-            .setViewport(500,500,10f,100);
+            .setViewport(50,50,10f,100);
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.RED);
         light.intensity = 3f;
@@ -80,7 +86,13 @@ public class GameView implements Disposable {
         if(!isOverlay) {
             skybox = new SceneSkybox(environmentCubemap);
             sceneManager.setSkyBox(skybox);
+
+            particleEffects = new ParticleEffects(cam);
+
+            particleEffects.addFire( new Vector3(6,8,6));
         }
+
+        postFilter = new PostFilter();
     }
 
 
@@ -113,18 +125,43 @@ public class GameView implements Disposable {
     public void render(float delta ) {
 
         // animate camera
-        camController.update(delta, world.getPlayer().getPosition());
+        camController.update(delta, world.getPlayer());
 
         refresh();
         sceneManager.update(delta);
+        sceneManager.renderShadows();
 
+        fbo.begin();
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);   // clear depth buffer only
-        sceneManager.render();
+
+        sceneManager.renderColors();
+
+        fbo.end();
+
+
+        // post-processing of game screen content : vignette effect and underwater wavy effect
+
+        postFilter.render(fbo);
+
+
+
+
+        if (!isOverlay) {
+            particleEffects.update(delta);
+            particleEffects.render();
+        }
+
     }
 
 
     public void resize(int width, int height){
+
         sceneManager.updateViewport(width, height);
+        if(fbo != null)
+            fbo.dispose();
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
+        postFilter.resize(width, height);
+
     }
 
 
@@ -136,7 +173,9 @@ public class GameView implements Disposable {
         diffuseCubemap.dispose();
         specularCubemap.dispose();
         brdfLUT.dispose();
-        if(!isOverlay)
+        if(!isOverlay) {
             skybox.dispose();
+            particleEffects.dispose();
+        }
     }
 }

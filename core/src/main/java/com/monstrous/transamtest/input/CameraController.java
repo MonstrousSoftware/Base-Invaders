@@ -5,12 +5,14 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector3;
 import com.monstrous.transamtest.Settings;
+import com.monstrous.transamtest.worlddata.GameObject;
 
 public class CameraController extends InputAdapter {
 
     private final Camera camera;
     private final Vector3 offset = new Vector3();
-    private float distance = 5f;
+    private final Vector3 actualOffset = new Vector3();
+    private float distance = 15f;
     private final Vector3 viewingDirection;   // look direction, is forwardDirection plus Y component
     private float mouseDeltaX;
     private float mouseDeltaY;
@@ -54,9 +56,14 @@ public class CameraController extends InputAdapter {
             viewingDirection.set(newDirection);
     }
 
-    public void update ( float deltaTime, Vector3 playerPosition ) {
+    public void update ( float deltaTime, GameObject player ) {
         //Gdx.app.log("view Dir",""+viewingDirection.toString());
-        camera.position.set(playerPosition);
+        camera.position.set(player.getPosition());
+        viewingDirection.set(player.getDirection());
+        viewingDirection.y -= 0.4f;
+
+        float v = player.body.getVelocity().len();
+        distance = 5f + v;  // speed dependent view distance
 
         // mouse to move view direction
         rotateView(mouseDeltaX*deltaTime*Settings.turnSpeed, mouseDeltaY*deltaTime*Settings.turnSpeed );
@@ -67,9 +74,11 @@ public class CameraController extends InputAdapter {
         offset.set(viewingDirection).scl(-1);      // invert view direction
         offset.y = Math.max(0, offset.y);             // but don't go below player
         offset.nor().scl(distance);                   // scale for camera distance
-        camera.position.add(offset);
 
-        camera.lookAt(playerPosition);
+        actualOffset.slerp(offset,deltaTime);   // let camera lag behind a bit
+        camera.position.add(actualOffset);
+
+        camera.lookAt(player.getPosition());
         camera.up.set(Vector3.Y);
 
         camera.update(true);

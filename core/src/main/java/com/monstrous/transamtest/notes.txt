@@ -3,4 +3,12 @@
 - to fix: car collision box is not well aligned
 - assert error at com.github.antzGames.gdx.ode4j.ode.internal.joints.DxJointHinge2.makeV1andV2(DxJointHinge2.java:260)
 - to do : keep shadow light close to view
-- keep camera behind car, zoom out when going fast
+- done: keep camera behind car, zoom out when going fast
+- larger terrain, e.g. tiles & culling
+- hungry owl
+- light to highlight eg alien tech
+- juicy text-overs
+- ufo path
+- enemy vehciles
+- shooting
+- score, driving overhead
