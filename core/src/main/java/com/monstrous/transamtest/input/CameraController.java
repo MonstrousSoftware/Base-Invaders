@@ -16,6 +16,7 @@ public class CameraController extends InputAdapter {
     private final Vector3 viewingDirection;   // look direction, is forwardDirection plus Y component
     private float mouseDeltaX;
     private float mouseDeltaY;
+    private boolean autoCam = false;
 
     public CameraController(Camera camera ) {
         this.camera = camera;
@@ -59,11 +60,15 @@ public class CameraController extends InputAdapter {
     public void update ( float deltaTime, GameObject player ) {
         //Gdx.app.log("view Dir",""+viewingDirection.toString());
         camera.position.set(player.getPosition());
-        viewingDirection.set(player.getDirection());
-        viewingDirection.y -= 0.4f;
 
-        float v = player.body.getVelocity().len();
-        distance = 5f + v;  // speed dependent view distance
+        if(autoCam) {
+            viewingDirection.set(player.getDirection());
+            viewingDirection.y -= 0.4f;
+            float v = player.body.getVelocity().len();
+            distance = 5f + v;  // speed dependent view distance
+        }
+
+
 
         // mouse to move view direction
         rotateView(mouseDeltaX*deltaTime*Settings.turnSpeed, mouseDeltaY*deltaTime*Settings.turnSpeed );
@@ -75,7 +80,10 @@ public class CameraController extends InputAdapter {
         offset.y = Math.max(0, offset.y);             // but don't go below player
         offset.nor().scl(distance);                   // scale for camera distance
 
-        actualOffset.slerp(offset,deltaTime);   // let camera lag behind a bit
+        if(autoCam)
+            actualOffset.slerp(offset,deltaTime);   // let camera lag behind a bit
+        else
+            actualOffset.set(offset);
         camera.position.add(actualOffset);
 
         camera.lookAt(player.getPosition());

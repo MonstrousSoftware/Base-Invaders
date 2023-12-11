@@ -26,7 +26,7 @@ public class GameScreen extends ScreenAdapter {
         world = new World();
 
         Populator.populate(world);
-        gameView = new GameView(world,false, 0.1f, 300f);
+        gameView = new GameView(world,false, 1.0f, 300f);
 
         physicsView = new PhysicsView(world);
         gridView = new GridView();

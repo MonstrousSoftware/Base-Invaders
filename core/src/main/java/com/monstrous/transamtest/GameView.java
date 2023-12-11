@@ -12,6 +12,8 @@ import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
+import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
+import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
@@ -30,7 +32,7 @@ public class GameView implements Disposable {
     private SceneSkybox skybox;
     private final CameraController camController;
     private final boolean isOverlay;
-    //private final CascadeShadowMap csm;
+    private CascadeShadowMap csm = null;
     private ParticleEffects particleEffects = null;
     private FrameBuffer fbo;
     private PostFilter postFilter;
@@ -60,10 +62,10 @@ public class GameView implements Disposable {
 //        DirectionalLightEx light = new DirectionalLightEx();
 
         DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
-            .setViewport(50,50,10f,100);
+            .setViewport(500,500,10f,100);
         light.direction.set(1, -3, 1).nor();
-        light.color.set(Color.RED);
-        light.intensity = 3f;
+        light.color.set(Color.WHITE);
+        light.intensity = 5f;
         sceneManager.environment.add(light);
 
         // setup quick IBL (image based lighting)
@@ -126,6 +128,9 @@ public class GameView implements Disposable {
 
         // animate camera
         camController.update(delta, world.getPlayer());
+
+//        DirectionalShadowLight shadowLight = sceneManager.getFirstDirectionalShadowLight();
+//        csm.setCascades(sceneManager.camera, shadowLight, 400f, 3f);
 
         refresh();
         sceneManager.update(delta);

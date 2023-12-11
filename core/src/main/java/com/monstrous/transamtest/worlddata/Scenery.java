@@ -3,8 +3,8 @@ package com.monstrous.transamtest.worlddata;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.transamtest.Settings;
 
-// rocks and trees
-// rendering into a model cache
+// rocks, vegetation, etc.
+
 
 public class Scenery  {
 
@@ -22,6 +22,7 @@ public class Scenery  {
         placeRandom(world, "cactus.001", 200);
         placeRandom(world, "cactus.002", 200);
         placeRandom(world, "warningSign", 20);
+        placeRandom(world, "squadronSign", 20);
     }
 
     private void placeRandom(World world, String name, int count){
