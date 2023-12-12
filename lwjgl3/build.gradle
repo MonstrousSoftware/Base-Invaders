@@ -21,7 +21,7 @@ else {
 }
 
 sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
-mainClassName = 'com.monstrous.transamtest.lwjgl3.Lwjgl3Launcher'
+mainClassName = 'com.monstrous.baseInvaders.lwjgl3.Lwjgl3Launcher'
 eclipse.project.name = appName + '-lwjgl3'
 java.sourceCompatibility = 11
 java.targetCompatibility = 11
