@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.Car;
-import com.monstrous.baseInvaders.Main;
+import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.physics.*;
@@ -30,6 +30,7 @@ public class World implements Disposable {
     private Car theCar;
     private Terrain terrain;
     private Scenery scenery;
+    private float ufoSpawnTimer;
 
 
     public World() {
@@ -37,7 +38,7 @@ public class World implements Disposable {
         cars = new Array<>();
         stats = new GameStats();
         sceneAsset = Main.assets.sceneAsset;
-        for(Node node : sceneAsset.scene.model.nodes){  // print some debug info
+        for (Node node : sceneAsset.scene.model.nodes) {  // print some debug info
             Gdx.app.log("Node ", node.id);
         }
         physicsWorld = new PhysicsWorld(this);
@@ -58,6 +59,7 @@ public class World implements Disposable {
         player = null;
         userCarController.reset();
         scenery.populate();
+        ufoSpawnTimer = 3f;
     }
 
     public int getNumGameObjects() {
@@ -72,10 +74,9 @@ public class World implements Disposable {
         return player;
     }
 
-    public void setPlayer( GameObject player ){
+    public void setPlayer(GameObject player) {
         this.player = player;
         theCar = new Car(userCarController);
-//        player.body.setCapsuleCharacteristics();
     }
 
 
@@ -84,22 +85,22 @@ public class World implements Disposable {
     }
 
 
-    public GameObject spawnObject(GameObjectType type, String name, String proxyName, CollisionShapeType shapeType, boolean resetPosition, Vector3 position){
-        if(type == GameObjectType.TYPE_TERRAIN)
+    public GameObject spawnObject(GameObjectType type, String name, String proxyName, CollisionShapeType shapeType, boolean resetPosition, Vector3 position) {
+        if (type == GameObjectType.TYPE_TERRAIN)
             return spawnTerrain();
 
-        Scene scene = loadNode( name, resetPosition, position );
+        Scene scene = loadNode(name, resetPosition, position);
         ModelInstance collisionInstance = scene.modelInstance;
-        if(proxyName != null) {
-            Scene proxyScene = loadNode( proxyName, resetPosition, position );
+        if (proxyName != null) {
+            Scene proxyScene = loadNode(proxyName, resetPosition, position);
             collisionInstance = proxyScene.modelInstance;
         }
         PhysicsBody body = null;
-        if(type != GameObjectType.TYPE_SCENERY)
+        if (type != GameObjectType.TYPE_SCENERY && type != GameObjectType.TYPE_UFO)
             body = factory.createBody(collisionInstance, shapeType, type.isStatic);
         GameObject go = new GameObject(type, scene, body);
         gameObjects.add(go);
-        if(type.isCar)
+        if (type.isCar)
             addWheels(go);
 
         return go;
@@ -119,10 +120,10 @@ public class World implements Disposable {
 
     // spawn an item at terrain heightScenery
 
-    public  GameObject dropItem( String name, float x, float z, float angle){
+    public GameObject dropItem(String name, float x, float z, float angle) {
         float y = terrain.getHeight(x, z);
         tmpPosition.set(x, y, z);
-        GameObject go =  spawnObject(GameObjectType.TYPE_SCENERY, name, null, CollisionShapeType.CYLINDER, true, tmpPosition);
+        GameObject go = spawnObject(GameObjectType.TYPE_SCENERY, name, null, CollisionShapeType.CYLINDER, true, tmpPosition);
         go.scene.modelInstance.transform.rotate(Vector3.Y, angle);
         return go;
     }
@@ -138,13 +139,13 @@ public class World implements Disposable {
         gameObjects.add(w2);
         gameObjects.add(w3);
 
-        Car car = new Car( userCarController );
+        Car car = new Car(userCarController);
         factory.connectWheels(car, chassis, w0, w1, w2, w3);
         cars.add(car);
     }
 
     // index: 0=front left, 1=front right, 2 =rear left, 3 = rear right
-    public  GameObject makeWheel(GameObject chassis, int index) {
+    public GameObject makeWheel(GameObject chassis, int index) {
         Vector3 chassisPos = new Vector3();
         chassis.scene.modelInstance.transform.getTranslation(chassisPos);
         float dx = Settings.wheelSide;    // side
@@ -159,53 +160,72 @@ public class World implements Disposable {
             dz = Settings.wheelForward;
 
         Vector3 wheelPos = new Vector3();
-        wheelPos.set( chassisPos.x + dx, chassisPos.y + dy, chassisPos.z + dz);
+        wheelPos.set(chassisPos.x + dx, chassisPos.y + dy, chassisPos.z + dz);
 
         GameObject go = spawnObject(GameObjectType.TYPE_WHEEL, "wheel", null, CollisionShapeType.CYLINDER, true, wheelPos);
 
         // turn cylinder axis from Z to X axis, as the car is oriented towards Z, and cylinder by default points to Z
         Quaternion Q = new Quaternion();
         if (index == 1 || index == 3) // right
-            Q.setEulerAngles(90,90,0);          // BUGFIX!!!
+            Q.setEulerAngles(90, 90, 0);          // BUGFIX!!!
         else
-            Q.setEulerAngles(90,90,0);
+            Q.setEulerAngles(90, 90, 0);
         go.body.setOrientation(Q);
 
 
         return go;
     }
 
-    private Scene loadNode( String nodeName, boolean resetPosition, Vector3 position ) {
+    private Scene loadNode(String nodeName, boolean resetPosition, Vector3 position) {
         Scene scene = new Scene(sceneAsset.scene, nodeName);
-        if(scene.modelInstance.nodes.size == 0)
+        if (scene.modelInstance.nodes.size == 0)
             throw new RuntimeException("Cannot find node in GLTF file: " + nodeName);
         applyNodeTransform(resetPosition, scene.modelInstance, scene.modelInstance.nodes.first());         // incorporate nodes' transform into model instance transform
         scene.modelInstance.transform.translate(position);
         return scene;
     }
 
-    private void applyNodeTransform(boolean resetPosition, ModelInstance modelInstance, Node node ){
-        if(!resetPosition)
+    private void applyNodeTransform(boolean resetPosition, ModelInstance modelInstance, Node node) {
+        if (!resetPosition)
             modelInstance.transform.mul(node.globalTransform);
-        node.translation.set(0,0,0);
-        node.scale.set(1,1,1);
+        node.translation.set(0, 0, 0);
+        node.scale.set(1, 1, 1);
         node.rotation.idt();
         modelInstance.calculateTransforms();
     }
 
-    public void removeObject(GameObject gameObject){
+    public void removeObject(GameObject gameObject) {
         gameObject.health = 0;
-        if(gameObject.type == GameObjectType.TYPE_ENEMY)
+        if (gameObject.type == GameObjectType.TYPE_ENEMY)
             stats.numEnemies--;
         gameObjects.removeValue(gameObject, true);
         gameObject.dispose();
     }
 
+    private void ufoSpawner(float deltaTime) {
+        if(stats.ufosSpawned >= 7)  // max nr of items
+            return;
+        ufoSpawnTimer -= deltaTime;
+        if(ufoSpawnTimer<=0) {
+
+            float x = (float) (Math.random()-0.5f)*(Settings.worldSize-15f);    // not too close to the edge
+            float z = (float) (Math.random()-0.5f)*(Settings.worldSize-15f);
+            float y = terrain.getHeight(x, z);
+            spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(x, y+5f, z));
+            stats.ufosSpawned++;
+            ufoSpawnTimer = 15f;
+        }
+    }
 
 
     public void update( float deltaTime ) {
 
+        stats.gameTime += deltaTime;
+        ufoSpawner(deltaTime);
         userCarController.update(deltaTime);
+
+        for(GameObject go : gameObjects)
+            go.update(this, deltaTime);
 
         for(Car car: cars )
             car.update(deltaTime);
@@ -254,10 +274,10 @@ public class World implements Disposable {
 
         Main.assets.sounds.PICK_UP.play();
         removeObject(pickup);
-//        if(pickup.type == GameObjectType.TYPE_PICKUP_COIN) {
-//            stats.coinsCollected++;
-//            Main.assets.sounds.COIN.play();
-//        }
+        if(pickup.type == GameObjectType.TYPE_PICKUP_ITEM) {
+            stats.techCollected++;
+
+        }
 //        else if(pickup.type == GameObjectType.TYPE_PICKUP_HEALTH) {
 //            character.health = Math.min(character.health + 0.5f, 1f);   // +50% health
 //            Main.assets.sounds.UPGRADE.play();

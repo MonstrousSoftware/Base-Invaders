@@ -35,7 +35,7 @@ public class GameView implements Disposable {
     private ParticleEffects particleEffects = null;
     private FrameBuffer fbo;
     private PostFilter postFilter;
-    private boolean useFBO = false;
+    private boolean useFBO = true;
 
     // if the view is an overlay, we don't clear screen on render, only depth buffer
     //
@@ -94,6 +94,7 @@ public class GameView implements Disposable {
             particleEffects.addFire( new Vector3(6,8,6));
         }
 
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 1500, 1500, true);
         postFilter = new PostFilter();
     }
 
@@ -162,13 +163,11 @@ public class GameView implements Disposable {
 
 
     public void resize(int width, int height){
-
         sceneManager.updateViewport(width, height);
         if(fbo != null)
             fbo.dispose();
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
         postFilter.resize(width, height);
-
     }
 
 

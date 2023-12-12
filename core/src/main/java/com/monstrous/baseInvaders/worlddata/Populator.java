@@ -8,6 +8,10 @@ public class Populator {
 
     public static void populate(World world) {
         world.clear();
+
+        //world.spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(32, 8, 40));
+
+
         // use resetPosition=false for objects you have placed in Blender and true for objects you'll move around in code.
         //
         //world.spawnObject(GameObjectType.TYPE_STATIC, "groundbox", null, CollisionShapeType.MESH, false, Vector3.Zero);
@@ -25,9 +29,8 @@ public class Populator {
 
       //  world.spawnObject(GameObjectType.TYPE_PICKUP_FLAG, "flag", null, CollisionShapeType.CYLINDER, true,new Vector3(32,2,5));
 
-        world.spawnObject(GameObjectType.TYPE_STATIC, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(32, 8, 40));
 
-        world.spawnObject(GameObjectType.TYPE_PICKUP_ITEM, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(32, 2, 5));
+       // world.spawnObject(GameObjectType.TYPE_PICKUP_ITEM, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(32, 2, 5));
 
         world.spawnObject(GameObjectType.TYPE_STATIC, "warningSign", null, CollisionShapeType.BOX, true, new Vector3(12, 2, 15));
 

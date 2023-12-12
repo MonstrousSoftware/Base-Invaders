@@ -8,15 +8,19 @@ import com.badlogic.gdx.math.Vector3;
 import com.monstrous.baseInvaders.gui.GUI;
 import com.monstrous.baseInvaders.physics.CollisionShapeType;
 import com.monstrous.baseInvaders.physics.PhysicsView;
+import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.GameObjectType;
 import com.monstrous.baseInvaders.worlddata.Populator;
+import com.monstrous.baseInvaders.worlddata.Terrain;
 import com.monstrous.baseInvaders.worlddata.World;
 
 
 public class GameScreen extends ScreenAdapter {
 
+    private Main game;
     private GameView gameView;
     private GameView instrumentView;
+    private MiniMap minimap;
     private PhysicsView physicsView;
     private GridView gridView;
     private GUI gui;
@@ -24,6 +28,12 @@ public class GameScreen extends ScreenAdapter {
     private World instrumentWorld;
     private int windowedWidth, windowedHeight;
     private boolean debugRender = false;
+    private boolean carSettingsWindow = false;
+    private int techCollected = 0;
+
+    public GameScreen(Main game) {
+        this.game = game;
+    }
 
     @Override
     public void show() {
@@ -40,6 +50,7 @@ public class GameScreen extends ScreenAdapter {
 
         physicsView = new PhysicsView(world);
         gridView = new GridView();
+        minimap = new MiniMap(Terrain.MAP_SIZE, Terrain.MAP_SIZE);
 
         gui = new GUI(world.getUserCarController(), world);
 
@@ -91,10 +102,17 @@ public class GameScreen extends ScreenAdapter {
             restart();
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1))
             debugRender = !debugRender;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F2))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F2) || world.stats.techCollected > techCollected) {
             gui.addTechIcon();
+            techCollected++;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) {
+            carSettingsWindow = !carSettingsWindow;
+            gui.showCarSettings(carSettingsWindow);
+        }
 
         world.update(delta);
+        minimap.update(gameView.getCamera(), world);
 
         //float moveSpeed = world.getPlayer().body.getVelocity().len();
         gameView.render(delta) ;
@@ -105,6 +123,10 @@ public class GameScreen extends ScreenAdapter {
             gridView.render(gameView.getCamera());
             physicsView.render(gameView.getCamera());
         }
+
+
+        minimap.render();
+
         gui.render(delta);
 
     }
@@ -114,6 +136,7 @@ public class GameScreen extends ScreenAdapter {
 
         gameView.resize(width, height);
         gui.resize(width, height);
+        minimap.resize(width, height);
     }
 
 
@@ -129,5 +152,6 @@ public class GameScreen extends ScreenAdapter {
         gridView.dispose();
         world.dispose();
         gui.dispose();
+        minimap.dispose();
     }
 }

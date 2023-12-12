@@ -54,10 +54,22 @@ public class Assets implements Disposable {
 
     }
 
+
+    public boolean update() {
+        return assets.update();
+    }
+
+
     public void finishLoading() {
         assets.finishLoading();
         initConstants();
     }
+
+    public float getProgress() {
+        return assets.getProgress();
+    }
+
+
 
     private void initConstants() {
         sounds = new AssetSounds();

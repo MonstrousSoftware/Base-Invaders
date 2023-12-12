@@ -19,6 +19,7 @@ public class GUI implements Disposable {
 
     private Skin skin;
     public Stage stage;
+    private World world;
     private UserCarController carController;
     private Label rpmValue;
     private Label gearValue;
@@ -28,13 +29,18 @@ public class GUI implements Disposable {
     private CarSettingsWindow settingsWindow;
     private Table techTable;
     private int numTechItems = 0;
+    private Label timeLabel;
+    private Label fpsLabel;
+    private final StringBuffer sb;
 
 
     public GUI(UserCarController carController, World world ) {
         Gdx.app.log("GUI constructor", "");
         this.carController = carController;
+        this.world = world;
         skin = new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
         stage = new Stage(new ScreenViewport());
+        sb = new StringBuffer();
 
         settingsWindow = new CarSettingsWindow("Car Settings", skin, world);
     }
@@ -73,13 +79,32 @@ public class GUI implements Disposable {
         techTable = new Table();
         stage.addActor(techTable);
 
+        Table screenTable2 = new Table();
+        screenTable2.setFillParent(true);
+        timeLabel = new Label("00:00", skin);
+        fpsLabel = new Label("0", skin);
+        screenTable2.add().top();
+        screenTable2.add();
+        screenTable2.add(timeLabel).top().right().expand().row();
+        screenTable2.add(new Label("FPS : ", skin)).bottom().left();
+        screenTable2.add(fpsLabel).bottom().left().expandX();
+
+        stage.addActor(screenTable2);
+
+
 
         Table screenTable = new Table();
         screenTable.setFillParent(true);
         screenTable.add(settingsWindow).top().right().expand();
+        settingsWindow.setVisible(false);
         stage.addActor(screenTable);
-        Image dial = new Image(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/dial.png")))));
-        stage.addActor(dial);
+
+//        Image dial = new Image(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/dial.png")))));
+//        stage.addActor(dial);
+    }
+
+    public void showCarSettings( boolean mode ){
+       settingsWindow.setVisible(mode);
     }
 
     public void addTechIcon() {
@@ -92,7 +117,31 @@ public class GUI implements Disposable {
         numTechItems++;
     }
 
+
+    private void updateLabels() {
+
+        sb.setLength(0);
+        sb.append(Gdx.graphics.getFramesPerSecond());
+        fpsLabel.setText(sb.toString());
+
+        sb.setLength(0);
+        int mm = (int) (world.stats.gameTime/60);
+        int ss = (int)( world.stats.gameTime - 60*mm);
+        if(mm <10)
+            sb.append("0");
+        sb.append(mm);
+        sb.append(":");
+        if(ss <10)
+            sb.append("0");
+        sb.append(ss);
+        timeLabel.setText(sb.toString());
+    }
+
+
+
     private void update( float deltaTime ){
+        updateLabels();
+
         timer -= deltaTime;
         if(timer <= 0) {
             rpmValue.setText((int)carController.rpm);

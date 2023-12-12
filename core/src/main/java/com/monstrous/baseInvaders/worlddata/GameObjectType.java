@@ -16,6 +16,7 @@ public class GameObjectType {
     public final static GameObjectType TYPE_WHEEL = new GameObjectType("wheel", false, false, false,false, false, false, false, false);
     public final static GameObjectType TYPE_TERRAIN = new GameObjectType("static", true, false, false, false, false, false, false, false);
     public final static GameObjectType TYPE_SCENERY = new GameObjectType("scenery", true, false, false, false, false, false, false, false);
+    public final static GameObjectType TYPE_UFO = new GameObjectType("ufo", true, false, false, false, false, false, false, false);
 
 
     public String typeName;

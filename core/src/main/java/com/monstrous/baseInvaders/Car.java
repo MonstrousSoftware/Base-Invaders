@@ -1,6 +1,8 @@
 package com.monstrous.baseInvaders;
 
+import com.badlogic.gdx.Gdx;
 import com.github.antzGames.gdx.ode4j.ode.DHinge2Joint;
+import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.GameObject;
 //import org.ode4j.ode.DHinge2Joint;
 
@@ -11,6 +13,7 @@ import com.monstrous.baseInvaders.worlddata.GameObject;
 public class Car {
 
     public static int MAX_GEAR = 5;
+    public static int REVERSE_GEAR = -1;
 
     public static float MAX_RPM = 8000;
     public static float RPM_REV = 2000f;     // rpm increase per second
@@ -57,7 +60,7 @@ public class Car {
 
     // automatic gear shifts....
     private void checkForGearChange(){
-        if(carState.rpm > 7000 && carState.gear < MAX_GEAR) {
+        if(carState.rpm > 7000 && carState.gear < MAX_GEAR && carState.gear != REVERSE_GEAR) {
             carState.gear++;
             carState.rpm = 1000;
         }
@@ -93,10 +96,14 @@ public class Car {
 
         float wav = 0.01f*driveShaftRPM;
 
+        float steerAngle = -carState.steerAngle;
+        steerAngle *= (15f-speed)/15f;                      // reduce steer angle at high speeds
+        //Gdx.app.log("speed", ""+speed);
+
         if(carState.braking)
             rollAngVel = 0;
 
-        updateJoints(-carState.steerAngle, wav, rollAngVel);
+        updateJoints(steerAngle, wav, rollAngVel);
     }
 
     private void updateJoints(float steerAngle, float wheelAngularVelocity, float rollAngVel) {

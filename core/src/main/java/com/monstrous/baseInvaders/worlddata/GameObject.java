@@ -2,6 +2,7 @@ package com.monstrous.baseInvaders.worlddata;
 
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
+import com.monstrous.baseInvaders.behaviours.Behaviour;
 import com.monstrous.baseInvaders.physics.PhysicsBody;
 import net.mgsx.gltf.scene3d.scene.Scene;
 
@@ -13,6 +14,7 @@ public class GameObject implements Disposable {
     public final Vector3 direction;
     public boolean visible;
     public float health;
+    private Behaviour behaviour;
 
 
     public GameObject(GameObjectType type, Scene scene, PhysicsBody body) {
@@ -24,10 +26,13 @@ public class GameObject implements Disposable {
         visible = true;
         direction = new Vector3();
         health = 1f;
+        behaviour = Behaviour.createBehaviour(this);
 
     }
 
     public void update(World world, float deltaTime ){
+        if(behaviour != null)
+            behaviour.update(world, deltaTime);
     }
 
     public boolean isDead() {
@@ -38,6 +43,13 @@ public class GameObject implements Disposable {
         if(body == null)
             return Vector3.Zero;
         return body.getPosition();
+    }
+
+    public void setPosition( Vector3 pos ) {
+        if(body == null)
+            scene.modelInstance.transform.setTranslation(pos);
+        else
+            body.setPosition(pos);
     }
 
     public Vector3 getDirection() {

@@ -6,6 +6,7 @@ public class GameStats {
     public int techCollected;
     public int numEnemies;
     public boolean levelComplete;
+    public int ufosSpawned;
 
     public GameStats() {
         reset();
@@ -16,6 +17,7 @@ public class GameStats {
         numFlags = 0;
         techCollected = 0;
         numEnemies = 0;
+        ufosSpawned = 0;
         levelComplete = false;
     }
 }
