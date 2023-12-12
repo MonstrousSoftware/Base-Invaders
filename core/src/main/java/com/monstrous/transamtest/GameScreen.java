@@ -23,7 +23,7 @@ public class GameScreen extends ScreenAdapter {
     private World world;
     private World instrumentWorld;
     private int windowedWidth, windowedHeight;
-    private boolean debugRender = true;
+    private boolean debugRender = false;
 
     @Override
     public void show() {

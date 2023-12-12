@@ -1,5 +1,6 @@
 package com.monstrous.transamtest.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Mesh;
@@ -252,9 +253,14 @@ public class PhysicsBodyFactory implements Disposable {
         DVector3C anchor = wheel.geom.getBody().getPosition();
         joint.attach(chassis.geom.getBody(), wheel.geom.getBody());
 
+
+        Gdx.app.log("anchor", anchor.toString());
         joint.setAnchor(anchor);
-        joint.setAxis1(0,1,0);      // up axis for steering
+
+        joint.setAxis1(0, 1, 0);      // up axis for steering
         joint.setAxis2(-1, 0, 0);    // roll axis for rolling
+
+
         joint.setParamVel2(0);
         joint.setParamFMax2(35f);
         joint.setParamFMax(35f);

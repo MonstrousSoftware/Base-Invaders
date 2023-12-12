@@ -168,7 +168,7 @@ public class World implements Disposable {
         // turn cylinder axis from Z to X axis, as the car is oriented towards Z, and cylinder by default points to Z
         Quaternion Q = new Quaternion();
         if (index == 1 || index == 3) // right
-            Q.setEulerAngles(90,-90,0);
+            Q.setEulerAngles(90,90,0);          // BUGFIX!!!
         else
             Q.setEulerAngles(90,90,0);
         go.body.setOrientation(Q);

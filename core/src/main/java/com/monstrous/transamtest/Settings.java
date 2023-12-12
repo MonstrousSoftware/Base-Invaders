@@ -57,7 +57,7 @@ public class Settings {
 
     public static float maxSteerAngle = (float) (0.2f*Math.PI);
 
-    static public final String GLTF_FILE = "models/transam.gltf";
+    static public final String GLTF_FILE = "models/baseinvaders.gltf";
 
     static public float     worldSize = 256f;
 }
