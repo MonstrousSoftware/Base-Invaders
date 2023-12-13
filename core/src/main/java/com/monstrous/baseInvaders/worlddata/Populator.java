@@ -32,7 +32,12 @@ public class Populator {
 
        // world.spawnObject(GameObjectType.TYPE_PICKUP_ITEM, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(32, 2, 5));
 
-        world.spawnObject(GameObjectType.TYPE_STATIC, "warningSign", null, CollisionShapeType.BOX, true, new Vector3(12, 2, 15));
+
+        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(0, 0, 0));
+        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(10, 0, 0));
+
+        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(20, 0, 0));
+
 
 
         world.spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.CYLINDER, true,new Vector3(8,1,5));

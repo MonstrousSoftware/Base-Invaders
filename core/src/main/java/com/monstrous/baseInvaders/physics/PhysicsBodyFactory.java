@@ -28,6 +28,8 @@ import com.monstrous.baseInvaders.Car;
 import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.worlddata.GameObject;
 
+import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
+
 
 public class PhysicsBodyFactory implements Disposable {
 
@@ -243,6 +245,32 @@ public class PhysicsBodyFactory implements Disposable {
         car.joints[2]=makeWheelJoint(chassis.body, w2.body,false);
         car.joints[3]=makeWheelJoint(chassis.body, w3.body,false);
         car.chassisObject =chassis;
+
+        // define surface properties for front and rear tyres
+        //
+        DContact.DSurfaceParameters frontSurface = new DContact.DSurfaceParameters();
+        frontSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM;// | dContactApprox1;
+        frontSurface.mu = Settings.mu;
+        frontSurface.mu2 = Settings.mu2;
+        frontSurface.slip1 = Settings.slip1;
+        frontSurface.slip2 = Settings.slip2;
+        frontSurface.soft_erp = 0.8;
+        frontSurface.soft_cfm = 0.01;
+
+        w0.setSurface(frontSurface);
+        w1.setSurface(frontSurface);
+
+        DContact.DSurfaceParameters backSurface = new DContact.DSurfaceParameters();
+        backSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM; // | dContactApprox1;
+        backSurface.mu = Settings.mu;
+        backSurface.mu2 = Settings.mu2;
+        backSurface.slip1 = Settings.slip1;
+        backSurface.slip2 = Settings.slip2;
+        backSurface.soft_erp = 0.8;
+        backSurface.soft_cfm = 0.01;
+
+        w2.setSurface(backSurface);
+        w3.setSurface(backSurface);
     }
 
 

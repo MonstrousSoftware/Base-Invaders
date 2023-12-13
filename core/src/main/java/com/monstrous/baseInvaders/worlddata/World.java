@@ -13,6 +13,8 @@ import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.physics.*;
 //import com.monstrous.transamtest.worlddata.Terrain;
+import com.monstrous.baseInvaders.terrain.Terrain;
+import com.monstrous.baseInvaders.terrain.TerrainChunk;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
@@ -28,7 +30,7 @@ public class World implements Disposable {
     private final UserCarController userCarController;
     public final PhysicsRayCaster rayCaster;
     private Car theCar;
-    private Terrain terrain;
+    private TerrainChunk terrain;
     private Scenery scenery;
     private float ufoSpawnTimer;
 
@@ -45,7 +47,7 @@ public class World implements Disposable {
         factory = new PhysicsBodyFactory(physicsWorld);
         rayCaster = new PhysicsRayCaster(physicsWorld);
         userCarController = new UserCarController();
-        terrain = new Terrain();
+        terrain = new TerrainChunk(0,0);
         scenery = new Scenery(this);
 
     }
@@ -107,12 +109,13 @@ public class World implements Disposable {
     }
 
     private GameObject spawnTerrain() {
-        Scene scene = new Scene(terrain.getModelInstance());
+
+        ModelInstance instance = terrain.getModelInstance();
+        Scene scene = new Scene(instance);
         PhysicsBody body = factory.createBody(scene.modelInstance,
             CollisionShapeType.MESH, true);
         GameObject go = new GameObject(GameObjectType.TYPE_TERRAIN, scene, body);
         gameObjects.add(go);
-
         return go;
     }
 
@@ -208,8 +211,8 @@ public class World implements Disposable {
         ufoSpawnTimer -= deltaTime;
         if(ufoSpawnTimer<=0) {
 
-            float x = (float) (Math.random()-0.5f)*(Settings.worldSize-15f);    // not too close to the edge
-            float z = (float) (Math.random()-0.5f)*(Settings.worldSize-15f);
+            float x = (float) (Math.random()-0.5f)*(Settings.worldSize -15f);    // not too close to the edge
+            float z = (float) (Math.random()-0.5f)*(Settings.worldSize -15f);
             float y = terrain.getHeight(x, z);
             spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(x, y+5f, z));
             stats.ufosSpawned++;

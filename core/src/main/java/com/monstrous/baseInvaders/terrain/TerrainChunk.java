@@ -1,4 +1,4 @@
-package com.monstrous.baseInvaders.worlddata;
+package com.monstrous.baseInvaders.terrain;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
@@ -15,11 +15,11 @@ import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.Settings;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 
-public class Terrain implements Disposable {
+public class TerrainChunk implements Disposable {
 
     public static final int MAP_SIZE = 129;     // grid size
-    public static final float SCALE  = Settings.worldSize;       // terrain size
-    public static final float AMPLITUDE  = 10f;
+    public static final float SCALE  = Settings.chunkSize;       // terrain size
+    public static final float AMPLITUDE  = 0f;
 
     private Model model;
     private ModelInstance modelInstance;
@@ -30,28 +30,15 @@ public class Terrain implements Disposable {
     private Vector3 normalVectors[][] = new Vector3[MAP_SIZE][MAP_SIZE];
     private Vector3 position; // position of terrain in world coordinates
 
-    public Terrain() {
 
-        Texture noiseTexture = new Texture(Gdx.files.internal("noiseTexture.png")); // assumed to be MAP_SIZE x MAP_SIZE
-        if (!noiseTexture.getTextureData().isPrepared()) {
-            noiseTexture.getTextureData().prepare();
-        }
-        Pixmap pixmap = noiseTexture.getTextureData().consumePixmap();
-        Color sample = new Color();
+    public TerrainChunk(int xoffset, int yoffset) {
+        Noise noise = new Noise();
 
-        int tw = pixmap.getWidth();
-        int th = pixmap.getHeight();
-        heightMap = new float[MAP_SIZE][MAP_SIZE];
-        for (int x = 0; x < MAP_SIZE; x++) {
-            for (int y = 0; y < MAP_SIZE; y++) {
-                int tx = (x * tw)/MAP_SIZE;
-                int ty = (y * th)/MAP_SIZE;
-                int rgba = pixmap.getPixel(ty,tx);
-                sample.set(rgba);
-                heightMap[y][x] = AMPLITUDE*(sample.r -0.5f );
-            }
-        }
-        noiseTexture.getTextureData().disposePixmap();
+        heightMap = noise.generatePerlinMap( MAP_SIZE, MAP_SIZE, xoffset, yoffset, 16);
+        for (int y = 0; y < MAP_SIZE; y++)
+            for (int x = 0; x < MAP_SIZE; x++)
+                heightMap[y][x] *= AMPLITUDE;
+
 
         Texture terrainTexture = new Texture(Gdx.files.internal("textures/ground/ground-color.png"), true);
         terrainTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -62,16 +49,11 @@ public class Terrain implements Disposable {
         normalTexture.setFilter(Texture.TextureFilter.MipMap, Texture.TextureFilter.Nearest);
 
 
-        position = new Vector3(-Settings.worldSize/2, 0, -Settings.worldSize/2);    // place the terrain so the centre is at the origin
+        position = new Vector3(-Settings.chunkSize /2, 0, -Settings.chunkSize /2);    // place the terrain so the centre is at the origin
 
         Material material =  new Material();
         material.set(PBRTextureAttribute.createBaseColorTexture(terrainTexture));
         material.set(PBRTextureAttribute.createNormalTexture(normalTexture));
-
-        //TextureAttribute.createDiffuse(terrainTexture));
-
-       // material.set(PBRColorAttribute.createBaseColorFactor(new Color(Color.GREEN).fromHsv(15, .9f, .8f)));
-
 
         model = makeGridModel(heightMap, SCALE, MAP_SIZE-1, GL20.GL_TRIANGLES, material);
         modelInstance =  new ModelInstance(model, position);
@@ -88,7 +70,7 @@ public class Terrain implements Disposable {
 
 
     // make a Model consisting of a square grid
-    public Model makeGridModel(float[][] heightMap, float scale, int divisions, int primitive, Material material) {
+    private Model makeGridModel(float[][] heightMap, float scale, int divisions, int primitive, Material material) {
         final int N = divisions;
         numIndices = 0;
         int numFloats = 0;
@@ -118,9 +100,9 @@ public class Terrain implements Disposable {
                 float posx = ((float) x / (float) N);        // x in [0.0 .. 1.0]
 
                 posz = heightMap[y][x];
-                // have a slope down on the edges
-                if(x == 0 || x == N || y == 0 || y == N)
-                    posz = -10f;
+//                // have a slope down on the edges
+//                if(x == 0 || x == N || y == 0 || y == N)
+//                    posz = -10f;
                 pos.set(posx * scale, posz, posy * scale);            // swapping z,y to orient horizontally
 
                 positions[y * (N + 1) + x] = new Vector3(pos);
@@ -230,12 +212,12 @@ public class Terrain implements Disposable {
         float relz = z - position.z;
 
         // position in grid (rounded down)
-        int mx = (int)Math.floor(relx * (MAP_SIZE-1) / Settings.worldSize);
-        int mz = (int)Math.floor(relz * (MAP_SIZE-1) / Settings.worldSize);
+        int mx = (int)Math.floor(relx * (MAP_SIZE-1) / Settings.chunkSize);
+        int mz = (int)Math.floor(relz * (MAP_SIZE-1) / Settings.chunkSize);
 
         if(mx < 0 ||mx >= (MAP_SIZE-1) || mz < 0 || mz >= (MAP_SIZE-1))
             return 0;
-        float cellSize = Settings.worldSize / (MAP_SIZE-1);
+        float cellSize = Settings.chunkSize / (MAP_SIZE-1);
         float xCoord = (relx % cellSize)/cellSize;
         float zCoord = (relz % cellSize)/cellSize;
         float ht;
@@ -256,8 +238,8 @@ public class Terrain implements Disposable {
         float relz = z - position.z;
 
         // position in grid (rounded down)
-        int mx = (int)Math.floor(relx * (MAP_SIZE-1) / Settings.worldSize);
-        int mz = (int)Math.floor(relz * (MAP_SIZE-1) / Settings.worldSize);
+        int mx = (int)Math.floor(relx * (MAP_SIZE-1) / Settings.chunkSize);
+        int mz = (int)Math.floor(relz * (MAP_SIZE-1) / Settings.chunkSize);
 
         if(mx < 0 ||mx >= (MAP_SIZE-1) || mz < 0 || mz >= (MAP_SIZE-1)) {
             outNormal.set(0,1,0);

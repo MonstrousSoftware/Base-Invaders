@@ -16,7 +16,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 // on web this screen is to get a user key press, so we can start playing sound
 // also shows progress on asset loading
 
-public class StartScreen extends StdScreenAdapter {
+public class LoadScreen extends StdScreenAdapter {
 
     private Main game;
     private Stage stage;
@@ -28,8 +28,8 @@ public class StartScreen extends StdScreenAdapter {
     private Label prompt;
 
 
-    public StartScreen(Main game) {
-        Gdx.app.log("StartScreen constructor", "");
+    public LoadScreen(Main game) {
+        Gdx.app.log("LoadScreen constructor", "");
         this.game = game;
 
     }
@@ -37,7 +37,7 @@ public class StartScreen extends StdScreenAdapter {
 
     @Override
     public void show() {
-        Gdx.app.log("StartScreen show()", "");
+        Gdx.app.log("LoadScreen show()", "");
 
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
         stage = new Stage(new ScreenViewport());
@@ -105,20 +105,20 @@ public class StartScreen extends StdScreenAdapter {
     @Override
     public void resize(int w, int h) {
 
-        Gdx.app.log("StartScreen resize()", "");
+        Gdx.app.log("LoadScreen resize()", "");
         stage.getViewport().update(w, h, true);
 
     }
 
     @Override
     public void hide() {
-        Gdx.app.log("StartScreen hide()", "");
+        Gdx.app.log("LoadScreen hide()", "");
         dispose();
     }
 
     @Override
     public void dispose() {
-        Gdx.app.log("StartScreen dispose()", "");
+        Gdx.app.log("LoadScreen dispose()", "");
         stage.dispose();
         skin.dispose();
         texture.dispose();

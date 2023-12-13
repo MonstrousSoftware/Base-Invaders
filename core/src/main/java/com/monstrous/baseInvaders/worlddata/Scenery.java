@@ -26,8 +26,8 @@ public class Scenery  {
 
     private void placeRandom(World world, String name, int count){
         for(int n = 0; n < count; n++) {
-            float xx = (float) (Math.random()-0.5f)*(Settings.worldSize-5f);    // don't plant trees to close to the edge
-            float zz = (float) (Math.random()-0.5f)*(Settings.worldSize-5f);
+            float xx = (float) (Math.random()-0.5f)*(Settings.chunkSize -5f);    // don't plant trees to close to the edge
+            float zz = (float) (Math.random()-0.5f)*(Settings.chunkSize -5f);
             float r = (float) (Math.random()*360f);
             world.dropItem( name, xx, zz, r);
         }

@@ -19,7 +19,7 @@ public class Car {
     public static float RPM_REV = 2000f;     // rpm increase per second
     public static float SHAFT_LATENCY = 10f;
 
-    public static float[] gearRatios = { -0.2f, 0, 1f, 3f, 4f, 5.5f, 7f };      // for testing, to tune
+    public static float[] gearRatios = { -1.5f, 0, 1f, 3f, 4f, 5.5f, 7f };      // for testing, to tune
 
     //public static float[] gearRatios = { -0.2f, 0, 0.2f, 1, 3, 4, 5 };      // for testing, to tune
 
@@ -97,7 +97,7 @@ public class Car {
         float wav = 0.01f*driveShaftRPM;
 
         float steerAngle = -carState.steerAngle;
-        steerAngle *= (15f-speed)/15f;                      // reduce steer angle at high speeds
+//        steerAngle *= (15f-speed)/15f;                      // reduce steer angle at high speeds
         //Gdx.app.log("speed", ""+speed);
 
         if(carState.braking)
@@ -124,9 +124,9 @@ public class Car {
 
                 // let front wheels roll and rear wheels slip
                 // (doesnt provide enough traction)
-                //j2.setParamVel2(wheelAngularVelocity);
+                j2.setParamVel2(wheelAngularVelocity);
 
-                j2.setParamVel2(rollAngVel);
+                //j2.setParamVel2(rollAngVel);
             }
             if(i >= 2) {
 

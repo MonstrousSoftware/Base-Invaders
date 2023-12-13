@@ -57,5 +57,6 @@ public class Settings {
 
     static public final String GLTF_FILE = "models/baseinvaders.gltf";
 
-    static public float     worldSize = 256f;
+    static public float chunkSize = 256f;
+    static public float worldSize = 256f;
 }

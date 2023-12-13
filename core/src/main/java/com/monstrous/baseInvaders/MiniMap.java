@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -108,8 +107,8 @@ public class MiniMap implements Disposable {
 
                     position.set(go.getPosition());
 
-                    float x = -(position.x / Settings.worldSize) * viewWidth + viewWidth / 2f;
-                    float y = (position.z / Settings.worldSize) * viewHeight + viewHeight / 2f;
+                    float x = (position.x / Settings.worldSize) * viewWidth;
+                    float y = (position.z / Settings.worldSize) * viewHeight;
                     Texture symbol = techMarker;
                     if (go.type.isCar)
                         symbol = carMarker;

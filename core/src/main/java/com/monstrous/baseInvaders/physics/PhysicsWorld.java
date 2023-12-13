@@ -21,6 +21,7 @@ public class PhysicsWorld implements Disposable {
     public DSpace space;
     private final DJointGroup contactGroup;
     private final World gameWorld;
+    private DContact.DSurfaceParameters defaultSurface;
 
     public PhysicsWorld(World gameWorld) {
         this.gameWorld = gameWorld;
@@ -29,6 +30,12 @@ public class PhysicsWorld implements Disposable {
         Gdx.app.log("ODE config", OdeHelper.getConfiguration());
         contactGroup = OdeHelper.createJointGroup();
         reset();
+
+        defaultSurface = new DContact.DSurfaceParameters();
+        defaultSurface.mode = dContactFDir1 |  dContactSoftERP | dContactSoftCFM ;
+        defaultSurface.mu = Settings.mu;
+        defaultSurface.soft_erp = 0.8;
+        defaultSurface.soft_cfm = 0.01;
     }
 
 
@@ -82,16 +89,19 @@ public class PhysicsWorld implements Disposable {
                 go1 = (GameObject)o1.getData();
                 go2 = (GameObject)o2.getData();
 
+
                 GameObject wheel = null;
-                if(go1.type == GameObjectType.TYPE_WHEEL) {
+                if(go1.type == GameObjectType.TYPE_WHEEL)
                     wheel = go1;
-                }
-                else if(go2.type == GameObjectType.TYPE_WHEEL) {
+                else if(go2.type == GameObjectType.TYPE_WHEEL)
                     wheel = go2;
-                }
+
+
+                DContact.DSurfaceParameters surface = defaultSurface;
                 if(wheel != null) {
                     //Gdx.app.log("cb", "collision with wheel, dir:"+ wheel.getDirection());
                     dir1.set( wheel.getDirection() );
+                    surface = wheel.getSurface();
                 }
 
 
@@ -100,18 +110,25 @@ public class PhysicsWorld implements Disposable {
                 for (int i = 0; i < n; i++) {
                     DContact contact = contacts.get(i);
                     contact.fdir1.set(dir1.x, dir1.y, dir1.z);
+                    contact.surface.mode = surface.mode;
+                    contact.surface.mu = surface.mu;
+                    contact.surface.mu2 = surface.mu2;
+                    contact.surface.slip1 = surface.slip1;
+                    contact.surface.slip2 = surface.slip2;
+                    contact.surface.soft_erp = surface.soft_erp;
+                    contact.surface.soft_cfm = surface.soft_cfm;
                     //contact.fdir1.set(1,0,0);
                     //dContactSlip1 | dContactSlip2  |
-                    contact.surface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
-                    if (o1 instanceof DSphere || o2 instanceof DSphere || o1 instanceof DCapsule || o2 instanceof DCapsule)
-                        contact.surface.mu = 0.01;  // low friction for balls & capsules
-                    else
-                        contact.surface.mu = Settings.mu;
-                    contact.surface.mu2 = Settings.mu2;
-                    contact.surface.slip1 = Settings.slip1;
-                    contact.surface.slip2 = Settings.slip2;
-                    contact.surface.soft_erp = 0.8;
-                    contact.surface.soft_cfm = 0.01;
+//                    contact.surface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
+//                    if (o1 instanceof DSphere || o2 instanceof DSphere || o1 instanceof DCapsule || o2 instanceof DCapsule)
+//                        contact.surface.mu = 0.01;  // low friction for balls & capsules
+//                    else
+//                        contact.surface.mu = Settings.mu;
+//                    contact.surface.mu2 = Settings.mu2;
+//                    contact.surface.slip1 = Settings.slip1;
+//                    contact.surface.slip2 = Settings.slip2;
+//                    contact.surface.soft_erp = 0.8;
+//                    contact.surface.soft_cfm = 0.01;
 
                     DJoint c = OdeHelper.createContactJoint(world, contactGroup, contact);
                     c.attach(o1.getBody(), o2.getBody());

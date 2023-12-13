@@ -16,7 +16,7 @@ public class CameraController extends InputAdapter {
     private final Vector3 viewingDirection;   // look direction, is forwardDirection plus Y component
     private float mouseDeltaX;
     private float mouseDeltaY;
-    private boolean autoCam = false;
+    public boolean autoCam = false;
 
     public CameraController(Camera camera ) {
         this.camera = camera;

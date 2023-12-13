@@ -6,12 +6,13 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector3;
 import com.monstrous.baseInvaders.gui.GUI;
+import com.monstrous.baseInvaders.input.CameraController;
 import com.monstrous.baseInvaders.physics.CollisionShapeType;
 import com.monstrous.baseInvaders.physics.PhysicsView;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.GameObjectType;
 import com.monstrous.baseInvaders.worlddata.Populator;
-import com.monstrous.baseInvaders.worlddata.Terrain;
+import com.monstrous.baseInvaders.terrain.TerrainChunk;
 import com.monstrous.baseInvaders.worlddata.World;
 
 
@@ -50,7 +51,7 @@ public class GameScreen extends ScreenAdapter {
 
         physicsView = new PhysicsView(world);
         gridView = new GridView();
-        minimap = new MiniMap(Terrain.MAP_SIZE, Terrain.MAP_SIZE);
+        minimap = new MiniMap(TerrainChunk.MAP_SIZE, TerrainChunk.MAP_SIZE);
 
         gui = new GUI(world.getUserCarController(), world);
 
@@ -94,6 +95,8 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private boolean autoCam = false;
+
     @Override
     public void render(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
@@ -105,6 +108,10 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2) || world.stats.techCollected > techCollected) {
             gui.addTechIcon();
             techCollected++;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+            autoCam = !autoCam;
+            ((CameraController)gameView.getCameraController()).autoCam = autoCam;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) {
             carSettingsWindow = !carSettingsWindow;
@@ -120,7 +127,7 @@ public class GameScreen extends ScreenAdapter {
         instrumentView.render(delta) ;
 
         if(debugRender) {
-            gridView.render(gameView.getCamera());
+            //gridView.render(gameView.getCamera());
             physicsView.render(gameView.getCamera());
         }
 

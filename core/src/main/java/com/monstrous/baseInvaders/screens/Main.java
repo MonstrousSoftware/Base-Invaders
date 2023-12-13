@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.monstrous.baseInvaders.Assets;
 import com.monstrous.baseInvaders.GameScreen;
 import com.monstrous.baseInvaders.Settings;
-import com.monstrous.baseInvaders.screens.StartScreen;
 
 import static com.badlogic.gdx.Application.ApplicationType.Desktop;
 
@@ -19,7 +18,7 @@ public class Main extends Game {
 
         assets = new Assets();
 
-        setScreen( new StartScreen(this) );
+        setScreen( new LoadScreen(this) );
     }
 
     public void onLoadingComplete(){
