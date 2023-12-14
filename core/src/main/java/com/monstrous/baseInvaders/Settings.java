@@ -45,13 +45,16 @@ public class Settings {
 
 
     public static float mu = 3.5f;
-    public static float mu2 = 3.5f;
+    public static float mu2 = 30.5f;
     public static float slip1 = 0.1f;
     public static float slip2 = 0.1f;
 
 
     public static float suspensionCFM = 0.14f;
     public static float suspensionERP = 0.8f;
+
+    public static float chassisDensity = 1f;
+    public static float wheelDensity = 1f;
 
     public static float maxSteerAngle = (float) (0.2f*Math.PI);
 

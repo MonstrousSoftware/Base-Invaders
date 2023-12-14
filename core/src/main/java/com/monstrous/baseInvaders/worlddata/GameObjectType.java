@@ -3,6 +3,9 @@ package com.monstrous.baseInvaders.worlddata;
 public class GameObjectType {
     public final static GameObjectType TYPE_STATIC = new GameObjectType("static", true, false, false, false, false, false, false, false);
     public final static GameObjectType TYPE_PLAYER = new GameObjectType("player", false, true, true, false, false, false, false, false);
+    public final static GameObjectType TYPE_ENEMY_CAR = new GameObjectType("enemy", false, false, true, false, true, false, false, false);
+
+
     public final static GameObjectType TYPE_PICKUP_FLAG = new GameObjectType("flag", false, false, false,true, false , false, false, false);
 
     public final static GameObjectType TYPE_PICKUP_ITEM = new GameObjectType("item", false, false, false,true, false , false, false, false);

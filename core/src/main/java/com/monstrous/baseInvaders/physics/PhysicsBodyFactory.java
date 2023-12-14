@@ -55,7 +55,7 @@ public class PhysicsBodyFactory implements Disposable {
         disposables = new Array<>();
     }
 
-    public PhysicsBody createBody(ModelInstance collisionInstance, CollisionShapeType shapeType, boolean isStatic) {
+    public PhysicsBody createBody(ModelInstance collisionInstance, CollisionShapeType shapeType, boolean isStatic, float density) {
         BoundingBox bbox = new BoundingBox();
         Node node = collisionInstance.nodes.first();
         node.calculateBoundingBox(bbox, false); // bounding box without the transform
@@ -72,34 +72,34 @@ public class PhysicsBodyFactory implements Disposable {
         switch (shapeType) {
             case BOX:
                 geom = OdeHelper.createBox(physicsWorld.space, w, h, d);
-                massInfo.setBox(1, w, h, d);
+                massInfo.setBox(density, w, h, d);
                 break;
             case SPHERE:
                 diameter = Math.max(Math.max(w, d), h);
                 radius = diameter / 2f;
                 geom = OdeHelper.createSphere(physicsWorld.space, radius);
-                massInfo.setSphere(1, radius);
+                massInfo.setSphere(density, radius);
                 break;
             case CAPSULE:
                 diameter = Math.max(w, d);
                 radius = diameter / 2f; // radius of the cap
                 len = h - 2 * radius;     // height of the cylinder between the two end caps
                 geom = OdeHelper.createCapsule(physicsWorld.space, radius, len);
-                massInfo.setCapsule(1, 2, radius, len);
+                massInfo.setCapsule(density, 2, radius, len);
                 break;
             case CYLINDER:
                 diameter = Math.max(w, d);
                 radius = diameter / 2f; // radius of the cap
                 len = h;     // height of the cylinder between the two end caps
                 geom = OdeHelper.createCylinder(physicsWorld.space, radius, len);
-                massInfo.setCylinder(1, 2, radius, len);
+                massInfo.setCylinder(density, 2, radius, len);
                 break;
             case MESH:
                 // create a TriMesh from the provided modelInstance
                 DTriMeshData triData = OdeHelper.createTriMeshData();
                 fillTriData(triData, collisionInstance);
                 geom = OdeHelper.createTriMesh(physicsWorld.space, triData, null, null, null);
-                massInfo.setBox(1, w, h, d);
+                massInfo.setBox(density, w, h, d);
                 break;
 
             default:
@@ -290,12 +290,12 @@ public class PhysicsBodyFactory implements Disposable {
 
 
         joint.setParamVel2(0);
-        joint.setParamFMax2(35f);
-        joint.setParamFMax(35f);
+        joint.setParamFMax2(35000f);
+        joint.setParamFMax(35000f);
         joint.setParamFudgeFactor(0.1f);
         joint.setParamSuspensionERP(Settings.suspensionERP);
         joint.setParamSuspensionCFM(Settings.suspensionCFM);
-        float maxSteer = Settings.maxSteerAngle;
+        //float maxSteer = Settings.maxSteerAngle;
         if(!steering) { // rear wheel?
 
             joint.setParam(DJoint.PARAM_N.dParamLoStop1, 0);            // put a stop at max steering angle

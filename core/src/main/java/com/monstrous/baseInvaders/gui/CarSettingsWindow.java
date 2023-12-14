@@ -157,6 +157,38 @@ public class CarSettingsWindow extends Window {
         add(labelDampingValue).width(50);
         row();
 
+        final Label labelCD = new Label(String.valueOf(Settings.chassisDensity), skin);
+        final Slider sliderCD = new Slider(0, 3, 0.1f, false, skin);
+        sliderCD.setAnimateDuration(0.1f);
+        sliderCD.setValue(Settings.chassisDensity);
+        sliderCD.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Settings.chassisDensity = sliderCD.getValue();
+                labelCD.setText(String.valueOf(Settings.chassisDensity));
+            }
+        });
+        add(new Label("Chassis density: ", skin)).pad(5);
+        add(sliderCD);
+        add(labelCD).width(50);
+        row();
+
+        final Label labelWD = new Label(String.valueOf(Settings.wheelDensity), skin);
+        final Slider sliderWD = new Slider(0, 3, 0.1f, false, skin);
+        sliderWD.setAnimateDuration(0.1f);
+        sliderWD.setValue(Settings.wheelDensity);
+        sliderWD.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Settings.wheelDensity = sliderWD.getValue();
+                labelWD.setText(String.valueOf(Settings.wheelDensity));
+            }
+        });
+        add(new Label("Wheel density: ", skin)).pad(5);
+        add(sliderWD);
+        add(labelWD).width(50);
+        row();
+
 //        final Label labelCompressionValue = new Label(String.valueOf(Settings.suspensionCompression), skin);
 //        final Slider sliderCompression = new Slider(0, 50, 1, false, skin);
 //        sliderCompression.setAnimateDuration(0.1f);

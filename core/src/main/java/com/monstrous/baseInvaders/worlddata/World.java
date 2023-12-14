@@ -87,7 +87,7 @@ public class World implements Disposable {
     }
 
 
-    public GameObject spawnObject(GameObjectType type, String name, String proxyName, CollisionShapeType shapeType, boolean resetPosition, Vector3 position) {
+    public GameObject spawnObject(GameObjectType type, String name, String proxyName, CollisionShapeType shapeType, boolean resetPosition, Vector3 position, float density) {
         if (type == GameObjectType.TYPE_TERRAIN)
             return spawnTerrain();
 
@@ -97,9 +97,11 @@ public class World implements Disposable {
             Scene proxyScene = loadNode(proxyName, resetPosition, position);
             collisionInstance = proxyScene.modelInstance;
         }
+        if (type.isCar)
+            density = Settings.chassisDensity;
         PhysicsBody body = null;
         if (type != GameObjectType.TYPE_SCENERY && type != GameObjectType.TYPE_UFO)
-            body = factory.createBody(collisionInstance, shapeType, type.isStatic);
+            body = factory.createBody(collisionInstance, shapeType, type.isStatic, density);
         GameObject go = new GameObject(type, scene, body);
         gameObjects.add(go);
         if (type.isCar)
@@ -113,7 +115,7 @@ public class World implements Disposable {
         ModelInstance instance = terrain.getModelInstance();
         Scene scene = new Scene(instance);
         PhysicsBody body = factory.createBody(scene.modelInstance,
-            CollisionShapeType.MESH, true);
+            CollisionShapeType.MESH, true, 1f);
         GameObject go = new GameObject(GameObjectType.TYPE_TERRAIN, scene, body);
         gameObjects.add(go);
         return go;
@@ -126,7 +128,7 @@ public class World implements Disposable {
     public GameObject dropItem(String name, float x, float z, float angle) {
         float y = terrain.getHeight(x, z);
         tmpPosition.set(x, y, z);
-        GameObject go = spawnObject(GameObjectType.TYPE_SCENERY, name, null, CollisionShapeType.CYLINDER, true, tmpPosition);
+        GameObject go = spawnObject(GameObjectType.TYPE_SCENERY, name, null, CollisionShapeType.CYLINDER, true, tmpPosition, 1f);
         go.scene.modelInstance.transform.rotate(Vector3.Y, angle);
         return go;
     }
@@ -165,7 +167,7 @@ public class World implements Disposable {
         Vector3 wheelPos = new Vector3();
         wheelPos.set(chassisPos.x + dx, chassisPos.y + dy, chassisPos.z + dz);
 
-        GameObject go = spawnObject(GameObjectType.TYPE_WHEEL, "wheel", null, CollisionShapeType.CYLINDER, true, wheelPos);
+        GameObject go = spawnObject(GameObjectType.TYPE_WHEEL, "wheel", null, CollisionShapeType.CYLINDER, true, wheelPos, Settings.wheelDensity);
 
         // turn cylinder axis from Z to X axis, as the car is oriented towards Z, and cylinder by default points to Z
         Quaternion Q = new Quaternion();
@@ -214,7 +216,7 @@ public class World implements Disposable {
             float x = (float) (Math.random()-0.5f)*(Settings.worldSize -15f);    // not too close to the edge
             float z = (float) (Math.random()-0.5f)*(Settings.worldSize -15f);
             float y = terrain.getHeight(x, z);
-            spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(x, y+5f, z));
+            spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(x, y+5f, z), 1f);
             stats.ufosSpawned++;
             ufoSpawnTimer = 15f;
         }
@@ -224,6 +226,7 @@ public class World implements Disposable {
     public void update( float deltaTime ) {
 
         stats.gameTime += deltaTime;
+        stats.speed = (int)cars.get(0).speedKPH;
         ufoSpawner(deltaTime);
         userCarController.update(deltaTime);
 

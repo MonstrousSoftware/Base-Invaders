@@ -35,7 +35,7 @@ public class GameView implements Disposable {
     private ParticleEffects particleEffects = null;
     private FrameBuffer fbo;
     private PostFilter postFilter;
-    private boolean useFBO = false;
+    public boolean useFBO = true;
 
     // if the view is an overlay, we don't clear screen on render, only depth buffer
     //

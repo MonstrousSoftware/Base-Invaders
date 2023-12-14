@@ -72,7 +72,7 @@ public class GameScreen extends ScreenAdapter {
 
         instrumentWorld = new World();
 
-        instrumentWorld.spawnObject(GameObjectType.TYPE_STATIC, "dial", null, CollisionShapeType.BOX, false, new Vector3(1,1,1));
+        instrumentWorld.spawnObject(GameObjectType.TYPE_STATIC, "dial", null, CollisionShapeType.BOX, false, new Vector3(1,1,1), 1f);
         instrumentView = new GameView(instrumentWorld,true, 0.1f, 10f);
     }
 

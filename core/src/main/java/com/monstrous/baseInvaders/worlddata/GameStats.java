@@ -7,6 +7,7 @@ public class GameStats {
     public int numEnemies;
     public boolean levelComplete;
     public int ufosSpawned;
+    public int speed;
 
     public GameStats() {
         reset();
@@ -19,5 +20,6 @@ public class GameStats {
         numEnemies = 0;
         ufosSpawned = 0;
         levelComplete = false;
+        speed = 0;
     }
 }

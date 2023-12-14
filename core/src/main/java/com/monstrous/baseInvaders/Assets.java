@@ -3,6 +3,7 @@ package com.monstrous.baseInvaders;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
 import net.mgsx.gltf.loaders.gltf.GLTFAssetLoader;
@@ -29,6 +30,7 @@ public class Assets implements Disposable {
     public AssetSounds sounds;
     public Skin skin;
     public SceneAsset sceneAsset;
+    public BitmapFont uiFont;
 
     private AssetManager assets;
 
@@ -38,7 +40,7 @@ public class Assets implements Disposable {
 
         assets.load("ui/uiskin.json", Skin.class);
 
-       // assets.load("font/Amble-Regular-26.fnt", BitmapFont.class);
+        assets.load("font/Gasoek32.fnt", BitmapFont.class);
 
         assets.setLoader(SceneAsset.class, ".gltf", new GLTFAssetLoader());
         assets.load( Settings.GLTF_FILE, SceneAsset.class);
@@ -74,7 +76,7 @@ public class Assets implements Disposable {
     private void initConstants() {
         sounds = new AssetSounds();
         skin = assets.get("ui/uiskin.json");
-//        uiFont = assets.get("font/Amble-Regular-26.fnt");
+        uiFont = assets.get("font/Gasoek32.fnt");
         sceneAsset = assets.get(Settings.GLTF_FILE);
 //        scopeImage = assets.get("images/scope.png");
     }

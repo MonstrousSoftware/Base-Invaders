@@ -1,7 +1,9 @@
 package com.monstrous.baseInvaders.gui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -10,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.monstrous.baseInvaders.input.UserCarController;
+import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.World;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
@@ -31,6 +34,7 @@ public class GUI implements Disposable {
     private int numTechItems = 0;
     private Label timeLabel;
     private Label fpsLabel;
+    private Label speedLabel;
     private final StringBuffer sb;
 
 
@@ -48,10 +52,13 @@ public class GUI implements Disposable {
     private void rebuild() {
         String style = "window";
 
+        BitmapFont bitmapFont= Main.assets.uiFont;
+        Label.LabelStyle labelStyle = new Label.LabelStyle(bitmapFont, Color.BLUE);
+
         stage.clear();
-        rpmValue = new Label("", skin, style);
-        gearValue = new Label("", skin, style);
-        steerAngleValue = new Label("", skin, style);
+        rpmValue = new Label("", labelStyle);
+        gearValue = new Label("",labelStyle);
+        steerAngleValue = new Label("",labelStyle);
 
         Table table = new Table();
         table.top().left();               // make content move to top left
@@ -60,13 +67,13 @@ public class GUI implements Disposable {
 
         Table stats = new Table();
         stats.setBackground(skin.getDrawable("black"));
-        stats.add(new Label("RPM (W/S) : ", skin, style));
+        stats.add(new Label("RPM (W/S) : ", labelStyle));
         stats.add(rpmValue);
         stats.row();
-        stats.add(new Label("Gear (UP/DN) :", skin, style));
+        stats.add(new Label("Gear (UP/DN) :", labelStyle));
         stats.add(gearValue);
         stats.row();
-        stats.add(new Label("Steer angle (A/D) : ", skin, style));
+        stats.add(new Label("Steer angle (A/D) : ", labelStyle));
         stats.add(steerAngleValue);
         stats.row();
 
@@ -81,13 +88,15 @@ public class GUI implements Disposable {
 
         Table screenTable2 = new Table();
         screenTable2.setFillParent(true);
-        timeLabel = new Label("00:00", skin);
-        fpsLabel = new Label("0", skin);
+        timeLabel = new Label("00:00", labelStyle);
+        fpsLabel = new Label("0", labelStyle);
+        speedLabel = new Label("0", labelStyle);
         screenTable2.add().top();
         screenTable2.add();
         screenTable2.add(timeLabel).top().right().expand().row();
-        screenTable2.add(new Label("FPS : ", skin)).bottom().left();
+        screenTable2.add(new Label("FPS : ", labelStyle)).bottom().left();
         screenTable2.add(fpsLabel).bottom().left().expandX();
+        screenTable2.add(speedLabel).bottom().right();
 
         stage.addActor(screenTable2);
 
@@ -135,6 +144,10 @@ public class GUI implements Disposable {
             sb.append("0");
         sb.append(ss);
         timeLabel.setText(sb.toString());
+
+        sb.setLength(0);
+        sb.append(world.stats.speed);
+        speedLabel.setText(sb.toString());
     }
 
 

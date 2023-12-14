@@ -1,12 +1,15 @@
 package com.monstrous.baseInvaders.worlddata;
 
 import com.badlogic.gdx.math.Vector3;
+import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.physics.CollisionShapeType;
 
 
 public class Populator {
 
     public static void populate(World world) {
+
+
         world.clear();
 
         //world.spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(32, 8, 40));
@@ -16,7 +19,7 @@ public class Populator {
         //
         //world.spawnObject(GameObjectType.TYPE_STATIC, "groundbox", null, CollisionShapeType.MESH, false, Vector3.Zero);
 
-        world.spawnObject(GameObjectType.TYPE_TERRAIN, "groundbox", null, CollisionShapeType.MESH, false, Vector3.Zero);
+        world.spawnObject(GameObjectType.TYPE_TERRAIN, "groundbox", null, CollisionShapeType.MESH, false, Vector3.Zero, 1f);
 
 
         // world.spawnObject(GameObjectType.TYPE_STATIC, "ramp", null, CollisionShapeType.MESH, false, Vector3.Zero);
@@ -33,18 +36,20 @@ public class Populator {
        // world.spawnObject(GameObjectType.TYPE_PICKUP_ITEM, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(32, 2, 5));
 
 
-        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(0, 0, 0));
-        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(10, 0, 0));
-
-        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(20, 0, 0));
-
+        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(0, 0, -100), 1f);
+        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(10, 0, -100), 1f);
+        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(20, 0, -100), 1f);
 
 
-        world.spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.CYLINDER, true,new Vector3(8,1,5));
+
+        world.spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.CYLINDER, true,new Vector3(8,1,5), Settings.wheelDensity);
 
         Vector3 carPos = new Vector3(5,3,5);
 
-        GameObject go = world.spawnObject(GameObjectType.TYPE_PLAYER, "mustang","mustangProxy", CollisionShapeType.MESH, true, carPos);
+
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(20,3,-40), Settings.chassisDensity);
+
+        GameObject go = world.spawnObject(GameObjectType.TYPE_PLAYER, "mustang","mustangProxy", CollisionShapeType.MESH, true, carPos, Settings.chassisDensity);
         world.setPlayer(go);
     }
 }

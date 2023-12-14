@@ -17,14 +17,13 @@ public class Car {
 
     public static float MAX_RPM = 8000;
     public static float RPM_REV = 2000f;     // rpm increase per second
-    public static float SHAFT_LATENCY = 10f;
+    public static float SHAFT_LATENCY = 100f;
 
-    public static float[] gearRatios = { -1.5f, 0, 1f, 3f, 4f, 5.5f, 7f };      // for testing, to tune
-
-    //public static float[] gearRatios = { -0.2f, 0, 0.2f, 1, 3, 4, 5 };      // for testing, to tune
+    public static float[] gearRatios = { -3f, 0, 3f, 2f, 1.5f, 1f, 0.5f };      // for testing, to tune
 
     public float gearRatio;
     public float driveShaftRPM;
+    public float speedKPH;
     private CarState carState;
     private float prevRPM = -1;
     private boolean brakeSound = false;
@@ -83,7 +82,10 @@ public class Car {
         gearRatio = gearRatios[carState.gear+1];     // +1 because of the reverse gear
 
         // have drive shaft rotation lag behind gear shifts so that the car doesn't abruptly stop when shifting to neutral
-        float targetDriveshaftRPM = carState.rpm * gearRatio;
+        float targetDriveshaftRPM = carState.rpm/gearRatio;
+
+        if(targetDriveshaftRPM >= 16000)
+            Gdx.app.log("top rpm","");
         if(targetDriveshaftRPM > driveShaftRPM)
             driveShaftRPM += SHAFT_LATENCY;
         else if (targetDriveshaftRPM < driveShaftRPM)
@@ -92,6 +94,7 @@ public class Car {
             driveShaftRPM = targetDriveshaftRPM;
 
         float speed = chassisObject.body.getVelocity().len(); //?   is this local coord?
+
         float rollAngVel = 2*speed / ((float)Math.PI *  Settings.wheelRadius); //??
 
         float wav = 0.01f*driveShaftRPM;
@@ -104,6 +107,8 @@ public class Car {
             rollAngVel = 0;
 
         updateJoints(steerAngle, wav, rollAngVel);
+
+        speedKPH = speed*3.6f;  // m/s to km/h
     }
 
     private void updateJoints(float steerAngle, float wheelAngularVelocity, float rollAngVel) {
