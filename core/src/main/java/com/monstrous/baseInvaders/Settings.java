@@ -3,6 +3,8 @@ package com.monstrous.baseInvaders;
 
 public class Settings {
     static public boolean supportControllers = true;       // disable in case it causes issues
+    static public boolean fullScreen = false;
+
     static public float verticalReadjustSpeed = 4f;
 
 
@@ -61,5 +63,5 @@ public class Settings {
     static public final String GLTF_FILE = "models/baseinvaders.gltf";
 
     static public float chunkSize = 256f;
-    static public float worldSize = 256f;
+    static public float worldSize = 1024f;
 }

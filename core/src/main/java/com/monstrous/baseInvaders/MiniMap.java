@@ -29,6 +29,7 @@ public class MiniMap implements Disposable {
     private Texture heightMap;
     private final Vector3 position;
     private Texture carMarker;
+    private Texture jeepMarker;
     private Texture techMarker;
 
     public MiniMap(float worldWidth, float worldDepth) {
@@ -38,6 +39,7 @@ public class MiniMap implements Disposable {
         fboMiniMap = new FrameBuffer(Pixmap.Format.RGBA8888, mapSize, mapSize, true);
         mapFrame = new Texture(Gdx.files.internal("images/frame220.png"));
         carMarker = new Texture(Gdx.files.internal("textures/greenMarker.png"));
+        jeepMarker = new Texture(Gdx.files.internal("textures/orangeMarker.png"));
         techMarker = new Texture(Gdx.files.internal("textures/purpleMarker.png"));
         miniMapRect = new Rectangle();
         mapFrameRect = new Rectangle();
@@ -64,7 +66,7 @@ public class MiniMap implements Disposable {
 //        for(int i = 0; i < 4; i++)
 //            screenCorners[i] = new Vector3();
 
-        heightMap = new Texture(Gdx.files.internal("images/map.png"));
+        heightMap = new Texture(Gdx.files.internal("images/roundedRect.png"));
         position = new Vector3();
     }
 
@@ -89,17 +91,25 @@ public class MiniMap implements Disposable {
         batch.getProjectionMatrix().setToOrtho2D(0, 0, viewWidth, viewHeight);
     }
 
+    private Vector3 carPosition = new Vector3();
 
     public void update(Camera cam , World world) {
 
         //setScreenCorners(cam);
 
         fboMiniMap.begin();
-            Gdx.gl.glClearColor(0,0,0, 1);
+            Gdx.gl.glClearColor(0,0,0, 0.5f);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
             batch.begin();
-            batch.draw(heightMap,0,0, viewWidth, viewHeight);
+           // batch.draw(heightMap,0,0, viewWidth, viewHeight);
+
+            float cx = viewWidth/2f;
+            float cy = viewHeight/2f;
+
+            carPosition.set( world.getPlayer().getPosition() );
+            Vector3 carDirection =  world.getPlayer().getDirection();
+            float angle = (float)Math.atan2(carDirection.z, carDirection.x);
 
             for(int i = 0; i < world.getNumGameObjects(); i++) {
                 GameObject go = world.getGameObject(i);
@@ -107,14 +117,22 @@ public class MiniMap implements Disposable {
 
                     position.set(go.getPosition());
 
-                    float x = (position.x / Settings.worldSize) * viewWidth;
-                    float y = (position.z / Settings.worldSize) * viewHeight;
+                    float wx = (position.x - carPosition.x)/ Settings.worldSize;
+                    float wz = (position.z - carPosition.z)/ Settings.worldSize;
+
+                    float y = wx*(float)Math.cos(angle)+wz*(float)Math.sin(angle);
+                    float x = -wx*(float)Math.sin(angle)+wz*(float)Math.cos(angle);
+
+                    x *= viewWidth;
+                    y *= viewHeight;
                     Texture symbol = techMarker;
-                    if (go.type.isCar)
+                    if (go.type == GameObjectType.TYPE_PLAYER)
                         symbol = carMarker;
+                    else if (go.type == GameObjectType.TYPE_ENEMY_CAR)
+                        symbol = jeepMarker;
 
                     if (symbol != null)
-                        batch.draw(symbol, x, y, viewWidth/32f, viewWidth/32f);
+                        batch.draw(symbol, cx+x, cy+y, viewWidth/32f, viewWidth/32f);
                 }
             }
 
@@ -129,8 +147,9 @@ public class MiniMap implements Disposable {
 		TextureRegion s = new TextureRegion(fboMiniMap.getColorBufferTexture());
 		s.flip(false, true); // coordinate system in buffer differs from screen
 
-		batch.draw(mapFrame, mapFrameRect.x,  mapFrameRect.y,  mapFrameRect.width,  mapFrameRect.height);
+		//batch.draw(mapFrame, mapFrameRect.x,  mapFrameRect.y,  mapFrameRect.width,  mapFrameRect.height);
 		batch.draw(s, miniMapRect.x,  miniMapRect.y,  miniMapRect.width,  miniMapRect.height);
+
 
 		batch.end();
     }

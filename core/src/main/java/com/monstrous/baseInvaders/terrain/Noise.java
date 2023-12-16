@@ -1,5 +1,7 @@
 package com.monstrous.baseInvaders.terrain;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.math.Vector2;
 
 public class Noise {
@@ -74,7 +76,14 @@ public class Noise {
         float min = 9999f, max = -9999f;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float value = PerlinNoise(xoffset+(float)x/(float)gridscale, yoffset+(float)y/(float)gridscale);
+
+                float xf = xoffset+(float)x/(float)gridscale;
+                float yf = yoffset+(float)y/(float)gridscale;
+                if(x == 0)
+                    Gdx.app.log("xfirst", ""+xf);
+                if(x == width-1)
+                    Gdx.app.log("xlast", ""+xf);
+                float value = PerlinNoise(xf, yf);
                 noise[y][x] = value;
                 if(value < min)
                     min = value;
@@ -84,11 +93,11 @@ public class Noise {
         }
 
         // normalize
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                noise[y][x] = (noise[y][x]-min)/(max - min);
-            }
-        }
+//        for (int y = 0; y < height; y++) {
+//            for (int x = 0; x < width; x++) {
+//                noise[y][x] = (noise[y][x]-min)/(max - min);
+//            }
+//        }
         return noise;
 
     }
@@ -158,6 +167,23 @@ public class Noise {
 
 
 
+    // from tests/g3d/voxel/PerlinNoiseGenerator.java
+    public Pixmap generatePixmap (float [][] map, int size) {
+
+        Pixmap pixmap = new Pixmap(size, size, Pixmap.Format.RGBA8888);
+        int idx = 0;
+        for(int y = 0; y < size; y++) {
+            for(int x = 0; x < size; x++) {
+                byte val = (byte) (map[x][y] * 255f);
+
+                pixmap.getPixels().put(idx++, val);
+                pixmap.getPixels().put(idx++, val);
+                pixmap.getPixels().put(idx++, val);
+                pixmap.getPixels().put(idx++, (byte) 255);
+            }
+        }
+        return pixmap;
+    }
 
 
 }

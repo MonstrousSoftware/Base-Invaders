@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.monstrous.baseInvaders.Car;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.World;
@@ -23,7 +24,8 @@ public class GUI implements Disposable {
     private Skin skin;
     public Stage stage;
     private World world;
-    private UserCarController carController;
+    private Car car;
+    //private UserCarController carController;
     private Label rpmValue;
     private Label gearValue;
     private Label steerAngleValue;
@@ -38,9 +40,9 @@ public class GUI implements Disposable {
     private final StringBuffer sb;
 
 
-    public GUI(UserCarController carController, World world ) {
+    public GUI(Car car, World world ) {
         Gdx.app.log("GUI constructor", "");
-        this.carController = carController;
+        this.car = car;
         this.world = world;
         skin = new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
         stage = new Stage(new ScreenViewport());
@@ -157,15 +159,15 @@ public class GUI implements Disposable {
 
         timer -= deltaTime;
         if(timer <= 0) {
-            rpmValue.setText((int)carController.rpm);
-            steerAngleValue.setText((int) carController.steerAngle);
+            rpmValue.setText((int)car.rpm);
+            steerAngleValue.setText((int) car.steerAngle);
             //car.transform.getTranslation(tmpVec);
-            if(carController.gear == -1)
+            if(car.gear == -1)
                 gearValue.setText("R");
-            else if(carController.gear == 0)
+            else if(car.gear == 0)
                 gearValue.setText("N");
             else
-                gearValue.setText(carController.gear);
+                gearValue.setText(car.gear);
             timer = 0.25f;
         }
     }

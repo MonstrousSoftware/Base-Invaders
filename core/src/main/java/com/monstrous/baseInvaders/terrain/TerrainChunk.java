@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.GeometryUtils;
-import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.math.collision.Ray;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.Settings;
@@ -17,26 +14,40 @@ import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 
 public class TerrainChunk implements Disposable {
 
-    public static final int MAP_SIZE = 129;     // grid size
+    public static final int MAP_SIZE = 16;     // grid size
     public static final float SCALE  = Settings.chunkSize;       // terrain size
-    public static final float AMPLITUDE  = 0f;
+    public static final float AMPLITUDE  = 20f;
+    public static final float GRID_SCALE = 16;
 
+
+    public GridPoint2 coord;
     private Model model;
     private ModelInstance modelInstance;
     private float heightMap[][];
     private float vertPositions[];  // for collision detection, 3 floats per vertex
     private short indices[];    // 3 indices per triangle
     private int numIndices;
-    private Vector3 normalVectors[][] = new Vector3[MAP_SIZE][MAP_SIZE];
+    private Vector3 normalVectors[][] = new Vector3[MAP_SIZE+1][MAP_SIZE+1];
     private Vector3 position; // position of terrain in world coordinates
+    private Texture heightMapTexture;
 
 
     public TerrainChunk(int xoffset, int yoffset) {
+        this.coord = new GridPoint2(xoffset, yoffset);
         Noise noise = new Noise();
 
-        heightMap = noise.generatePerlinMap( MAP_SIZE, MAP_SIZE, xoffset, yoffset, 16);
-        for (int y = 0; y < MAP_SIZE; y++)
-            for (int x = 0; x < MAP_SIZE; x++)
+
+        heightMap = noise.generatePerlinMap( MAP_SIZE+1, MAP_SIZE+1, yoffset*((float)(MAP_SIZE))/GRID_SCALE,
+            xoffset*((float)(MAP_SIZE))/GRID_SCALE, (int)GRID_SCALE); //*TerrainChunk.MAP_SIZE/(float)GRID_SCALE
+
+        // convert height map to Texture for debugging
+        Pixmap pixmap = noise.generatePixmap(heightMap, MAP_SIZE+1);
+        heightMapTexture = new Texture(pixmap);
+
+
+
+        for (int y = 0; y <= MAP_SIZE; y++)
+            for (int x = 0; x <= MAP_SIZE; x++)
                 heightMap[y][x] *= AMPLITUDE;
 
 
@@ -55,8 +66,12 @@ public class TerrainChunk implements Disposable {
         material.set(PBRTextureAttribute.createBaseColorTexture(terrainTexture));
         material.set(PBRTextureAttribute.createNormalTexture(normalTexture));
 
-        model = makeGridModel(heightMap, SCALE, MAP_SIZE-1, GL20.GL_TRIANGLES, material);
+        model = makeGridModel(heightMap, SCALE, MAP_SIZE, GL20.GL_TRIANGLES, material);
         modelInstance =  new ModelInstance(model, position);
+    }
+
+    public Texture getHeightMapTexture() {
+        return heightMapTexture;
     }
 
     public ModelInstance getModelInstance() {

@@ -239,17 +239,20 @@ public class PhysicsBodyFactory implements Disposable {
 
     public void connectWheels(Car car, GameObject chassis, GameObject w0,GameObject w1,GameObject w2,GameObject w3 ) {
 
+        // todo also add weight below the car?
+
         car.joints =new DHinge2Joint[4];
         car.joints[0]=makeWheelJoint(chassis.body, w0.body,true);
         car.joints[1]=makeWheelJoint(chassis.body, w1.body,true);
         car.joints[2]=makeWheelJoint(chassis.body, w2.body,false);
         car.joints[3]=makeWheelJoint(chassis.body, w3.body,false);
         car.chassisObject =chassis;
+        chassis.body.geom.getBody().setAutoDisableFlag(false);
 
         // define surface properties for front and rear tyres
         //
         DContact.DSurfaceParameters frontSurface = new DContact.DSurfaceParameters();
-        frontSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM;// | dContactApprox1;
+        frontSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
         frontSurface.mu = Settings.mu;
         frontSurface.mu2 = Settings.mu2;
         frontSurface.slip1 = Settings.slip1;
@@ -261,7 +264,7 @@ public class PhysicsBodyFactory implements Disposable {
         w1.setSurface(frontSurface);
 
         DContact.DSurfaceParameters backSurface = new DContact.DSurfaceParameters();
-        backSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM; // | dContactApprox1;
+        backSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
         backSurface.mu = Settings.mu;
         backSurface.mu2 = Settings.mu2;
         backSurface.slip1 = Settings.slip1;
@@ -302,6 +305,7 @@ public class PhysicsBodyFactory implements Disposable {
             joint.setParam(DJoint.PARAM_N.dParamHiStop1, 0);             // idem
         } // don't put stops on steering wheels but rely on the car controller input for this
 
+        wheel.geom.getBody().setAutoDisableFlag(false);
         return joint;
     }
 }

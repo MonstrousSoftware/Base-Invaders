@@ -9,11 +9,17 @@
 - light to highlight eg alien tech
 - juicy text-overs
 - ufo path
-- enemy vehciles
+- enemy vehciles Car subclass
 - shooting
 - score, driving overhead
 - do we want fog?
+- map oriented with car
 
+done- minimap position
+done- minimap transparent, rotate
+- bigger terrain
+- gear shift more smoothly
+- roll over, wheelies
 
 
 

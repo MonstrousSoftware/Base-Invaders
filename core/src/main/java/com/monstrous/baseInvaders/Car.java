@@ -21,10 +21,15 @@ public class Car {
 
     public static float[] gearRatios = { -3f, 0, 3f, 2f, 1.5f, 1f, 0.5f };      // for testing, to tune
 
+    public int gear; // -1, 0, 1, 2, 3, ... MAX_GEAR
+    public float steerAngle;
+    public float rpm;
+    public boolean braking;
+
     public float gearRatio;
     public float driveShaftRPM;
     public float speedKPH;
-    private CarState carState;
+    //private CarState carState;
     private float prevRPM = -1;
     private boolean brakeSound = false;
     private long engineId;
@@ -32,40 +37,44 @@ public class Car {
     public DHinge2Joint[] joints;      // 4 for 4 wheels
     public GameObject chassisObject;
 
-    public Car(CarState carState) {
-        this.carState = carState;
+    public Car() {
+        gear = 1;
+        steerAngle = 15f;
+        rpm = 1000;
+
+//        this.carState = carState;
     }
 
 
     private void startStopSound(){
-        if(carState.rpm > 0 && prevRPM == 0)
+        if(rpm > 0 && prevRPM == 0)
             engineId = Main.assets.sounds.ENGINE.loop();
-        else if(carState.rpm == 0 && prevRPM > 0) {
+        else if(rpm == 0 && prevRPM > 0) {
             Main.assets.sounds.ENGINE.stop();
         }
-        if(!brakeSound && carState.braking && carState.rpm > 0) {
+        if(!brakeSound && braking && rpm > 0) {
             Main.assets.sounds.BRAKE.play();
             brakeSound = true;
         }
-        if(carState.rpm == 0)
+        if(rpm == 0)
             brakeSound = false;
-        prevRPM = carState.rpm;
+        prevRPM = rpm;
 
-        if(carState.rpm > 0) {
-            Main.assets.sounds.ENGINE.setPitch(engineId, carState.rpm / 6000f  );
+        if(rpm > 0) {
+            Main.assets.sounds.ENGINE.setPitch(engineId, rpm / 6000f  );
         }
 
     }
 
     // automatic gear shifts....
     private void checkForGearChange(){
-        if(carState.rpm > 7000 && carState.gear < MAX_GEAR && carState.gear != REVERSE_GEAR) {
-            carState.gear++;
-            carState.rpm = 1000;
+        if(rpm > 7000 && gear < MAX_GEAR && gear != REVERSE_GEAR) {
+            gear++;
+            rpm = 1000;
         }
-        if(carState.rpm < 1000 && carState.gear > 1) {
-            carState.gear--;
-            carState.rpm = 7000;
+        if(rpm < 1000 && gear > 1) {
+            gear--;
+            rpm = 7000;
         }
 
     }
@@ -77,12 +86,12 @@ public class Car {
         checkForGearChange();
 
 
-        //carState.update(deltaTime);
+        //update(deltaTime);
 
-        gearRatio = gearRatios[carState.gear+1];     // +1 because of the reverse gear
+        gearRatio = gearRatios[gear+1];     // +1 because of the reverse gear
 
         // have drive shaft rotation lag behind gear shifts so that the car doesn't abruptly stop when shifting to neutral
-        float targetDriveshaftRPM = carState.rpm/gearRatio;
+        float targetDriveshaftRPM = rpm/gearRatio;
 
         if(targetDriveshaftRPM >= 16000)
             Gdx.app.log("top rpm","");
@@ -90,7 +99,7 @@ public class Car {
             driveShaftRPM += SHAFT_LATENCY;
         else if (targetDriveshaftRPM < driveShaftRPM)
             driveShaftRPM -= SHAFT_LATENCY;
-        if(carState.braking)
+        if(braking)
             driveShaftRPM = targetDriveshaftRPM;
 
         float speed = chassisObject.body.getVelocity().len(); //?   is this local coord?
@@ -99,14 +108,14 @@ public class Car {
 
         float wav = 0.01f*driveShaftRPM;
 
-        float steerAngle = -carState.steerAngle;
+        //steerAngle = -steerAngle;
 //        steerAngle *= (15f-speed)/15f;                      // reduce steer angle at high speeds
         //Gdx.app.log("speed", ""+speed);
 
-        if(carState.braking)
+        if(braking)
             rollAngVel = 0;
 
-        updateJoints(steerAngle, wav, rollAngVel);
+        updateJoints(-steerAngle, wav, rollAngVel);
 
         speedKPH = speed*3.6f;  // m/s to km/h
     }
@@ -138,8 +147,8 @@ public class Car {
                 j2.setParamVel2(wheelAngularVelocity);
 
             }
-            j2.getBody(0).enable();
-            j2.getBody(1).enable();
+//            j2.getBody(0).enable();
+//            j2.getBody(1).enable();
         }
     }
 

@@ -15,6 +15,7 @@ public class UserCarController extends CarState implements InputProcessor {
     public static float MAX_STEER_ANGLE =  45;        // degrees
     public static float BRAKE_RPM_SCALE = 5f;
 
+    private Car car;
     private boolean leftPressed;
     private boolean rightPressed;
     private boolean forwardPressed;
@@ -23,7 +24,9 @@ public class UserCarController extends CarState implements InputProcessor {
     private boolean reversing;
 
 
-    public UserCarController() {
+    public UserCarController( Car car )
+    {
+        this.car = car;
         reset();
     }
 
@@ -33,35 +36,35 @@ public class UserCarController extends CarState implements InputProcessor {
         forwardPressed = false;
         backwardPressed = false;
         gearShift = 0;
-        gear = 1;
-        steerAngle = 0;
-        rpm = 0;
+        car.gear = 1;
+        car.steerAngle = 0;
+        car.rpm = 0;
         reversing = false;
     }
 
     public void update(float deltaTime) {
 
         // Steering
-        if(leftPressed &&steerAngle<MAX_STEER_ANGLE)
+        if(leftPressed && car.steerAngle<MAX_STEER_ANGLE)
         {
-            steerAngle += STEER_SPEED*deltaTime;
+            car.steerAngle += STEER_SPEED*deltaTime;
         }
-        if(rightPressed &&steerAngle  >-MAX_STEER_ANGLE)
+        if(rightPressed && car.steerAngle  >-MAX_STEER_ANGLE)
         {
-            steerAngle -= STEER_SPEED*deltaTime;
+            car.steerAngle -= STEER_SPEED*deltaTime;
         }
         // Accelerator
-        braking = (backwardPressed && !reversing) || (forwardPressed && reversing);
+        car.braking = (backwardPressed && !reversing) || (forwardPressed && reversing);
         if(forwardPressed) {
             if(!reversing){
-                if(rpm < Car.MAX_RPM)
-                    rpm += Car.RPM_REV * deltaTime;
+                if(car.rpm < Car.MAX_RPM)
+                    car.rpm += Car.RPM_REV * deltaTime;
             }else {
-                if( rpm > 0) {
-                    rpm-=BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
+                if( car.rpm > 0) {
+                    car.rpm-=BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
                 }
                 else {
-                    gear = 1;
+                    car.gear = 1;
                     reversing = false;
                 }
             }
@@ -69,30 +72,30 @@ public class UserCarController extends CarState implements InputProcessor {
         else {
             if (backwardPressed) {
                 if (reversing) {
-                    if (rpm < Car.MAX_RPM)
-                        rpm += Car.RPM_REV * deltaTime;
+                    if (car.rpm < Car.MAX_RPM)
+                        car.rpm += Car.RPM_REV * deltaTime;
                 } else {
-                    if (rpm > 0)    // braking
-                        rpm -= BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
+                    if (car.rpm > 0)    // braking
+                        car.rpm -= BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
                     else {
-                        gear = -1;
+                        car.gear = -1;
                         reversing = true;
                     }
                 }
             } else {
-                if (rpm > 0) {  // coasting
-                    rpm -= Car.RPM_REV * 3f * deltaTime;
+                if (car.rpm > 0) {  // coasting
+                    car.rpm -= Car.RPM_REV * 3f * deltaTime;
                 }
             }
         }
-        rpm = MathUtils.clamp(rpm, 0, Car.MAX_RPM);
+        car.rpm = MathUtils.clamp(car.rpm, 0, Car.MAX_RPM);
 
 
         int gearShift = getGearShift();
-        if(gearShift > 0  && gear < Car.MAX_GEAR)
-            gear++;
-        else if(gearShift < 0 && gear > -1)
-            gear--;
+        if(gearShift > 0  && car.gear < Car.MAX_GEAR)
+            car.gear++;
+        else if(gearShift < 0 && car.gear > -1)
+            car.gear--;
     }
 
 

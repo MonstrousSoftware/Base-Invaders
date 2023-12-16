@@ -3,6 +3,7 @@ package com.monstrous.baseInvaders;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
@@ -17,12 +18,14 @@ public class Assets implements Disposable {
         public final Sound ENGINE;
         public final Sound BRAKE;
         public final Sound PICK_UP;
+        public final Sound MENU_CLICK;
 
 
         public AssetSounds() {
             ENGINE = assets.get("sound/engine-6000.ogg");
             BRAKE = assets.get("sound/brake.ogg");
             PICK_UP = assets.get("sound/pick-up-sfx.ogg");
+            MENU_CLICK = assets.get("sound/click_002.ogg");
 
         }
     }
@@ -48,11 +51,16 @@ public class Assets implements Disposable {
         assets.load("sound/engine-6000.ogg", Sound.class);
         assets.load("sound/brake.ogg", Sound.class);
         assets.load("sound/pick-up-sfx.ogg", Sound.class);
+        assets.load("sound/click_002.ogg", Sound.class);
+
 //        assets.load("sound/hit1.ogg", Sound.class);
 //        assets.load("sound/jump1.ogg", Sound.class);
 //        assets.load("sound/secret1.ogg", Sound.class);
 //        assets.load("sound/upgrade1.ogg", Sound.class);
 //        assets.load("sound/9mm-pistol-shoot-short-reverb-7152.mp3", Sound.class);
+
+        assets.load("images/title.png", Texture.class);
+
 
     }
 

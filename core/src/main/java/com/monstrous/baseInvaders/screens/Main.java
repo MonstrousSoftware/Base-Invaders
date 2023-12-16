@@ -3,7 +3,6 @@ package com.monstrous.baseInvaders.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.monstrous.baseInvaders.Assets;
-import com.monstrous.baseInvaders.GameScreen;
 import com.monstrous.baseInvaders.Settings;
 
 import static com.badlogic.gdx.Application.ApplicationType.Desktop;

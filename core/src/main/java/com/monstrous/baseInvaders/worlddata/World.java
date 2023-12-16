@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.Car;
+import com.monstrous.baseInvaders.input.AICarController;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
@@ -27,15 +28,17 @@ public class World implements Disposable {
     private final SceneAsset sceneAsset;
     private final PhysicsWorld physicsWorld;
     private final PhysicsBodyFactory factory;
-    private final UserCarController userCarController;
+    private UserCarController userCarController;
     public final PhysicsRayCaster rayCaster;
-    private Car theCar;
-    private TerrainChunk terrain;
+    private Car playerCar;
+    public Terrain terrain;
     private Scenery scenery;
     private float ufoSpawnTimer;
 
 
     public World() {
+        Gdx.app.log("world", "constructor");
+
         gameObjects = new Array<>();
         cars = new Array<>();
         stats = new GameStats();
@@ -46,9 +49,12 @@ public class World implements Disposable {
         physicsWorld = new PhysicsWorld(this);
         factory = new PhysicsBodyFactory(physicsWorld);
         rayCaster = new PhysicsRayCaster(physicsWorld);
-        userCarController = new UserCarController();
-        terrain = new TerrainChunk(0,0);
+        //userCarController = nullnew UserCarController();
+        terrain = new Terrain();
         scenery = new Scenery(this);
+
+        playerCar = new Car();
+        userCarController = new UserCarController(playerCar);
 
     }
 
@@ -59,7 +65,6 @@ public class World implements Disposable {
         gameObjects.clear();
         cars.clear();
         player = null;
-        userCarController.reset();
         scenery.populate();
         ufoSpawnTimer = 3f;
     }
@@ -78,11 +83,14 @@ public class World implements Disposable {
 
     public void setPlayer(GameObject player) {
         this.player = player;
-        theCar = new Car(userCarController);
     }
 
+    public Car getPlayerCar() {
+        return playerCar;
+    }
 
     public UserCarController getUserCarController() {
+
         return userCarController;
     }
 
@@ -111,14 +119,15 @@ public class World implements Disposable {
     }
 
     private GameObject spawnTerrain() {
+        for(ModelInstance instance : terrain.instances) {
 
-        ModelInstance instance = terrain.getModelInstance();
-        Scene scene = new Scene(instance);
-        PhysicsBody body = factory.createBody(scene.modelInstance,
-            CollisionShapeType.MESH, true, 1f);
-        GameObject go = new GameObject(GameObjectType.TYPE_TERRAIN, scene, body);
-        gameObjects.add(go);
-        return go;
+            Scene scene = new Scene(instance);
+            PhysicsBody body = factory.createBody(scene.modelInstance,
+                CollisionShapeType.MESH, true, 1f);
+            GameObject go = new GameObject(GameObjectType.TYPE_TERRAIN, scene, body);
+            gameObjects.add(go);
+        }
+        return null;
     }
 
     private Vector3 tmpPosition = new Vector3();
@@ -144,7 +153,15 @@ public class World implements Disposable {
         gameObjects.add(w2);
         gameObjects.add(w3);
 
-        Car car = new Car(userCarController);
+        Car car;
+        if(chassis.type == GameObjectType.TYPE_PLAYER) {
+            car = playerCar;
+        }
+        else {// enemy car
+            //AICarController aiCarController = new AICarController();
+            car = new Car();
+        }
+
         factory.connectWheels(car, chassis, w0, w1, w2, w3);
         cars.add(car);
     }
@@ -201,7 +218,7 @@ public class World implements Disposable {
 
     public void removeObject(GameObject gameObject) {
         gameObject.health = 0;
-        if (gameObject.type == GameObjectType.TYPE_ENEMY)
+        if (gameObject.type == GameObjectType.TYPE_ENEMY_CAR)
             stats.numEnemies--;
         gameObjects.removeValue(gameObject, true);
         gameObject.dispose();
