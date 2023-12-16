@@ -3,21 +3,21 @@
 - done: car collision box is not well aligned
 
 - to do : keep shadow light close to view
-- done: keep camera behind car, zoom out when going fast
-- larger terrain, e.g. tiles & culling
-- done: hungry owl
+done- keep camera behind car, zoom out when going fast
+done- larger terrain, e.g. tiles & culling
+done: hungry owl
 - light to highlight eg alien tech
 - juicy text-overs
-- ufo path
+done - ufo path
 - enemy vehciles Car subclass
 - shooting
 - score, driving overhead
 - do we want fog?
-- map oriented with car
+done- map oriented with car
 
 done- minimap position
 done- minimap transparent, rotate
-- bigger terrain
+done- bigger terrain
 - gear shift more smoothly
 - roll over, wheelies
 

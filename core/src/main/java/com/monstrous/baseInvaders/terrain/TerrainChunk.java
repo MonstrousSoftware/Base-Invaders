@@ -14,10 +14,10 @@ import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 
 public class TerrainChunk implements Disposable {
 
-    public static final int MAP_SIZE = 32;     // grid size
+    public static final int MAP_SIZE = 128;     // size of map in grid cells per axis
     public static final float SCALE  = Settings.chunkSize;       // terrain size
-    public static final float AMPLITUDE  = 5f;
-    public static final float GRID_SCALE = 8;      // how many Perlin points across the map
+    public static final float AMPLITUDE  = 20f;
+    public static final float GRID_SCALE = 64;      // how many Perlin points across the map
 
 
     public GridPoint2 coord;
@@ -80,7 +80,9 @@ public class TerrainChunk implements Disposable {
 
     @Override
     public void dispose() {
+
         model.dispose();
+        heightMapTexture.dispose();
     }
 
 

@@ -61,10 +61,8 @@ public class GameView implements Disposable {
 //        sceneManager.setCascadeShadowMap(csm);
 
         // setup light
-//        DirectionalLightEx light = new DirectionalLightEx();
-
         DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
-            .setViewport(50,50,10f,100);
+            .setViewport(50,50,10f,500);
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
         light.intensity = 5f;
@@ -93,7 +91,7 @@ public class GameView implements Disposable {
 
             particleEffects = new ParticleEffects(cam);
 
-            particleEffects.addFire( new Vector3(6,8,6));
+            particleEffects.addFire( new Vector3(Settings.worldSize/2,8,Settings.worldSize/2));
         }
 
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 1500, 1500, true);
@@ -162,6 +160,12 @@ public class GameView implements Disposable {
 
         sceneManager.renderColors();
 
+        if (!isOverlay) {
+            particleEffects.update(delta);
+            particleEffects.render();
+        }
+
+
         if(useFBO) {
             fbo.end();
             // post-processing of game screen content : vignette effect and underwater wavy effect
@@ -171,10 +175,6 @@ public class GameView implements Disposable {
 
 
 
-        if (!isOverlay) {
-            particleEffects.update(delta);
-            particleEffects.render();
-        }
 
 
     }

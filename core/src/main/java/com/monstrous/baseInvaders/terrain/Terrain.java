@@ -12,6 +12,9 @@ import com.monstrous.baseInvaders.Settings;
 import java.util.HashMap;
 
 
+// The Terrain runs from [0 - Settings.worldSize] in x and in z
+// It is subdivided into chunks of size Settings.chunkSize
+
 public class Terrain implements Disposable {
 
 
@@ -26,13 +29,11 @@ public class Terrain implements Disposable {
         instances = new Array<>();
 
         int sideLength = (int) (Settings.worldSize / Settings.chunkSize);
-        int off = 0; //-(sideLength-1)/2;    // to center on chunk (0,0)
         Gdx.app.log("terrain", ""+sideLength+" x "+sideLength+ " chunks");
 
-        for (int cx = off; cx < sideLength+off; cx++) {
-            for (int cz = off; cz < sideLength+off; cz++) {
+        for (int cx = 0; cx < sideLength; cx++) {
+            for (int cz = 0; cz < sideLength; cz++) {
                 TerrainChunk chunk = new TerrainChunk(cx, cz);
-                //Gdx.app.error("generate chunk", "x:"+cx+", z:"+cz);
                 int key = makeKey(cx, cz);
                 chunks.put(key, chunk);
                 ModelInstance modelInstance = chunk.getModelInstance();
@@ -53,18 +54,23 @@ public class Terrain implements Disposable {
 //        return chunks.get(0).getModelInstance();
 //    }
 
+    // get terrain height at (x,z)
     public float getHeight(float x, float z) {
-        int cx = Math.round(x/Settings.chunkSize);
-        int cz = Math.round(z/Settings.chunkSize);
+        // work out what chunk we're in
+        // and the relative position for that chunk
+        //
+        int cx = (int)Math.floor(x/Settings.chunkSize);
+        int cz = (int)Math.floor(z/Settings.chunkSize);
         int key = makeKey(cx, cz);
         TerrainChunk chunk = chunks.get(key);
         if(chunk == null){
             Gdx.app.error("position outside chunks", "x:"+x+", z:"+z);
             return 0;
         }
-        return chunks.get(key).getHeight(x - cx*Settings.chunkSize, z - cz*Settings.chunkSize);
+        return chunk.getHeight(x - cx*Settings.chunkSize, z - cz*Settings.chunkSize);
     }
 
+    // debug map
     public void render() {
         batch.begin();
 
@@ -80,5 +86,6 @@ public class Terrain implements Disposable {
     public void dispose() {
         for(TerrainChunk chunk : chunks.values())
             chunk.dispose();
+        batch.dispose();
     }
 }
