@@ -14,10 +14,10 @@ import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 
 public class TerrainChunk implements Disposable {
 
-    public static final int MAP_SIZE = 16;     // grid size
+    public static final int MAP_SIZE = 32;     // grid size
     public static final float SCALE  = Settings.chunkSize;       // terrain size
-    public static final float AMPLITUDE  = 20f;
-    public static final float GRID_SCALE = 16;
+    public static final float AMPLITUDE  = 5f;
+    public static final float GRID_SCALE = 8;      // how many Perlin points across the map
 
 
     public GridPoint2 coord;
@@ -37,8 +37,8 @@ public class TerrainChunk implements Disposable {
         Noise noise = new Noise();
 
 
-        heightMap = noise.generatePerlinMap( MAP_SIZE+1, MAP_SIZE+1, yoffset*((float)(MAP_SIZE))/GRID_SCALE,
-            xoffset*((float)(MAP_SIZE))/GRID_SCALE, (int)GRID_SCALE); //*TerrainChunk.MAP_SIZE/(float)GRID_SCALE
+        heightMap = noise.generatePerlinMap( MAP_SIZE+1, MAP_SIZE+1, xoffset*((float)(MAP_SIZE))/GRID_SCALE,
+            yoffset*((float)(MAP_SIZE))/GRID_SCALE, (int)GRID_SCALE);
 
         // convert height map to Texture for debugging
         Pixmap pixmap = noise.generatePixmap(heightMap, MAP_SIZE+1);

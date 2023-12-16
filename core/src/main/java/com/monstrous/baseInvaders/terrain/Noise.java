@@ -79,10 +79,6 @@ public class Noise {
 
                 float xf = xoffset+(float)x/(float)gridscale;
                 float yf = yoffset+(float)y/(float)gridscale;
-                if(x == 0)
-                    Gdx.app.log("xfirst", ""+xf);
-                if(x == width-1)
-                    Gdx.app.log("xlast", ""+xf);
                 float value = PerlinNoise(xf, yf);
                 noise[y][x] = value;
                 if(value < min)

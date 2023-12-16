@@ -5,8 +5,10 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.input.CameraController;
+import com.monstrous.baseInvaders.worlddata.GameObject;
 import com.monstrous.baseInvaders.worlddata.World;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
@@ -113,16 +115,31 @@ public class GameView implements Disposable {
     }
 
 
-    public void refresh() {
-        sceneManager.getRenderableProviders().clear();        // remove all scenes
+//    private BoundingBox bbox = new BoundingBox();
 
+    private Vector3 pos = new Vector3();
+
+    public void refresh(Camera cam) {
+        sceneManager.getRenderableProviders().clear();        // remove all scenes
+        int count = 0;
         // add scene for each game object
+
         int num = world.getNumGameObjects();
         for(int i = 0; i < num; i++){
-            Scene scene = world.getGameObject(i).scene;
-            if (world.getGameObject(i).visible)
+            GameObject go = world.getGameObject(i);
+            if (!go.visible)
+                continue;
+
+            go.boundingBox.getCenter(pos);
+            pos.add( go.getPosition() );
+
+            if(!go.type.isStatic || cam.frustum.boundsInFrustum(pos, go.dimensions)) {
+                Scene scene = world.getGameObject(i).scene;
                 sceneManager.addScene(scene, false);
+                count++;
+            }
         }
+        world.stats.itemsRendered = count;
     }
 
     public void render(float delta ) {
@@ -134,7 +151,7 @@ public class GameView implements Disposable {
 //        DirectionalShadowLight shadowLight = sceneManager.getFirstDirectionalShadowLight();
 //        csm.setCascades(sceneManager.camera, shadowLight, 400f, 3f);
 
-            refresh();
+            refresh(cam);
             sceneManager.update(delta);
         }
         sceneManager.renderShadows();

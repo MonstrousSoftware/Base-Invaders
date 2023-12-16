@@ -44,10 +44,10 @@ public class Populator {
 
         world.spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.CYLINDER, true,new Vector3(8,10,5), Settings.wheelDensity);
 
-        Vector3 carPos = new Vector3(5,8,5);
+        Vector3 carPos = new Vector3(Settings.worldSize/2,8,Settings.worldSize/2);
 
 
-        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(20,18,-40), Settings.chassisDensity);
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(120,18,160), Settings.chassisDensity);
 
         GameObject go = world.spawnObject(GameObjectType.TYPE_PLAYER, "mustang","mustangProxy", CollisionShapeType.MESH, true, carPos, Settings.chassisDensity);
         world.setPlayer(go);

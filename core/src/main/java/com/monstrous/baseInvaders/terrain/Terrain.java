@@ -26,14 +26,17 @@ public class Terrain implements Disposable {
         instances = new Array<>();
 
         int sideLength = (int) (Settings.worldSize / Settings.chunkSize);
+        int off = 0; //-(sideLength-1)/2;    // to center on chunk (0,0)
+        Gdx.app.log("terrain", ""+sideLength+" x "+sideLength+ " chunks");
 
-        for (int cx = 0; cx < sideLength; cx++) {
-            for (int cz = 0; cz < sideLength; cz++) {
+        for (int cx = off; cx < sideLength+off; cx++) {
+            for (int cz = off; cz < sideLength+off; cz++) {
                 TerrainChunk chunk = new TerrainChunk(cx, cz);
+                //Gdx.app.error("generate chunk", "x:"+cx+", z:"+cz);
                 int key = makeKey(cx, cz);
                 chunks.put(key, chunk);
                 ModelInstance modelInstance = chunk.getModelInstance();
-                modelInstance.transform.translate(cz * Settings.chunkSize, 0, cx * Settings.chunkSize);
+                modelInstance.transform.translate(cx * Settings.chunkSize, 0, cz * Settings.chunkSize);
                 instances.add(modelInstance);
             }
         }
@@ -51,16 +54,22 @@ public class Terrain implements Disposable {
 //    }
 
     public float getHeight(float x, float z) {
-        return chunks.get(0).getHeight(x, z);
+        int cx = Math.round(x/Settings.chunkSize);
+        int cz = Math.round(z/Settings.chunkSize);
+        int key = makeKey(cx, cz);
+        TerrainChunk chunk = chunks.get(key);
+        if(chunk == null){
+            Gdx.app.error("position outside chunks", "x:"+x+", z:"+z);
+            return 0;
+        }
+        return chunks.get(key).getHeight(x - cx*Settings.chunkSize, z - cz*Settings.chunkSize);
     }
 
     public void render() {
         batch.begin();
 
-
-
         for(TerrainChunk chunk : chunks.values()) {
-            batch.draw(chunk.getHeightMapTexture(), chunk.coord.x*(TerrainChunk.MAP_SIZE+1), (3-chunk.coord.y)*(TerrainChunk.MAP_SIZE+1));
+            batch.draw(chunk.getHeightMapTexture(), chunk.coord.y*(TerrainChunk.MAP_SIZE+1), (3-chunk.coord.x)*(TerrainChunk.MAP_SIZE+1));
         }
 
         batch.end();

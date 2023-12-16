@@ -51,7 +51,7 @@ public class GameScreen extends ScreenAdapter {
         world = new World();
 
         Populator.populate(world);
-        gameView = new GameView(world,false, 1.0f, 300f);
+        gameView = new GameView(world,false, 1.0f, 3000f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
 
         physicsView = new PhysicsView(world);
@@ -141,7 +141,7 @@ public class GameScreen extends ScreenAdapter {
 
         minimap.render();
 
-        world.terrain.render();
+        //world.terrain.render();       // debug
 
         gui.render(delta);
 
