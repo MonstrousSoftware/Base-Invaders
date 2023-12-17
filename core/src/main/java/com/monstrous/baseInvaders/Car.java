@@ -10,7 +10,6 @@ import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.GameObject;
 
 import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
-import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.dContactApprox1;
 //import org.ode4j.ode.DHinge2Joint;
 
 
@@ -37,7 +36,7 @@ public class Car {
 
     public float gearRatio;
     public float driveShaftRPM;
-    public float speedKPH;
+    public float speedMPH;
     //private CarState carState;
     private float prevRPM = -1;
     private boolean brakeSound = false;
@@ -110,6 +109,7 @@ public class Car {
 
     }
 
+    private Vector3 v = new Vector3();
 
     public void update(float deltaTime ){
 
@@ -132,7 +132,9 @@ public class Car {
         if(braking)
             driveShaftRPM = targetDriveshaftRPM;
 
-        float speed = chassisObject.body.getVelocity().len(); //?   is this local coord?
+        v.set(chassisObject.body.getVelocity());
+        //v.y = 0; // look only at horizontal
+        float speed = v.dot(chassisObject.direction);
 
         float rollAngVel = 2*speed / ((float)Math.PI *  Settings.wheelRadius); //??
 
@@ -147,7 +149,7 @@ public class Car {
 
         updateJoints(-steerAngle, wav, rollAngVel);
 
-        speedKPH = speed*3.6f;  // m/s to km/h
+        speedMPH = speed*2.23f;  // m/s to miles/h
     }
 
     private void updateJoints(float steerAngle, float wheelAngularVelocity, float rollAngVel) {

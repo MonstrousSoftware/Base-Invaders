@@ -8,14 +8,12 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.Car;
-import com.monstrous.baseInvaders.input.AICarController;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.physics.*;
 //import com.monstrous.transamtest.worlddata.Terrain;
 import com.monstrous.baseInvaders.terrain.Terrain;
-import com.monstrous.baseInvaders.terrain.TerrainChunk;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneAsset;
 
@@ -243,7 +241,7 @@ public class World implements Disposable {
     public void update( float deltaTime ) {
 
         stats.gameTime += deltaTime;
-        stats.speed = (int)cars.get(0).speedKPH;
+        stats.speed = (int)cars.get(0).speedMPH;
         ufoSpawner(deltaTime);
         userCarController.update(deltaTime);
 

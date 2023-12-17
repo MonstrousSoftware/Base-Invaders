@@ -79,7 +79,7 @@ public class MiniMap implements Disposable {
         miniMapRect.width = mapSize;
         miniMapRect.height = mapSize;
         miniMapRect.x = viewWidth-(miniMapRect.width+border);
-        miniMapRect.y = viewHeight-(miniMapRect.height+border);
+        miniMapRect.y = viewHeight-(miniMapRect.height+border+50);
 
         float wf = mapSize + 2*border;
         mapFrameRect = new Rectangle();

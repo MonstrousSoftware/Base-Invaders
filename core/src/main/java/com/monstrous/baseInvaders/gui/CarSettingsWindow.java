@@ -13,8 +13,9 @@ public class CarSettingsWindow extends Window {
 
     public CarSettingsWindow(String title, Skin skin, World world) {
         super(title, skin);
+        String style= "small";
 
-        final Label labelMu = new Label(String.valueOf(Settings.mu), skin);
+        final Label labelMu = new Label(String.valueOf(Settings.mu), skin, style);
         final Slider sliderMu = new Slider(0, 3, 0.1f, false, skin);
         sliderMu.setAnimateDuration(0.1f);
         sliderMu.setValue(Settings.mu);
@@ -26,12 +27,12 @@ public class CarSettingsWindow extends Window {
                 //world.rebuild();
             }
         });
-        add(new Label("Mu: ", skin)).pad(5);
+        add(new Label("Mu: ", skin, style)).pad(5);
         add(sliderMu);
         add(labelMu).width(50);
         row();
 
-        final Label labelMu2 = new Label(String.valueOf(Settings.mu2), skin);
+        final Label labelMu2 = new Label(String.valueOf(Settings.mu2), skin, style);
         final Slider sliderMu2 = new Slider(0, 3, 0.1f, false, skin);
         sliderMu2.setAnimateDuration(0.1f);
         sliderMu2.setValue(Settings.mu);
@@ -43,12 +44,12 @@ public class CarSettingsWindow extends Window {
                 //world.rebuild();
             }
         });
-        add(new Label("Mu2: ", skin)).pad(5);
+        add(new Label("Mu2: ", skin, style)).pad(5);
         add(sliderMu2);
         add(labelMu2).width(50);
         row();
 
-        final Label labelSlip1 = new Label(String.valueOf(Settings.slip1), skin);
+        final Label labelSlip1 = new Label(String.valueOf(Settings.slip1), skin, style);
         final Slider sliderSlip1 = new Slider(0, 3, 0.1f, false, skin);
         sliderSlip1.setAnimateDuration(0.1f);
         sliderSlip1.setValue(Settings.slip1);
@@ -60,12 +61,12 @@ public class CarSettingsWindow extends Window {
                 //world.rebuild();
             }
         });
-        add(new Label("Slip1: ", skin)).pad(5);
+        add(new Label("Slip1: ", skin, style)).pad(5);
         add(sliderSlip1);
         add(labelSlip1).width(50);
         row();
 
-        final Label labelSlip2 = new Label(String.valueOf(Settings.slip2), skin);
+        final Label labelSlip2 = new Label(String.valueOf(Settings.slip2), skin, style);
         final Slider sliderSlip2 = new Slider(0, 3, 0.1f, false, skin);
         sliderSlip2.setAnimateDuration(0.1f);
         sliderSlip2.setValue(Settings.slip2);
@@ -77,7 +78,7 @@ public class CarSettingsWindow extends Window {
                 //world.rebuild();
             }
         });
-        add(new Label("Slip2: ", skin)).pad(5);
+        add(new Label("Slip2: ", skin, style)).pad(5);
         add(sliderSlip2);
         add(labelSlip2).width(50);
         row();
@@ -119,7 +120,7 @@ public class CarSettingsWindow extends Window {
 //        add(labelCarMassValue).width(50);
 //        row();
 //
-        final Label labelStiffnessValue = new Label(String.valueOf(Settings.suspensionCFM), skin);
+        final Label labelStiffnessValue = new Label(String.valueOf(Settings.suspensionCFM), skin, style);
         final Slider sliderStiffness = new Slider(0, 1, 0.01f, false, skin);
         sliderStiffness.setAnimateDuration(0.1f);
         sliderStiffness.setValue(Settings.suspensionCFM);
@@ -133,12 +134,12 @@ public class CarSettingsWindow extends Window {
         });
 
 
-        add(new Label("Suspension CFM: ", skin)).pad(5);
+        add(new Label("Suspension CFM: ", skin, style)).pad(5);
         add(sliderStiffness);
         add(labelStiffnessValue).width(50);
         row();
 
-        final Label labelDampingValue = new Label(String.valueOf(Settings.suspensionERP), skin);
+        final Label labelDampingValue = new Label(String.valueOf(Settings.suspensionERP), skin, style);
         final Slider sliderDamping = new Slider(0, 1, 0.01f, false, skin);
         sliderDamping.setAnimateDuration(0.1f);
         sliderDamping.setValue(Settings.suspensionERP);
@@ -152,12 +153,12 @@ public class CarSettingsWindow extends Window {
         });
 
 
-        add(new Label("Suspension ERP: ", skin)).pad(5);
+        add(new Label("Suspension ERP: ", skin, style)).pad(5);
         add(sliderDamping);
         add(labelDampingValue).width(50);
         row();
 
-        final Label labelCD = new Label(String.valueOf(Settings.chassisDensity), skin);
+        final Label labelCD = new Label(String.valueOf(Settings.chassisDensity), skin, style);
         final Slider sliderCD = new Slider(0, 3, 0.1f, false, skin);
         sliderCD.setAnimateDuration(0.1f);
         sliderCD.setValue(Settings.chassisDensity);
@@ -168,12 +169,12 @@ public class CarSettingsWindow extends Window {
                 labelCD.setText(String.valueOf(Settings.chassisDensity));
             }
         });
-        add(new Label("Chassis density: ", skin)).pad(5);
+        add(new Label("Chassis density: ", skin, style)).pad(5);
         add(sliderCD);
         add(labelCD).width(50);
         row();
 
-        final Label labelWD = new Label(String.valueOf(Settings.wheelDensity), skin);
+        final Label labelWD = new Label(String.valueOf(Settings.wheelDensity), skin, style);
         final Slider sliderWD = new Slider(0, 3, 0.1f, false, skin);
         sliderWD.setAnimateDuration(0.1f);
         sliderWD.setValue(Settings.wheelDensity);
@@ -184,7 +185,7 @@ public class CarSettingsWindow extends Window {
                 labelWD.setText(String.valueOf(Settings.wheelDensity));
             }
         });
-        add(new Label("Wheel density: ", skin)).pad(5);
+        add(new Label("Wheel density: ", skin, style)).pad(5);
         add(sliderWD);
         add(labelWD).width(50);
         row();

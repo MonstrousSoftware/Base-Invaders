@@ -29,7 +29,7 @@ public class InstrumentView implements Disposable {
         batch.begin();
 
         indicatorRPM.setRotation(45-270f*car.rpm/8000f);
-        indicatorSpeed.setRotation(45-270f*car.speedKPH/100f);
+        indicatorSpeed.setRotation(45-270f*car.speedMPH /100f);
 
         batch.draw(dial, 0,0);
         batch.draw(dial, width - 256,0);
