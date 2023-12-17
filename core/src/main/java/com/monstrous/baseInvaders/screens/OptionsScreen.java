@@ -114,8 +114,8 @@ public class OptionsScreen extends MenuScreen {
        int pad = 10;
 
        screenTable.add(fullScreen).pad(pad).left().row();
-       screenTable.add(invertLook).pad(pad).left().row();
-       screenTable.add(freeLook).pad(pad).left().row();
+//       screenTable.add(invertLook).pad(pad).left().row();
+//       screenTable.add(freeLook).pad(pad).left().row();
 //       screenTable.add(weather).pad(pad).left().row();
 //       screenTable.add(hints).pad(pad).left().row();
 //       screenTable.add(narrator).pad(pad).left().row();

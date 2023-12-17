@@ -175,7 +175,7 @@ public class Car {
                 //j2.setParamVel2(rollAngVel);
             }
             if(i >= 2) {
-
+                j2.setParamVel(0);
                 j2.setParamVel2(wheelAngularVelocity);
 
             }
@@ -187,12 +187,12 @@ public class Car {
     private void addCounterWeight(PhysicsWorld physicsWorld, GameObject chassis) {
         DMass massInfo = OdeHelper.createMass();
         DBody weightBody = OdeHelper.createBody(physicsWorld.world);
-        massInfo.setSphere(100,0.5f);
-        massInfo.adjust(50);
+        massInfo.setSphere(100,0.2f);
+        massInfo.adjust(10);
         weightBody.setMass(massInfo);
         weightBody.enable();
         Vector3 pos = chassis.getPosition();
-        weightBody.setPosition(pos.x, pos.y-4f, pos.z+3);   // put weight below the chassis
+        weightBody.setPosition(pos.x, pos.y-.5f, pos.z+1f);   // put weight below the chassis
         weightBody.setAutoDisableFlag(false);
         weightBody.setGravityMode(true);
         weightBody.setDamping(0.01, 0.1);
@@ -262,13 +262,13 @@ public class Car {
         joint.setAxis2(-1, 0, 0);    // roll axis for rolling
 
 
-        joint.setParamVel2(1000);
-        joint.setParamFMax2(1500f);
+        joint.setParamVel2(0);
+        joint.setParamFMax2(15000f);
         joint.setParamFMax(150000f);
         joint.setParamFudgeFactor(0.1f);
         joint.setParamSuspensionERP(Settings.suspensionERP);
         joint.setParamSuspensionCFM(Settings.suspensionCFM);
-        joint.setParamFudgeFactor(0.1f);
+
         //float maxSteer = Settings.maxSteerAngle;
         if(!steering) { // rear wheel?
 

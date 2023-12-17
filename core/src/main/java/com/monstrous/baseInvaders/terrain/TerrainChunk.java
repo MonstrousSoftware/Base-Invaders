@@ -16,7 +16,7 @@ public class TerrainChunk implements Disposable {
 
     public static final int MAP_SIZE = 128;     // size of map in grid cells per axis
     public static final float SCALE  = Settings.chunkSize;       // terrain size
-    public static final float AMPLITUDE  = 0f;
+    public static final float AMPLITUDE  = 20f;
     public static final float GRID_SCALE = 64;      // how many Perlin points across the map
 
 

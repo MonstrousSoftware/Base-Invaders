@@ -16,9 +16,10 @@ public class KeysScreen extends MenuScreen {
         { "W", "accelerate" }, {"A", "left"},
         { "S", "brake"}, {"D", "right"},
         { "R", "restart" },
-        { "Esc", "in-game menu" },
+        { "Esc", "return to menu" },
+        { "F1", "debug view" },
         { "F5", "toggle camera view" },
-        { "F1", "debug view" }
+        { "F11", "toggle full screen" },
     };
 
     private GameScreen gameScreen;

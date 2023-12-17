@@ -113,8 +113,6 @@ public class GameView implements Disposable {
     }
 
 
-//    private BoundingBox bbox = new BoundingBox();
-
     private Vector3 pos = new Vector3();
 
     public void refresh(Camera cam) {
@@ -172,11 +170,6 @@ public class GameView implements Disposable {
 
             postFilter.render(fbo);
         }
-
-
-
-
-
     }
 
 

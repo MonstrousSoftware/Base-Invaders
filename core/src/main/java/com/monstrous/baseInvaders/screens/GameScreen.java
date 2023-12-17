@@ -5,10 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector3;
-import com.monstrous.baseInvaders.GameView;
-import com.monstrous.baseInvaders.GridView;
-import com.monstrous.baseInvaders.InstrumentView;
-import com.monstrous.baseInvaders.MiniMap;
+import com.monstrous.baseInvaders.*;
 import com.monstrous.baseInvaders.gui.GUI;
 import com.monstrous.baseInvaders.input.CameraController;
 import com.monstrous.baseInvaders.physics.CollisionShapeType;
@@ -31,10 +28,10 @@ public class GameScreen extends ScreenAdapter {
     private GUI gui;
     private World world;
     private int windowedWidth, windowedHeight;
-    private boolean debugRender = true;
+    private boolean debugRender = !Settings.release;
     private boolean carSettingsWindow = false;
     private int techCollected = 0;
-    private boolean autoCam = false;
+    private boolean autoCam = Settings.release;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -51,7 +48,7 @@ public class GameScreen extends ScreenAdapter {
         world = new World();
 
         Populator.populate(world);
-        gameView = new GameView(world,false, 1.0f, 3000f);
+        gameView = new GameView(world,false, 1.0f, 400f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
         gameView.useFBO = !debugRender;
 
@@ -110,8 +107,12 @@ public class GameScreen extends ScreenAdapter {
         if(delta > 0.1f)    // in case we're running in the debugger
             delta = 0.1f;
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-            Gdx.app.exit();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            if(!Settings.release)
+                Gdx.app.exit();
+            game.setScreen( new MainMenuScreen(game));
+            return;
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.R))
             restart();
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
