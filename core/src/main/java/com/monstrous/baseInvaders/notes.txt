@@ -19,8 +19,8 @@ done- minimap position
 done- minimap transparent, rotate
 done- bigger terrain
 done- gear shift more smoothly
-- roll over, wheelies
-
+done- roll over, wheelies
+- move jeeps
 
 
 To get CascadeShadows use gdxGltfVersion=-SNAPSHOT instead of 2.1.0 which is the latest release.
