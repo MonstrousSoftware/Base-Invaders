@@ -91,13 +91,14 @@ public class GUI implements Disposable {
         screenTable2.setFillParent(true);
         timeLabel = new Label("00:00", skin);
         fpsLabel = new Label("0", skin, "small");
-        speedLabel = new Label("0", skin, "small");
+        speedLabel = new Label("0", skin );
         screenTable2.add().top();
         screenTable2.add();
         screenTable2.add(timeLabel).top().right().expand().row();
         screenTable2.add(new Label("FPS : ", skin, "small")).bottom().left();
         screenTable2.add(fpsLabel).bottom().left().expandX();
-        screenTable2.add(speedLabel).bottom().right();
+        screenTable2.add(gearValue).bottom().left();
+        screenTable2.add(speedLabel).bottom().pad(80).right();
 
         stage.addActor(screenTable2);
 

@@ -145,7 +145,7 @@ public class Car {
         //Gdx.app.log("speed", ""+speed);
 
         if(braking)
-            rollAngVel = 0;
+            wav = 0;
 
         updateJoints(-steerAngle, wav, rollAngVel);
 
@@ -170,9 +170,9 @@ public class Car {
 
                 // let front wheels roll and rear wheels slip
                 // (doesnt provide enough traction)
-                //j2.setParamVel2(wheelAngularVelocity);
+                j2.setParamVel2(wheelAngularVelocity);
 
-                j2.setParamVel2(rollAngVel);
+                //j2.setParamVel2(rollAngVel);
             }
             if(i >= 2) {
 
@@ -188,23 +188,19 @@ public class Car {
         DMass massInfo = OdeHelper.createMass();
         DBody weightBody = OdeHelper.createBody(physicsWorld.world);
         massInfo.setSphere(100,0.5f);
-        massInfo.adjust(10);
+        massInfo.adjust(50);
         weightBody.setMass(massInfo);
         weightBody.enable();
         Vector3 pos = chassis.getPosition();
-        weightBody.setPosition(pos.x, pos.y-4f, pos.z);
+        weightBody.setPosition(pos.x, pos.y-4f, pos.z+3);   // put weight below the chassis
         weightBody.setAutoDisableFlag(false);
         weightBody.setGravityMode(true);
         weightBody.setDamping(0.01, 0.1);
 
-//        DGeom geom = OdeHelper.createSphere(physicsWorld.space, 0.5f);
-//        geom.setBody(weightBody);
-//        geom.setCategoryBits(0);
-//        geom.setCollideBits(0);
-
 
         DFixedJoint joint = OdeHelper.createFixedJoint(physicsWorld.world);    // add joint to the world
         joint.attach(chassis.body.geom.getBody(), weightBody);
+
 
         Gdx.app.log("car mass", "chassis: "+chassis.body.geom.getBody().getMass()+" antirollmass:"+weightBody.getMass());
     }
