@@ -228,8 +228,8 @@ public class World implements Disposable {
         ufoSpawnTimer -= deltaTime;
         if(ufoSpawnTimer<=0) {
 
-            float x = (float) (Math.random())*0.9f*Settings.worldSize;    // not too close to the edge
-            float z = (float) (Math.random())*0.9f*Settings.worldSize;
+            float x = (float) (Math.random())*0.5f*Settings.worldSize;    // not too close to the edge
+            float z = (float) (Math.random())*0.5f*Settings.worldSize;
             float y = terrain.getHeight(x, z);
             spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(x, y+5f, z), 1f);
             stats.ufosSpawned++;
@@ -240,7 +240,10 @@ public class World implements Disposable {
 
     public void update( float deltaTime ) {
 
-        stats.gameTime += deltaTime;
+        if(!stats.levelComplete)
+            stats.gameTime += deltaTime;
+        if(stats.techCollected == 7)
+            stats.levelComplete = true;
         stats.speed = (int)cars.get(0).speedMPH;
         ufoSpawner(deltaTime);
         userCarController.update(deltaTime);
@@ -297,6 +300,7 @@ public class World implements Disposable {
         removeObject(pickup);
         if(pickup.type == GameObjectType.TYPE_PICKUP_ITEM) {
             stats.techCollected++;
+
 
         }
 //        else if(pickup.type == GameObjectType.TYPE_PICKUP_HEALTH) {

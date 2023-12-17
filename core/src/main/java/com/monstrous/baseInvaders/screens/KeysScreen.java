@@ -18,7 +18,6 @@ public class KeysScreen extends MenuScreen {
         { "R", "restart" },
         { "Esc", "in-game menu" },
         { "F5", "toggle camera view" },
-        {"F9", "quick-load"},
         { "F1", "debug view" }
     };
 

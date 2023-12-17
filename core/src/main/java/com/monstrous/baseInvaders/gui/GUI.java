@@ -37,6 +37,7 @@ public class GUI implements Disposable {
     private Label timeLabel;
     private Label fpsLabel;
     private Label speedLabel;
+    private Label levelCompletedLabel;
     private final StringBuffer sb;
 
 
@@ -61,6 +62,8 @@ public class GUI implements Disposable {
         rpmValue = new Label("", labelStyle);
         gearValue = new Label("",labelStyle);
         steerAngleValue = new Label("",labelStyle);
+        levelCompletedLabel = new Label("LEVEL COMPLETED!", skin);
+        levelCompletedLabel.setVisible(false);
 
         Table table = new Table();
         table.top().left();               // make content move to top left
@@ -102,7 +105,10 @@ public class GUI implements Disposable {
 
         stage.addActor(screenTable2);
 
-
+        Table screenTable3 = new Table();
+        screenTable3.setFillParent(true);
+        screenTable3.add(levelCompletedLabel).pad(100).bottom().expand();
+        stage.addActor(screenTable3);
 
         Table screenTable = new Table();
         screenTable.setFillParent(true);
@@ -111,6 +117,11 @@ public class GUI implements Disposable {
         stage.addActor(screenTable);
 
     }
+
+    public void showLevelCompleted( boolean mode ){
+        levelCompletedLabel.setVisible(mode);
+    }
+
 
     public void showCarSettings( boolean mode ){
        settingsWindow.setVisible(mode);

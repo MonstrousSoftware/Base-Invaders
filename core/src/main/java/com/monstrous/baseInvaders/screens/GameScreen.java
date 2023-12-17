@@ -151,6 +151,9 @@ public class GameScreen extends ScreenAdapter {
 
 
         instrumentView.render(world.getPlayerCar());
+
+        if(world.stats.levelComplete)
+            gui.showLevelCompleted(true);
         gui.render(delta);
 
     }

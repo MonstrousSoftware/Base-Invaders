@@ -37,7 +37,7 @@ public class MainMenuScreen extends MenuScreen {
        TextButton play = new TextButton("Play Game", skin);
        TextButton keys = new TextButton("Keys", skin);
        TextButton options = new TextButton("Options", skin);
-       TextButton credits = new TextButton("Credits", skin);
+       //TextButton credits = new TextButton("Credits", skin);
        TextButton quit = new TextButton("Quit", skin);
 
        float pad = 10f;
@@ -45,7 +45,7 @@ public class MainMenuScreen extends MenuScreen {
        screenTable.add(play).pad(pad).row();
        screenTable.add(keys).pad(pad).row();
        screenTable.add(options).pad(pad).row();
-       screenTable.add(credits).pad(pad).row();
+       //screenTable.add(credits).pad(pad).row();
        // hide quit on web unless we have an outro screen
        if(!(Gdx.app.getType() == Application.ApplicationType.WebGL) )
             screenTable.add(quit).pad(pad).row();
@@ -86,14 +86,14 @@ public class MainMenuScreen extends MenuScreen {
             }
         });
 
-        credits.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                super.clicked(event, x, y);
-                playSelectNoise();
-                //game.setScreen(new CreditsScreen( game ));
-            }
-        });
+//        credits.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                super.clicked(event, x, y);
+//                playSelectNoise();
+//                //game.setScreen(new CreditsScreen( game ));
+//            }
+//        });
 
        quit.addListener(new ClickListener() {
            @Override
@@ -114,7 +114,7 @@ public class MainMenuScreen extends MenuScreen {
             cStage.clearFocusableActors();
             cStage.addFocusableActor(play);
             cStage.addFocusableActor(options);
-            cStage.addFocusableActor(credits);
+//            cStage.addFocusableActor(credits);
             cStage.addFocusableActor(quit);
             cStage.setFocusedActor(play);
         }
