@@ -60,6 +60,7 @@ public class World implements Disposable {
 
     public void clear() {
         physicsWorld.reset();
+        userCarController.reset();
 
         stats.reset();
         gameObjects.clear();
@@ -105,8 +106,7 @@ public class World implements Disposable {
             Scene proxyScene = loadNode(proxyName, resetPosition, position);
             collisionInstance = proxyScene.modelInstance;
         }
-        if (type.isCar)
-            density = Settings.chassisDensity;
+
         PhysicsBody body = null;
         if (type != GameObjectType.TYPE_SCENERY && type != GameObjectType.TYPE_UFO)
             body = factory.createBody(collisionInstance, shapeType, type.isStatic, density);
@@ -162,7 +162,7 @@ public class World implements Disposable {
             car = new Car();
         }
 
-        factory.connectWheels(car, chassis, w0, w1, w2, w3);
+        car.connectWheels(physicsWorld, chassis, w0, w1, w2, w3);
         cars.add(car);
     }
 

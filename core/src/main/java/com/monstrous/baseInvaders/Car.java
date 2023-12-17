@@ -1,9 +1,16 @@
 package com.monstrous.baseInvaders;
 
 import com.badlogic.gdx.Gdx;
-import com.github.antzGames.gdx.ode4j.ode.DHinge2Joint;
+import com.badlogic.gdx.math.Vector3;
+import com.github.antzGames.gdx.ode4j.math.DVector3C;
+import com.github.antzGames.gdx.ode4j.ode.*;
+import com.monstrous.baseInvaders.physics.PhysicsBody;
+import com.monstrous.baseInvaders.physics.PhysicsWorld;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.GameObject;
+
+import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
+import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.dContactApprox1;
 //import org.ode4j.ode.DHinge2Joint;
 
 
@@ -14,6 +21,7 @@ public class Car {
 
     public static int MAX_GEAR = 5;
     public static int REVERSE_GEAR = -1;
+    public static int NEUTRAL_GEAR = 0;
 
     public static float MAX_RPM = 8000;
     public static float RPM_REV = 2000f;     // rpm increase per second
@@ -22,6 +30,7 @@ public class Car {
     public static float[] gearRatios = { -3f, 0, 3f, 2f, 1.5f, 1f, 0.5f };      // for testing, to tune
 
     public int gear; // -1, 0, 1, 2, 3, ... MAX_GEAR
+    public int nextGear;
     public float steerAngle;
     public float rpm;
     public boolean braking;
@@ -33,16 +42,18 @@ public class Car {
     private float prevRPM = -1;
     private boolean brakeSound = false;
     private long engineId;
+    private boolean shiftingUp = false;
+    private boolean shiftingDown = false;
+    private float shiftRPM;
 
     public DHinge2Joint[] joints;      // 4 for 4 wheels
     public GameObject chassisObject;
 
     public Car() {
         gear = 1;
-        steerAngle = 15f;
-        rpm = 1000;
+        steerAngle = 0f;
+        rpm = 0;
 
-//        this.carState = carState;
     }
 
 
@@ -67,14 +78,34 @@ public class Car {
     }
 
     // automatic gear shifts....
-    private void checkForGearChange(){
-        if(rpm > 7000 && gear < MAX_GEAR && gear != REVERSE_GEAR) {
-            gear++;
-            rpm = 1000;
+    private void checkForGearChange( float deltaTime ){
+        if(shiftingUp){
+            if(rpm <= shiftRPM){
+                //gear = nextGear;
+                shiftingUp = false;
+            }
+            else
+                rpm -= 8000*deltaTime;
         }
-        if(rpm < 1000 && gear > 1) {
-            gear--;
-            rpm = 7000;
+        else if(shiftingDown){
+            if(rpm >= shiftRPM){
+                //gear = nextGear;
+                shiftingDown = false;
+            }
+            else
+                rpm += 8000*deltaTime;
+        }
+        else if(rpm > 7000 && gear < MAX_GEAR && gear != REVERSE_GEAR && !shiftingUp) {
+            shiftingUp = true;
+            nextGear = gear+1;
+            shiftRPM = rpm * gearRatios[nextGear+1] / gearRatios[gear+1];
+            gear = nextGear;//NEUTRAL_GEAR;
+        }
+        else if(rpm < 1000 && gear > 1 && !shiftingDown) {
+            shiftingDown = true;
+            nextGear = gear-1;
+            shiftRPM = rpm * gearRatios[nextGear+1] / gearRatios[gear+1];
+            gear = nextGear;
         }
 
     }
@@ -83,7 +114,7 @@ public class Car {
     public void update(float deltaTime ){
 
         startStopSound();
-        checkForGearChange();
+        checkForGearChange(deltaTime);
 
 
         //update(deltaTime);
@@ -93,8 +124,7 @@ public class Car {
         // have drive shaft rotation lag behind gear shifts so that the car doesn't abruptly stop when shifting to neutral
         float targetDriveshaftRPM = rpm/gearRatio;
 
-        if(targetDriveshaftRPM >= 16000)
-            Gdx.app.log("top rpm","");
+
         if(targetDriveshaftRPM > driveShaftRPM)
             driveShaftRPM += SHAFT_LATENCY;
         else if (targetDriveshaftRPM < driveShaftRPM)
@@ -138,9 +168,9 @@ public class Car {
 
                 // let front wheels roll and rear wheels slip
                 // (doesnt provide enough traction)
-                j2.setParamVel2(wheelAngularVelocity);
+                //j2.setParamVel2(wheelAngularVelocity);
 
-                //j2.setParamVel2(rollAngVel);
+                j2.setParamVel2(rollAngVel);
             }
             if(i >= 2) {
 
@@ -152,7 +182,104 @@ public class Car {
         }
     }
 
+    private void addCounterWeight(PhysicsWorld physicsWorld, GameObject chassis) {
+        DMass massInfo = OdeHelper.createMass();
+        DBody weightBody = OdeHelper.createBody(physicsWorld.world);
+        massInfo.setSphere(100,0.5f);
+        massInfo.adjust(10);
+        weightBody.setMass(massInfo);
+        weightBody.enable();
+        Vector3 pos = chassis.getPosition();
+        weightBody.setPosition(pos.x, pos.y-4f, pos.z);
+        weightBody.setAutoDisableFlag(false);
+        weightBody.setGravityMode(true);
+        weightBody.setDamping(0.01, 0.1);
+
+//        DGeom geom = OdeHelper.createSphere(physicsWorld.space, 0.5f);
+//        geom.setBody(weightBody);
+//        geom.setCategoryBits(0);
+//        geom.setCollideBits(0);
 
 
+        DFixedJoint joint = OdeHelper.createFixedJoint(physicsWorld.world);    // add joint to the world
+        joint.attach(chassis.body.geom.getBody(), weightBody);
+
+        Gdx.app.log("car mass", "chassis: "+chassis.body.geom.getBody().getMass()+" antirollmass:"+weightBody.getMass());
+    }
+
+    public void connectWheels(PhysicsWorld physicsWorld, GameObject chassis, GameObject w0, GameObject w1, GameObject w2, GameObject w3 ) {
+
+        // todo also add weight below the car?
+        addCounterWeight(physicsWorld, chassis);
+
+        joints =new DHinge2Joint[4];
+        joints[0]=makeWheelJoint(physicsWorld, chassis.body, w0.body,true);
+        joints[1]=makeWheelJoint(physicsWorld, chassis.body, w1.body,true);
+        joints[2]=makeWheelJoint(physicsWorld, chassis.body, w2.body,false);
+        joints[3]=makeWheelJoint(physicsWorld, chassis.body, w3.body,false);
+        chassisObject =chassis;
+        chassis.body.geom.getBody().setAutoDisableFlag(false);
+
+        // define surface properties for front and rear tyres
+        // mu2 is "grip" in forward direction
+        // mu in sideways direction
+        DContact.DSurfaceParameters frontSurface = new DContact.DSurfaceParameters();
+        frontSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM;// | dContactApprox1;
+        frontSurface.mu = Settings.mu;
+        frontSurface.mu2 = Settings.mu2;
+        frontSurface.slip1 = Settings.slip1;
+        frontSurface.slip2 = Settings.slip2;
+        frontSurface.soft_erp = 0.8;
+        frontSurface.soft_cfm = 0.01;
+
+        w0.setSurface(frontSurface);
+        w1.setSurface(frontSurface);
+
+        DContact.DSurfaceParameters backSurface = new DContact.DSurfaceParameters();
+        backSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM;// | dContactApprox1;
+        backSurface.mu = Settings.mu;
+        backSurface.mu2 = Settings.mu2;
+        backSurface.slip1 = Settings.slip1;
+        backSurface.slip2 = Settings.slip2;
+        backSurface.soft_erp = 0.8;
+        backSurface.soft_cfm = 0.01;
+
+        w2.setSurface(backSurface);
+        w3.setSurface(backSurface);
+    }
+
+
+    public DHinge2Joint makeWheelJoint(PhysicsWorld physicsWorld, PhysicsBody chassis, PhysicsBody wheel, boolean steering ){
+
+        // hinge2joints for wheels
+        DHinge2Joint joint = OdeHelper.createHinge2Joint(physicsWorld.world);    // add joint to the world
+        DVector3C anchor = wheel.geom.getBody().getPosition();
+        joint.attach(chassis.geom.getBody(), wheel.geom.getBody());
+
+
+        Gdx.app.log("anchor", anchor.toString());
+        joint.setAnchor(anchor);
+
+        joint.setAxis1(0, 1, 0);      // up axis for steering
+        joint.setAxis2(-1, 0, 0);    // roll axis for rolling
+
+
+        joint.setParamVel2(1000);
+        joint.setParamFMax2(1500f);
+        joint.setParamFMax(150000f);
+        joint.setParamFudgeFactor(0.1f);
+        joint.setParamSuspensionERP(Settings.suspensionERP);
+        joint.setParamSuspensionCFM(Settings.suspensionCFM);
+        joint.setParamFudgeFactor(0.1f);
+        //float maxSteer = Settings.maxSteerAngle;
+        if(!steering) { // rear wheel?
+
+            joint.setParam(DJoint.PARAM_N.dParamLoStop1, 0);            // put a stop at max steering angle
+            joint.setParam(DJoint.PARAM_N.dParamHiStop1, 0);             // idem
+        } // don't put stops on steering wheels but rely on the car controller input for this
+
+        wheel.geom.getBody().setAutoDisableFlag(false);
+        return joint;
+    }
 
 }

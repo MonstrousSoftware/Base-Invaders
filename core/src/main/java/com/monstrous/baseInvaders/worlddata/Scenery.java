@@ -17,7 +17,7 @@ public class Scenery  {
         // place all scenery in a model cache
         // we can delete all the items as game objects once we have the cache constructed.
         //
-        placeRandom(world, "cactus", 90);
+        placeRandom(world, "cactus", 9000);
         placeRandom(world, "cactus.001", 90);
         placeRandom(world, "cactus.002", 90);
         placeRandom(world, "warningSign", 20);

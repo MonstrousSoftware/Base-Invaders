@@ -39,7 +39,7 @@ public class LoadScreen extends StdScreenAdapter {
     public void show() {
         Gdx.app.log("LoadScreen show()", "");
 
-        skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skin/invaders.json"));
         stage = new Stage(new ScreenViewport());
 
         progressBar = new ProgressBar(0f, 1.0f, 0.01f, false, skin);

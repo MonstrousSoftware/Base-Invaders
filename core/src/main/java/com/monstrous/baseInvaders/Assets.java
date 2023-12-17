@@ -41,7 +41,7 @@ public class Assets implements Disposable {
         Gdx.app.log("Assets constructor", "");
         assets = new AssetManager();
 
-        assets.load("ui/uiskin.json", Skin.class);
+        assets.load("skin/invaders.json", Skin.class);
 
         assets.load("font/Gasoek32.fnt", BitmapFont.class);
 
@@ -83,7 +83,7 @@ public class Assets implements Disposable {
 
     private void initConstants() {
         sounds = new AssetSounds();
-        skin = assets.get("ui/uiskin.json");
+        skin = assets.get("skin/invaders.json");
         uiFont = assets.get("font/Gasoek32.fnt");
         sceneAsset = assets.get(Settings.GLTF_FILE);
 //        scopeImage = assets.get("images/scope.png");

@@ -22,7 +22,7 @@ public class Main extends Game {
 
     public void onLoadingComplete(){
         assets.finishLoading();
-        setScreen( new GameScreen(this) );
+        setScreen( new MainMenuScreen(this) );
     }
 
     @Override

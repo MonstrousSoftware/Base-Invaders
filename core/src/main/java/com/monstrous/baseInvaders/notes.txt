@@ -18,7 +18,7 @@ done- map oriented with car
 done- minimap position
 done- minimap transparent, rotate
 done- bigger terrain
-- gear shift more smoothly
+done- gear shift more smoothly
 - roll over, wheelies
 
 

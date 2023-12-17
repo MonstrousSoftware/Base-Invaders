@@ -17,7 +17,7 @@ import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
 //
 public class PhysicsWorld implements Disposable {
 
-    DWorld world;
+    public DWorld world;
     public DSpace space;
     private final DJointGroup contactGroup;
     private final World gameWorld;

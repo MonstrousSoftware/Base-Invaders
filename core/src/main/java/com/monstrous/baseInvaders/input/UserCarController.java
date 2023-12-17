@@ -44,6 +44,8 @@ public class UserCarController extends CarState implements InputProcessor {
 
     public void update(float deltaTime) {
 
+
+
         // Steering
         if(leftPressed && car.steerAngle<MAX_STEER_ANGLE)
         {

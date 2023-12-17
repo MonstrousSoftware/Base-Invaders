@@ -31,7 +31,7 @@ public class MenuScreen extends StdScreenAdapter {
     public void show() {
         viewport = new ScreenViewport();
 
-        skin = game.assets.get("ui/uiskin.json"); //"skin/fright/fright.json");
+        skin = Main.assets.skin; //game.assets.get("ui/uiskin.json"); //"skin/fright/fright.json");
         stage = new ControllerMenuStage(new ScreenViewport());          // we can use this even without controllers, although it doesn't seem to work with teavm + Chrome browser
         rebuild();
         input.setInputProcessor(stage);
@@ -55,7 +55,7 @@ public class MenuScreen extends StdScreenAdapter {
     @Override
     public void render(float delta) {
         super.render(delta);
-        background.render();
+        background.render(delta);
 
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();

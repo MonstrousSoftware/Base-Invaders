@@ -112,6 +112,8 @@ public class PhysicsBodyFactory implements Disposable {
             // note: geom for static object has no rigid body attached
         } else {
             DBody rigidBody = OdeHelper.createBody(physicsWorld.world);
+            if(massInfo.getMass() <= 0)
+                Gdx.app.error("zero mass", "");
             rigidBody.setMass(massInfo);
             rigidBody.enable();
             rigidBody.setAutoDisableDefaults();
@@ -237,75 +239,4 @@ public class PhysicsBodyFactory implements Disposable {
     }
 
 
-    public void connectWheels(Car car, GameObject chassis, GameObject w0,GameObject w1,GameObject w2,GameObject w3 ) {
-
-        // todo also add weight below the car?
-
-        car.joints =new DHinge2Joint[4];
-        car.joints[0]=makeWheelJoint(chassis.body, w0.body,true);
-        car.joints[1]=makeWheelJoint(chassis.body, w1.body,true);
-        car.joints[2]=makeWheelJoint(chassis.body, w2.body,false);
-        car.joints[3]=makeWheelJoint(chassis.body, w3.body,false);
-        car.chassisObject =chassis;
-        chassis.body.geom.getBody().setAutoDisableFlag(false);
-
-        // define surface properties for front and rear tyres
-        //
-        DContact.DSurfaceParameters frontSurface = new DContact.DSurfaceParameters();
-        frontSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
-        frontSurface.mu = Settings.mu;
-        frontSurface.mu2 = Settings.mu2;
-        frontSurface.slip1 = Settings.slip1;
-        frontSurface.slip2 = Settings.slip2;
-        frontSurface.soft_erp = 0.8;
-        frontSurface.soft_cfm = 0.01;
-
-        w0.setSurface(frontSurface);
-        w1.setSurface(frontSurface);
-
-        DContact.DSurfaceParameters backSurface = new DContact.DSurfaceParameters();
-        backSurface.mode = dContactFDir1 |  dContactMu2 | dContactSlip1 | dContactSlip2 | dContactSoftERP | dContactSoftCFM | dContactApprox1;
-        backSurface.mu = Settings.mu;
-        backSurface.mu2 = Settings.mu2;
-        backSurface.slip1 = Settings.slip1;
-        backSurface.slip2 = Settings.slip2;
-        backSurface.soft_erp = 0.8;
-        backSurface.soft_cfm = 0.01;
-
-        w2.setSurface(backSurface);
-        w3.setSurface(backSurface);
-    }
-
-
-    public DHinge2Joint makeWheelJoint(PhysicsBody chassis, PhysicsBody wheel, boolean steering ){
-
-        // hinge2joints for wheels
-        DHinge2Joint joint = OdeHelper.createHinge2Joint(physicsWorld.world);    // add joint to the world
-        DVector3C anchor = wheel.geom.getBody().getPosition();
-        joint.attach(chassis.geom.getBody(), wheel.geom.getBody());
-
-
-        Gdx.app.log("anchor", anchor.toString());
-        joint.setAnchor(anchor);
-
-        joint.setAxis1(0, 1, 0);      // up axis for steering
-        joint.setAxis2(-1, 0, 0);    // roll axis for rolling
-
-
-        joint.setParamVel2(0);
-        joint.setParamFMax2(35000f);
-        joint.setParamFMax(35000f);
-        joint.setParamFudgeFactor(0.1f);
-        joint.setParamSuspensionERP(Settings.suspensionERP);
-        joint.setParamSuspensionCFM(Settings.suspensionCFM);
-        //float maxSteer = Settings.maxSteerAngle;
-        if(!steering) { // rear wheel?
-
-            joint.setParam(DJoint.PARAM_N.dParamLoStop1, 0);            // put a stop at max steering angle
-            joint.setParam(DJoint.PARAM_N.dParamHiStop1, 0);             // idem
-        } // don't put stops on steering wheels but rely on the car controller input for this
-
-        wheel.geom.getBody().setAutoDisableFlag(false);
-        return joint;
-    }
 }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector3;
 import com.monstrous.baseInvaders.GameView;
 import com.monstrous.baseInvaders.GridView;
+import com.monstrous.baseInvaders.InstrumentView;
 import com.monstrous.baseInvaders.MiniMap;
 import com.monstrous.baseInvaders.gui.GUI;
 import com.monstrous.baseInvaders.input.CameraController;
@@ -23,18 +24,17 @@ public class GameScreen extends ScreenAdapter {
 
     private Main game;
     private GameView gameView;
-    private GameView instrumentView;
     private MiniMap minimap;
     private PhysicsView physicsView;
     private GridView gridView;
+    private InstrumentView instrumentView;
     private GUI gui;
     private World world;
-    private World instrumentWorld;
     private int windowedWidth, windowedHeight;
-    private boolean debugRender = false;
+    private boolean debugRender = true;
     private boolean carSettingsWindow = false;
     private int techCollected = 0;
-    private boolean autoCam = true;
+    private boolean autoCam = false;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -53,6 +53,7 @@ public class GameScreen extends ScreenAdapter {
         Populator.populate(world);
         gameView = new GameView(world,false, 1.0f, 3000f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
+        gameView.useFBO = !debugRender;
 
         physicsView = new PhysicsView(world);
         gridView = new GridView();
@@ -79,6 +80,8 @@ public class GameScreen extends ScreenAdapter {
 //
 //        instrumentWorld.spawnObject(GameObjectType.TYPE_STATIC, "dial", null, CollisionShapeType.BOX, false, new Vector3(1,1,1), 1f);
 //        instrumentView = new GameView(instrumentWorld,true, 0.1f, 10f);
+
+        instrumentView = new InstrumentView();
     }
 
 
@@ -104,6 +107,9 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        if(delta > 0.1f)    // in case we're running in the debugger
+            delta = 0.1f;
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
             Gdx.app.exit();
         if (Gdx.input.isKeyJustPressed(Input.Keys.R))
@@ -143,6 +149,8 @@ public class GameScreen extends ScreenAdapter {
 
         //world.terrain.render();       // debug
 
+
+        instrumentView.render(world.getPlayerCar());
         gui.render(delta);
 
     }
@@ -153,6 +161,7 @@ public class GameScreen extends ScreenAdapter {
         gameView.resize(width, height);
         gui.resize(width, height);
         minimap.resize(width, height);
+        instrumentView.resize(width, height);
     }
 
 
@@ -169,5 +178,6 @@ public class GameScreen extends ScreenAdapter {
         world.dispose();
         gui.dispose();
         minimap.dispose();
+        instrumentView.dispose();
     }
 }

@@ -48,12 +48,12 @@ public class Settings {
 
     public static float mu = 3.5f;
     public static float mu2 = 30.5f;
-    public static float slip1 = 0.1f;
+    public static float slip1 = 0.5f;
     public static float slip2 = 0.1f;
 
 
-    public static float suspensionCFM = 0.14f;
-    public static float suspensionERP = 0.8f;
+    public static float suspensionCFM = 0.0025f;
+    public static float suspensionERP = 0.7f;
 
     public static float chassisDensity = 1f;
     public static float wheelDensity = 1f;
@@ -63,5 +63,5 @@ public class Settings {
     static public final String GLTF_FILE = "models/baseinvaders.gltf";
 
     static public float chunkSize = 256;
-    static public float worldSize = 5*256f;
+    static public float worldSize = 5*256;
 }

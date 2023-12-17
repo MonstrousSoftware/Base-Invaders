@@ -16,7 +16,7 @@ public class TerrainChunk implements Disposable {
 
     public static final int MAP_SIZE = 128;     // size of map in grid cells per axis
     public static final float SCALE  = Settings.chunkSize;       // terrain size
-    public static final float AMPLITUDE  = 20f;
+    public static final float AMPLITUDE  = 0f;
     public static final float GRID_SCALE = 64;      // how many Perlin points across the map
 
 
@@ -60,7 +60,7 @@ public class TerrainChunk implements Disposable {
         normalTexture.setFilter(Texture.TextureFilter.MipMap, Texture.TextureFilter.Nearest);
 
 
-        position = new Vector3(-Settings.chunkSize /2, 0, -Settings.chunkSize /2);    // place the terrain so the centre is at the origin
+        position = new Vector3(0, 0, 0);
 
         Material material =  new Material();
         material.set(PBRTextureAttribute.createBaseColorTexture(terrainTexture));

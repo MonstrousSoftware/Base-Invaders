@@ -4,11 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 
 // shader effect as background for menu screens
@@ -16,64 +19,114 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 public class MenuBackground implements Disposable {
 
     private SpriteBatch batch;
-    private ShaderProgram program;
-    private static float time;
-    private float[] resolution = { 640, 480 };      // will be fixed by resize()
-    private int u_time; // shader uniform id
-    private int u_resolution; // shader uniform id
-    Texture texture;
-    TextureRegion textureRegion;
+    private float width, height;
+    Array<Mover> movers;
+    Array<Disposable> disposables;
+
+    class Mover {
+        Sprite sprite;
+        float vx;
+        float vy;
+
+        public Mover(Texture tex, float x, float y, float vx, float vy) {
+            this.sprite = new Sprite(tex);
+            this.sprite.setPosition(x,y);
+            this.vx = vx;
+            this.vy = vy;
+        }
+
+        public void move(float delta){
+            float x = sprite.getX()+vx*delta;
+            float y = sprite.getY()+vy*delta;
+            if(x < 0 )
+                x += width;
+            if(x  > width)
+                x -= width;
+            if(y < 0)
+                y += height;
+            if(y > height)
+                y-=height;
+            sprite.setPosition(x, y);
+        }
+    }
 
     public MenuBackground() {
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.BLUE);
-        pixmap.drawPixel(0,0);
 
-        texture = new Texture(pixmap);
-        textureRegion = new TextureRegion(texture, 0,0,1,1);
-
-
-
-
-        // full screen post processing shader
-        program = new ShaderProgram(
-            Gdx.files.internal("shaders\\worley.vertex.glsl"),
-            Gdx.files.internal("shaders\\worley.fragment.glsl"));
-        if (!program.isCompiled())
-            throw new GdxRuntimeException(program.getLog());
-        ShaderProgram.pedantic = false;
-
-        u_time = program.getUniformLocation("u_time");
-        u_resolution = program.getUniformLocation("u_resolution");
-
+        disposables = new Array<>();
+        movers = new Array<>();
         batch = new SpriteBatch();
+        disposables.add(batch);
+        width = Gdx.graphics.getWidth();
+        height = Gdx.graphics.getHeight();
+
+        Texture tex1 = new Texture("textures/redStar.png");
+        disposables.add(tex1);
+        Texture tex2 = new Texture("textures/blueStar.png");
+        disposables.add(tex2);
+        Texture tex3 = new Texture("textures/redChevron.png");
+        disposables.add(tex3);
+        Texture tex4= new Texture("textures/blueBar.png");
+        disposables.add(tex4);
+        Texture tex5= new Texture("textures/redBar.png");
+        disposables.add(tex5);
+        Texture tex6= new Texture("textures/greyUFO.png");
+        disposables.add(tex6);
+
+
+        for(int i = 0; i < height; i+=40) {
+            Mover mover = new Mover(tex4, 100, i, 0, 40);
+            movers.add(mover);
+        }
+        for(int i = 0; i < height; i+=40) {
+            Mover mover = new Mover(tex5, width-i/2, i+20, -50, 40);
+            movers.add(mover);
+        }
+
+        for(int i = 0; i < width; i+=100) {
+            Mover mover = new Mover(tex1, i, height / 2, 10, 0);
+            movers.add(mover);
+        }
+        for(int i = 0; i < width; i+=100) {
+            Mover mover = new Mover(tex2, i, height / 3, -10, 0);
+            movers.add(mover);
+        }
+        for(int i = 0; i < width; i+=100) {
+            Mover mover = new Mover(tex3, i, 50, 5, 0);
+            movers.add(mover);
+        }
+        for(int i = 0; i < width; i+=width/5) {
+            Mover mover = new Mover(tex6, i, height-100, 15, 0);
+            movers.add(mover);
+        }
+
     }
 
     public void resize (int width, int height) {
-        resolution[0] = width;
-        resolution[1] = height;
+        this.width = width;
+        this.height = height;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);  // to ensure the fbo is rendered to the full window after a resize
 
     }
 
-    public void render() {
-        time += Gdx.graphics.getDeltaTime();
+    private void update(float delta){
+        for(Mover mover : movers)
+            mover.move(delta);
+    }
 
-
+    public void render( float delta ) {
+        update(delta);
+        ScreenUtils.clear(Color.LIGHT_GRAY);
         batch.begin();
-        batch.setShader(program);                        // post-processing shader
-        program.setUniformf(u_time, time);
-        program.setUniform2fv(u_resolution, resolution, 0, 2);
-        batch.draw(textureRegion, 0, 0, resolution[0], resolution[1]);    // draw frame buffer as screen filling texture
+        for(Mover mover : movers)
+            mover.sprite.draw(batch);
         batch.end();
-        batch.setShader(null);
+
     }
 
 
     @Override
     public void dispose() {
-        batch.dispose();
-        program.dispose();
-        texture.dispose();
+        for(Disposable disposable : disposables)
+            disposable.dispose();
     }
 }

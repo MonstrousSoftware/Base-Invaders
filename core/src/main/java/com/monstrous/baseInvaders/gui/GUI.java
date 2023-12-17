@@ -44,7 +44,7 @@ public class GUI implements Disposable {
         Gdx.app.log("GUI constructor", "");
         this.car = car;
         this.world = world;
-        skin = new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
+        skin = Main.assets.skin; //Assets.new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
         stage = new Stage(new ScreenViewport());
         sb = new StringBuffer();
 
@@ -67,36 +67,35 @@ public class GUI implements Disposable {
         table.setFillParent(true);        // size to match stage size
 
 
-        Table stats = new Table();
-        stats.setBackground(skin.getDrawable("black"));
-        stats.add(new Label("RPM (W/S) : ", labelStyle));
-        stats.add(rpmValue);
-        stats.row();
-        stats.add(new Label("Gear (UP/DN) :", labelStyle));
-        stats.add(gearValue);
-        stats.row();
-        stats.add(new Label("Steer angle (A/D) : ", labelStyle));
-        stats.add(steerAngleValue);
-        stats.row();
-
-        stats.pack();
-
-        table.add(stats);
-
-        stage.addActor(table);
+//        Table stats = new Table();
+//        stats.setBackground(skin.getDrawable("black"));
+//        stats.add(new Label("RPM (W/S) : ", labelStyle));
+//        stats.add(rpmValue);
+//        stats.row();
+//        stats.add(new Label("Gear (UP/DN) :", labelStyle));
+//        stats.add(gearValue);
+//        stats.row();
+//        stats.add(new Label("Steer angle (A/D) : ", labelStyle));
+//        stats.add(steerAngleValue);
+//        stats.row();
+//
+//        stats.pack();
+//
+//        table.add(stats);
+//        stage.addActor(table);
 
         techTable = new Table();
         stage.addActor(techTable);
 
         Table screenTable2 = new Table();
         screenTable2.setFillParent(true);
-        timeLabel = new Label("00:00", labelStyle);
-        fpsLabel = new Label("0", labelStyle);
-        speedLabel = new Label("0", labelStyle);
+        timeLabel = new Label("00:00", skin);
+        fpsLabel = new Label("0", skin, "small");
+        speedLabel = new Label("0", skin, "small");
         screenTable2.add().top();
         screenTable2.add();
         screenTable2.add(timeLabel).top().right().expand().row();
-        screenTable2.add(new Label("FPS : ", labelStyle)).bottom().left();
+        screenTable2.add(new Label("FPS : ", skin, "small")).bottom().left();
         screenTable2.add(fpsLabel).bottom().left().expandX();
         screenTable2.add(speedLabel).bottom().right();
 
@@ -110,8 +109,6 @@ public class GUI implements Disposable {
         settingsWindow.setVisible(false);
         stage.addActor(screenTable);
 
-//        Image dial = new Image(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/dial.png")))));
-//        stage.addActor(dial);
     }
 
     public void showCarSettings( boolean mode ){
@@ -193,7 +190,7 @@ public class GUI implements Disposable {
     public void dispose () {
         Gdx.app.log("GUI dispose()", "");
         stage.dispose();
-        skin.dispose();
+        //skin.dispose();
     }
 
 }
