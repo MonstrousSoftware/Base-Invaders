@@ -202,7 +202,7 @@ public class Car {
         joint.attach(chassis.body.geom.getBody(), weightBody);
 
 
-        Gdx.app.log("car mass", "chassis: "+chassis.body.geom.getBody().getMass()+" antirollmass:"+weightBody.getMass());
+        //Gdx.app.log("car mass", "chassis: "+chassis.body.geom.getBody().getMass()+" antirollmass:"+weightBody.getMass());
     }
 
     public void connectWheels(PhysicsWorld physicsWorld, GameObject chassis, GameObject w0, GameObject w1, GameObject w2, GameObject w3 ) {
@@ -255,7 +255,7 @@ public class Car {
         joint.attach(chassis.geom.getBody(), wheel.geom.getBody());
 
 
-        Gdx.app.log("anchor", anchor.toString());
+        //Gdx.app.log("anchor", anchor.toString());
         joint.setAnchor(anchor);
 
         joint.setAxis1(0, 1, 0);      // up axis for steering

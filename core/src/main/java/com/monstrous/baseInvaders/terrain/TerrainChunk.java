@@ -29,7 +29,7 @@ public class TerrainChunk implements Disposable {
     private int numIndices;
     private Vector3 normalVectors[][] = new Vector3[MAP_SIZE+1][MAP_SIZE+1];
     private Vector3 position; // position of terrain in world coordinates
-    private Texture heightMapTexture;
+//    private Texture heightMapTexture;
 
 
     public TerrainChunk(int xoffset, int yoffset) {
@@ -41,8 +41,8 @@ public class TerrainChunk implements Disposable {
             yoffset*((float)(MAP_SIZE))/GRID_SCALE, (int)GRID_SCALE);
 
         // convert height map to Texture for debugging
-        Pixmap pixmap = noise.generatePixmap(heightMap, MAP_SIZE+1);
-        heightMapTexture = new Texture(pixmap);
+//        Pixmap pixmap = noise.generatePixmap(heightMap, MAP_SIZE+1);
+//        heightMapTexture = new Texture(pixmap);
 
 
 
@@ -71,7 +71,7 @@ public class TerrainChunk implements Disposable {
     }
 
     public Texture getHeightMapTexture() {
-        return heightMapTexture;
+        return null; //heightMapTexture;
     }
 
     public ModelInstance getModelInstance() {
@@ -82,7 +82,7 @@ public class TerrainChunk implements Disposable {
     public void dispose() {
 
         model.dispose();
-        heightMapTexture.dispose();
+//        heightMapTexture.dispose();
     }
 
 

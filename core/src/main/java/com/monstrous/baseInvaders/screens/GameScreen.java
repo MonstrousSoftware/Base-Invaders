@@ -40,6 +40,11 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void show() {
 
+        // hide the mouse cursor and fix it to screen centre, so it doesn't go out the window canvas
+        Gdx.input.setCursorCatched(true);
+        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+
+
         Gdx.input.setCatchKey(Input.Keys.F1, true);
         Gdx.input.setCatchKey(Input.Keys.F2, true);
         Gdx.input.setCatchKey(Input.Keys.F3, true);
@@ -104,6 +109,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+
         if(delta > 0.1f)    // in case we're running in the debugger
             delta = 0.1f;
 
@@ -171,6 +177,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void hide() {
+        Gdx.input.setCursorCatched(false);
         dispose();
     }
 

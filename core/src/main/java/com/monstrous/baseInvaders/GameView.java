@@ -62,7 +62,7 @@ public class GameView implements Disposable {
 
         // setup light
         DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
-            .setViewport(50,50,10f,500);
+            .setViewport(5000,5000,10f,500);
         light.direction.set(1, -3, 1).nor();
         light.color.set(Color.WHITE);
         light.intensity = 5f;
@@ -116,6 +116,7 @@ public class GameView implements Disposable {
     private Vector3 pos = new Vector3();
 
     public void refresh(Camera cam) {
+
         sceneManager.getRenderableProviders().clear();        // remove all scenes
         int count = 0;
         // add scene for each game object

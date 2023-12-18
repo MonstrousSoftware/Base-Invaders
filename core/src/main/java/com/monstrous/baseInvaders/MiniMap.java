@@ -20,13 +20,13 @@ public class MiniMap implements Disposable {
     private SpriteBatch batch;
     private SpriteBatch fboBatch;
     private FrameBuffer fboMiniMap;
-    private Texture mapFrame;
+   // private Texture mapFrame;
     private Rectangle miniMapRect;
     private Rectangle mapFrameRect;
     private int viewWidth;
     private int viewHeight;
     //private Vector3 screenCorners[];		// XZ of screen corners in world coordinates
-    private Texture heightMap;
+    //private Texture heightMap;
     private final Vector3 position;
     private Texture carMarker;
     private Texture jeepMarker;
@@ -37,7 +37,7 @@ public class MiniMap implements Disposable {
         mapSize = 200;  // pixels
         border = 10;    // pixels
         fboMiniMap = new FrameBuffer(Pixmap.Format.RGBA8888, mapSize, mapSize, true);
-        mapFrame = new Texture(Gdx.files.internal("images/frame220.png"));
+        //mapFrame = new Texture(Gdx.files.internal("images/frame220.png"));
         carMarker = new Texture(Gdx.files.internal("textures/greenMarker.png"));
         jeepMarker = new Texture(Gdx.files.internal("textures/orangeMarker.png"));
         techMarker = new Texture(Gdx.files.internal("textures/purpleMarker.png"));
@@ -66,7 +66,7 @@ public class MiniMap implements Disposable {
 //        for(int i = 0; i < 4; i++)
 //            screenCorners[i] = new Vector3();
 
-        heightMap = new Texture(Gdx.files.internal("images/roundedRect.png"));
+        //heightMap = new Texture(Gdx.files.internal("images/roundedRect.png"));
         position = new Vector3();
     }
 
@@ -157,6 +157,6 @@ public class MiniMap implements Disposable {
     @Override
     public void dispose() {
         batch.dispose();
-        mapFrame.dispose();
+        //mapFrame.dispose();
     }
 }

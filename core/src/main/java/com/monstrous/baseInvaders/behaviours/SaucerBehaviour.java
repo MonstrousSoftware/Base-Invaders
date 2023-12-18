@@ -70,13 +70,13 @@ public class SaucerBehaviour extends Behaviour {
         if(height <= 0 && phase == 0){
             phase = 1;
             landTime = 4f;
-            Gdx.app.log("UFO going to phase 1","");
+            //Gdx.app.log("UFO going to phase 1","");
         } else if (phase == 1) {
             landTime -= deltaTime;
 
             if(landTime <= 0) {
                 world.spawnObject(GameObjectType.TYPE_PICKUP_ITEM, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(pos), 2f);
-                Gdx.app.log("UFO going to phase 2","");
+                //Gdx.app.log("UFO going to phase 2","");
                 phase = 2;
                 flyTime = 0;
             }

@@ -1,14 +1,8 @@
 package com.monstrous.baseInvaders.input;
 
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.math.MathUtils;
-import com.monstrous.baseInvaders.Car;
-import com.monstrous.baseInvaders.CarState;
-
 // controller for enemy cars
 
-public class AICarController extends CarState  {
+public class AICarController {
 //
 //    public static float STEER_SPEED = 150;
 //    public static float MAX_STEER_ANGLE =  45;        // degrees

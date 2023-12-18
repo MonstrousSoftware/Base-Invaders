@@ -22,6 +22,7 @@ public class MenuBackground implements Disposable {
     private float width, height;
     Array<Mover> movers;
     Array<Disposable> disposables;
+    private Texture grade;
 
     class Mover {
         Sprite sprite;
@@ -58,6 +59,8 @@ public class MenuBackground implements Disposable {
         disposables.add(batch);
         width = Gdx.graphics.getWidth();
         height = Gdx.graphics.getHeight();
+
+        grade = new Texture("textures/grade.png");
 
         Texture tex1 = new Texture("textures/redStar.png");
         disposables.add(tex1);
@@ -115,8 +118,9 @@ public class MenuBackground implements Disposable {
 
     public void render( float delta ) {
         update(delta);
-        ScreenUtils.clear(Color.LIGHT_GRAY);
+        //ScreenUtils.clear(Color.LIGHT_GRAY);
         batch.begin();
+        batch.draw(grade, 0,0, width, height);
         for(Mover mover : movers)
             mover.sprite.draw(batch);
         batch.end();

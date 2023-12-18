@@ -104,6 +104,9 @@ public class OptionsScreen extends MenuScreen {
        CheckBox freeLook = new CheckBox("Free Look", skin);
        freeLook.setChecked(Settings.freeLook);
 
+       CheckBox fps = new CheckBox("Show FPS", skin);
+       freeLook.setChecked(Settings.showFPS);
+
 
        controllerLabel = new Label("None", skin);
        if(controller != null)
@@ -114,6 +117,7 @@ public class OptionsScreen extends MenuScreen {
        int pad = 10;
 
        screenTable.add(fullScreen).pad(pad).left().row();
+       screenTable.add(fps).pad(pad).left().row();
 //       screenTable.add(invertLook).pad(pad).left().row();
 //       screenTable.add(freeLook).pad(pad).left().row();
 //       screenTable.add(weather).pad(pad).left().row();
@@ -135,8 +139,9 @@ public class OptionsScreen extends MenuScreen {
            ControllerMenuStage cStage = (ControllerMenuStage) stage;
            cStage.clearFocusableActors();
            cStage.addFocusableActor(fullScreen);
-           cStage.addFocusableActor(invertLook);
-           cStage.addFocusableActor(freeLook);
+           cStage.addFocusableActor(fps);
+//           cStage.addFocusableActor(invertLook);
+//           cStage.addFocusableActor(freeLook);
 //           cStage.addFocusableActor(weather);
 //           cStage.addFocusableActor(hints);
 //           cStage.addFocusableActor(narrator);
@@ -156,6 +161,14 @@ public class OptionsScreen extends MenuScreen {
                    Gdx.graphics.setFullscreenMode(currentMode);
                else
                    Gdx.graphics.setWindowedMode(1200, 800);         // todo
+           }
+       });
+
+       fps.addListener(new ChangeListener() {
+           @Override
+           public void changed(ChangeEvent event, Actor actor) {
+               playSelectNoise();
+               Settings.showFPS = fps.isChecked();
            }
        });
 

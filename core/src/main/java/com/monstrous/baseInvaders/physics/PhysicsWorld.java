@@ -97,11 +97,22 @@ public class PhysicsWorld implements Disposable {
                     wheel = go2;
 
 
+
                 DContact.DSurfaceParameters surface = defaultSurface;
                 if(wheel != null) {
                     //Gdx.app.log("cb", "collision with wheel, dir:"+ wheel.getDirection());
                     dir1.set( wheel.getDirection() );
                     surface = wheel.getSurface();
+                    if (wheel.body.getVelocity().len2() < 1f) {
+                        surface.slip1 = 0;
+                        surface.slip2 = 0;
+                        surface.mu = 1000;
+                    }
+                    else {
+                        surface.slip1 = Settings.slip1;
+                        surface.slip2 = Settings.slip2;
+                        surface.mu = Settings.mu;
+                    }
                 }
 
 

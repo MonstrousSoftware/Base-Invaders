@@ -20,8 +20,14 @@ public class CameraController extends InputAdapter {
 
     public CameraController(Camera camera ) {
         this.camera = camera;
-        offset.set(0, 2, -3);
         viewingDirection = new Vector3(0,0,1);
+        reset();
+    }
+
+    public void reset() {
+        offset.set(0, 1, -3);
+        actualOffset.set(0, 10, -30);
+        viewingDirection.set(0,0,1);
     }
 
     @Override

@@ -4,12 +4,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.monstrous.baseInvaders.Car;
-import com.monstrous.baseInvaders.CarState;
 
 //  captures key presses and updates car control variables
 
 // cannot extend InputAdapter because we're already extending CarController
-public class UserCarController extends CarState implements InputProcessor {
+public class UserCarController implements InputProcessor {
 
     public static float STEER_SPEED = 150;
     public static float MAX_STEER_ANGLE =  45;        // degrees

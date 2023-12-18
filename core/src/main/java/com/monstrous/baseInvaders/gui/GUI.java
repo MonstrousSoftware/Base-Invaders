@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.monstrous.baseInvaders.Car;
+import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.World;
@@ -53,15 +54,15 @@ public class GUI implements Disposable {
     }
 
     private void rebuild() {
-        String style = "window";
+//        String style = "window";
 
-        BitmapFont bitmapFont= Main.assets.uiFont;
-        Label.LabelStyle labelStyle = new Label.LabelStyle(bitmapFont, Color.BLUE);
+//        BitmapFont bitmapFont= Main.assets.uiFont;
+//        Label.LabelStyle labelStyle = new Label.LabelStyle(bitmapFont, Color.BLUE);
 
         stage.clear();
-        rpmValue = new Label("", labelStyle);
-        gearValue = new Label("",labelStyle);
-        steerAngleValue = new Label("",labelStyle);
+        rpmValue = new Label("", skin);
+        gearValue = new Label("",skin);
+        steerAngleValue = new Label("",skin);
         levelCompletedLabel = new Label("LEVEL COMPLETED!", skin);
         levelCompletedLabel.setVisible(false);
 
@@ -93,12 +94,18 @@ public class GUI implements Disposable {
         Table screenTable2 = new Table();
         screenTable2.setFillParent(true);
         timeLabel = new Label("00:00", skin);
-        fpsLabel = new Label("0", skin, "small");
-        speedLabel = new Label("0", skin );
+        Label fpsTagLabel;
+        if(Settings.showFPS)
+            fpsTagLabel = new Label("FPS : ", skin, "small");
+        else
+            fpsTagLabel = new Label("", skin, "small");
+
+        fpsLabel = new Label("", skin, "small");
+        speedLabel = new Label("---", skin );
         screenTable2.add().top();
         screenTable2.add();
         screenTable2.add(timeLabel).top().right().expand().row();
-        screenTable2.add(new Label("FPS : ", skin, "small")).bottom().left();
+        screenTable2.add(fpsTagLabel).bottom().left();
         screenTable2.add(fpsLabel).bottom().left().expandX();
         screenTable2.add(gearValue).bottom().left();
         screenTable2.add(speedLabel).bottom().pad(80).right();
@@ -119,6 +126,7 @@ public class GUI implements Disposable {
     }
 
     public void showLevelCompleted( boolean mode ){
+        levelCompletedLabel.setText("GAME COMPLETED\nYOUR TIME: "+timeLabel.getText());
         levelCompletedLabel.setVisible(mode);
     }
 
@@ -140,11 +148,13 @@ public class GUI implements Disposable {
 
     private void updateLabels() {
 
-        sb.setLength(0);
-        sb.append(Gdx.graphics.getFramesPerSecond());
-        sb.append(" ");
-        sb.append(world.stats.itemsRendered);
-        fpsLabel.setText(sb.toString());
+        if(Settings.showFPS) {
+            sb.setLength(0);
+            sb.append(Gdx.graphics.getFramesPerSecond());
+            //sb.append(" ");
+            //sb.append(world.stats.itemsRendered);
+            fpsLabel.setText(sb.toString());
+        }
 
         sb.setLength(0);
         int mm = (int) (world.stats.gameTime/60);

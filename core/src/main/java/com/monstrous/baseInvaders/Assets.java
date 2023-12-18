@@ -43,7 +43,7 @@ public class Assets implements Disposable {
 
         assets.load("skin/invaders.json", Skin.class);
 
-        assets.load("font/Gasoek32.fnt", BitmapFont.class);
+  //      assets.load("font/Gasoek32.fnt", BitmapFont.class);
 
         assets.setLoader(SceneAsset.class, ".gltf", new GLTFAssetLoader());
         assets.load( Settings.GLTF_FILE, SceneAsset.class);
@@ -84,7 +84,7 @@ public class Assets implements Disposable {
     private void initConstants() {
         sounds = new AssetSounds();
         skin = assets.get("skin/invaders.json");
-        uiFont = assets.get("font/Gasoek32.fnt");
+ //       uiFont = assets.get("font/Gasoek32.fnt");
         sceneAsset = assets.get(Settings.GLTF_FILE);
 //        scopeImage = assets.get("images/scope.png");
     }

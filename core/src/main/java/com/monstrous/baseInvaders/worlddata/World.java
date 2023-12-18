@@ -41,14 +41,14 @@ public class World implements Disposable {
         cars = new Array<>();
         stats = new GameStats();
         sceneAsset = Main.assets.sceneAsset;
-        for (Node node : sceneAsset.scene.model.nodes) {  // print some debug info
-            Gdx.app.log("Node ", node.id);
-        }
+//        for (Node node : sceneAsset.scene.model.nodes) {  // print some debug info
+//            Gdx.app.log("Node ", node.id);
+//        }
         physicsWorld = new PhysicsWorld(this);
         factory = new PhysicsBodyFactory(physicsWorld);
         rayCaster = new PhysicsRayCaster(physicsWorld);
         //userCarController = nullnew UserCarController();
-        terrain = new Terrain();
+        terrain = Main.terrain; //new Terrain();
         scenery = new Scenery(this);
 
         playerCar = new Car();
@@ -97,6 +97,11 @@ public class World implements Disposable {
     public GameObject spawnObject(GameObjectType type, String name, String proxyName, CollisionShapeType shapeType, boolean resetPosition, Vector3 position, float density) {
         if (type == GameObjectType.TYPE_TERRAIN)
             return spawnTerrain();
+
+        // a negative position Y means place it at terrain height plus ABS( y )
+        if(position.y < -1000){
+            position.y = terrain.getHeight(position.x, position.z)+1;
+        }
 
         Scene scene = loadNode(name, resetPosition, position);
         ModelInstance collisionInstance = scene.modelInstance;
@@ -244,7 +249,7 @@ public class World implements Disposable {
             stats.gameTime += deltaTime;
         if(stats.techCollected == 7)
             stats.levelComplete = true;
-        stats.speed = (int)cars.get(0).speedMPH;
+        stats.speed = (int)playerCar.speedMPH;
         ufoSpawner(deltaTime);
         userCarController.update(deltaTime);
 
@@ -328,6 +333,6 @@ public class World implements Disposable {
     public void dispose() {
         physicsWorld.dispose();
         rayCaster.dispose();
-        terrain.dispose();
+        //terrain.dispose();
     }
 }

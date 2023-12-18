@@ -22,6 +22,7 @@ public class Settings {
     static public boolean invertLook = false;
     static public boolean freeLook = true;
     static public float degreesPerPixel = 0.1f; // mouse sensitivity
+    static public boolean showFPS = !release;
 
     static public float gravity = -9.8f; // meters / s^2
 
@@ -48,7 +49,7 @@ public class Settings {
     public static float wheelRadius = 0.37f; // as measured in Blender
 
 
-    public static float mu = 1.5f;
+    public static float mu = 1.5f;  // 1.5
     public static float mu2 = 30.5f;//30
     public static float slip1 = 0.8f;
     public static float slip2 = 0.1f;
