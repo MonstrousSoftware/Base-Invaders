@@ -2,9 +2,13 @@ package com.monstrous.baseInvaders.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.controllers.Controllers;
 import com.monstrous.baseInvaders.Assets;
 import com.monstrous.baseInvaders.Settings;
+import com.monstrous.baseInvaders.input.MyControllerMappings;
 import com.monstrous.baseInvaders.terrain.Terrain;
+import de.golfgl.gdx.controllers.mapping.ControllerToInputAdapter;
 
 import static com.badlogic.gdx.Application.ApplicationType.Desktop;
 
@@ -12,6 +16,7 @@ import static com.badlogic.gdx.Application.ApplicationType.Desktop;
 public class Main extends Game {
     public static Assets assets;
     public static Terrain terrain;
+    public ControllerToInputAdapter controllerToInputAdapter;
 
     @Override
     public void create() {
@@ -19,6 +24,13 @@ public class Main extends Game {
 
         assets = new Assets();
 
+        if (Settings.supportControllers) {
+            controllerToInputAdapter = new ControllerToInputAdapter(new MyControllerMappings());
+            // bind controller events to keyboard keys
+            controllerToInputAdapter.addButtonMapping(MyControllerMappings.BUTTON_FIRE, Input.Keys.ENTER);
+            controllerToInputAdapter.addAxisMapping(MyControllerMappings.AXIS_VERTICAL, Input.Keys.UP, Input.Keys.DOWN);
+            Controllers.addListener(controllerToInputAdapter);
+        }
 
         setScreen( new LoadScreen(this) );
     }

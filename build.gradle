@@ -28,8 +28,8 @@ configure(subprojects) {
 }
 
 subprojects {
-  version = '1.0.0'
-  ext.appName = 'TransamTest'
+  version = '1.0.1'
+  ext.appName = 'BaseInvaders'
   repositories {
     mavenCentral()
     maven { url 'https://s01.oss.sonatype.org' }
@@ -42,4 +42,4 @@ subprojects {
   }
 }
 
-eclipse.project.name = 'TransamTest' + '-parent'
+eclipse.project.name = 'BaseInvaders' + '-parent'

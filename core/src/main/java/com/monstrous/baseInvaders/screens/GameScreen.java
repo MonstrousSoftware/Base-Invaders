@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.math.Vector3;
 import com.monstrous.baseInvaders.*;
 import com.monstrous.baseInvaders.gui.GUI;
 import com.monstrous.baseInvaders.input.CameraController;
+import com.monstrous.baseInvaders.input.MyControllerAdapter;
 import com.monstrous.baseInvaders.physics.CollisionShapeType;
 import com.monstrous.baseInvaders.physics.PhysicsView;
 import com.monstrous.baseInvaders.screens.Main;
@@ -32,6 +35,8 @@ public class GameScreen extends ScreenAdapter {
     private boolean carSettingsWindow = false;
     private int techCollected = 0;
     private boolean autoCam = Settings.release;
+    private MyControllerAdapter controllerAdapter;
+    private Controller currentController;
 
     public GameScreen(Main game) {
         this.game = game;
@@ -48,6 +53,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setCatchKey(Input.Keys.F1, true);
         Gdx.input.setCatchKey(Input.Keys.F2, true);
         Gdx.input.setCatchKey(Input.Keys.F3, true);
+        Gdx.input.setCatchKey(Input.Keys.F5, true);
         Gdx.input.setCatchKey(Input.Keys.F11, true);
 
         world = new World();
@@ -55,7 +61,7 @@ public class GameScreen extends ScreenAdapter {
         Populator.populate(world);
         gameView = new GameView(world,false, 1.0f, 400f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
-        gameView.useFBO = !debugRender;
+        //gameView.useFBO = !debugRender;
 
         physicsView = new PhysicsView(world);
         gridView = new GridView();
@@ -72,16 +78,19 @@ public class GameScreen extends ScreenAdapter {
 
         Gdx.app.log("No Controller enabled", "");
 
-        // hide the mouse cursor and fix it to screen centre, so it doesn't go out the window canvas
-//        Gdx.input.setCursorCatched(true);
-//        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        // controller
+        if (Settings.supportControllers) {
+            currentController = Controllers.getCurrent();
+            if (currentController != null) {
+                Gdx.app.log("current controller", currentController.getName());
+                controllerAdapter = new MyControllerAdapter(world.getUserCarController());
+                // we define a listener that listens to all controllers, in case the current controller gets disconnected and reconnected
+                Controllers.removeListener(game.controllerToInputAdapter);
+                Controllers.addListener(controllerAdapter);
+            } else
+                Gdx.app.log("current controller", "none");
+        }
 
-
-
-//        instrumentWorld = new World();
-//
-//        instrumentWorld.spawnObject(GameObjectType.TYPE_STATIC, "dial", null, CollisionShapeType.BOX, false, new Vector3(1,1,1), 1f);
-//        instrumentView = new GameView(instrumentWorld,true, 0.1f, 10f);
 
         instrumentView = new InstrumentView();
     }
@@ -113,19 +122,21 @@ public class GameScreen extends ScreenAdapter {
         if(delta > 0.1f)    // in case we're running in the debugger
             delta = 0.1f;
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) ||
+            (currentController != null && currentController.getButton(currentController.getMapping().buttonX))) {
             if(!Settings.release)
                 Gdx.app.exit();
             game.setScreen( new MainMenuScreen(game));
             return;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)||
+            (currentController != null && currentController.getButton(currentController.getMapping().buttonY)))
             restart();
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             debugRender = !debugRender;
-            gameView.useFBO = !debugRender;
+            //gameView.useFBO = false; //!debugRender;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F2) || world.stats.techCollected > techCollected) {
+        if( world.stats.techCollected > techCollected) {
             gui.addTechIcon();
             techCollected++;
         }
@@ -141,10 +152,8 @@ public class GameScreen extends ScreenAdapter {
         world.update(delta);
         minimap.update(gameView.getCamera(), world);
 
-        //float moveSpeed = world.getPlayer().body.getVelocity().len();
         gameView.render(delta) ;
 
-      //  instrumentView.render(delta) ;
 
         if(debugRender) {
             //gridView.render(gameView.getCamera());
@@ -153,9 +162,6 @@ public class GameScreen extends ScreenAdapter {
 
 
         minimap.render();
-
-        //world.terrain.render();       // debug
-
 
         instrumentView.render(world.getPlayerCar());
 
@@ -177,6 +183,10 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void hide() {
+        if(currentController != null) {
+            Controllers.removeListener(controllerAdapter);
+            Controllers.addListener(game.controllerToInputAdapter);
+        }
         Gdx.input.setCursorCatched(false);
         dispose();
     }

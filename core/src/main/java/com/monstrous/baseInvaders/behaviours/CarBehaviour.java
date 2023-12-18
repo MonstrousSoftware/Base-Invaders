@@ -77,7 +77,12 @@ public class CarBehaviour extends Behaviour {
     }
 
     // automatic gear shifts....
-    private void checkForGearChange( float deltaTime ){
+    private void checkForGearChange( boolean reversing, float deltaTime ){
+
+        if(reversing)
+            gear = -1;
+        else if( gear < 0)
+            gear = 1;
 
         if(shiftingUp){
             if(rpm <= shiftRPM){
@@ -121,10 +126,11 @@ public class CarBehaviour extends Behaviour {
             controller.rpm = rpm;
         braking = controller.braking;
         steerAngle = controller.steerAngle;
+
         //gear = controller.gear;
 
         startStopSound();
-        checkForGearChange(deltaTime);
+        checkForGearChange(controller.reversing, deltaTime);
        // controller.gear = gear;                 // update controller with any gear change
 
         //update(deltaTime);

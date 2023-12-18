@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.shaders.MenuBackground;
 import de.golfgl.gdx.controllers.ControllerMenuStage;
 
@@ -37,8 +38,8 @@ public class MenuScreen extends StdScreenAdapter {
         input.setInputProcessor(stage);
         input.setCatchKey(Input.Keys.UP, true);
         input.setCatchKey(Input.Keys.DOWN, true);
-//        if(Settings.supportControllers)
-//            game.controllerToInputAdapter.setInputProcessor(stage); // forward controller input to stage
+        if(Settings.supportControllers)
+            game.controllerToInputAdapter.setInputProcessor(stage); // forward controller input to stage
 
         background = new MenuBackground();
     }

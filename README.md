@@ -3,7 +3,7 @@
 
 A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/tommyettinger/gdx-liftoff).
 
-Car racing with a code structure based off the 3d tutorial. Using ODE4j, gdx-teavm.
+Car racing with a code structure based off the 3d tutorial. Using ODE4j.
 
 
 

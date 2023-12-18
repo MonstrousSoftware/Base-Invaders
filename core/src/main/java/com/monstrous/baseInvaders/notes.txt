@@ -30,3 +30,5 @@ Fixed Assert error
 - assert error at com.github.antzGames.gdx.ode4j.ode.internal.joints.DxJointHinge2.makeV1andV2(DxJointHinge2.java:260)
 This was due to a bug in ODE4j checkign if axis1 == axis2 but not axis1 == -axis2 before calculating cross vectors.
 It was fixed by having the same direction for all wheels (the model was made symmetrical).
+
+Disabled FBO because the vignette is not with the aliasing.

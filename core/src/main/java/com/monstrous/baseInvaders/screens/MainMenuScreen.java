@@ -113,6 +113,7 @@ public class MainMenuScreen extends MenuScreen {
             ControllerMenuStage cStage = (ControllerMenuStage)stage;
             cStage.clearFocusableActors();
             cStage.addFocusableActor(play);
+            cStage.addFocusableActor(keys);
             cStage.addFocusableActor(options);
 //            cStage.addFocusableActor(credits);
             cStage.addFocusableActor(quit);
