@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.monstrous.baseInvaders.Car;
 import com.monstrous.baseInvaders.Settings;
+import com.monstrous.baseInvaders.behaviours.CarBehaviour;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.World;
@@ -25,7 +26,7 @@ public class GUI implements Disposable {
     private Skin skin;
     public Stage stage;
     private World world;
-    private Car car;
+    private CarBehaviour car;
     //private UserCarController carController;
     private Label rpmValue;
     private Label gearValue;
@@ -42,7 +43,7 @@ public class GUI implements Disposable {
     private final StringBuffer sb;
 
 
-    public GUI(Car car, World world ) {
+    public GUI(CarBehaviour car, World world ) {
         Gdx.app.log("GUI constructor", "");
         this.car = car;
         this.world = world;

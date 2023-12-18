@@ -13,11 +13,11 @@ public class GameObject implements Disposable {
     public final GameObjectType type;
     public final Scene scene;
     public final PhysicsBody body;
-    public final Vector3 position;
+    private final Vector3 position;
     public final Vector3 direction;
     public boolean visible;
     public float health;
-    private Behaviour behaviour;
+    public Behaviour behaviour;
     private DContact.DSurfaceParameters surface;
     public final BoundingBox boundingBox = new BoundingBox();
     public final Vector3 dimensions;

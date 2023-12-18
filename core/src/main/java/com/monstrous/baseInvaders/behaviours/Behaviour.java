@@ -18,6 +18,10 @@ public class Behaviour {
     public static Behaviour createBehaviour(GameObject go){
         if(go.type == GameObjectType.TYPE_UFO)
             return new SaucerBehaviour(go);
+        else if(go.type == GameObjectType.TYPE_PLAYER)
+            return new CarBehaviour(go);
+        else if(go.type == GameObjectType.TYPE_ENEMY_CAR)
+            return new JeepBehaviour(go);
         return null;
     }
 }

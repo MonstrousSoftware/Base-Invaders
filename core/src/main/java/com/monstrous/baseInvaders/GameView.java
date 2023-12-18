@@ -64,6 +64,7 @@ public class GameView implements Disposable {
         DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
             .setViewport(5000,5000,10f,500);
         light.direction.set(1, -3, 1).nor();
+
         light.color.set(Color.WHITE);
         light.intensity = 5f;
         sceneManager.environment.add(light);

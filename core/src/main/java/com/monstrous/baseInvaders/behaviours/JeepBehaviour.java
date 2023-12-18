@@ -1,9 +1,10 @@
-package com.monstrous.baseInvaders;
+package com.monstrous.baseInvaders.behaviours;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.github.antzGames.gdx.ode4j.math.DVector3C;
 import com.github.antzGames.gdx.ode4j.ode.*;
+import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.physics.PhysicsBody;
 import com.monstrous.baseInvaders.physics.PhysicsWorld;
@@ -12,13 +13,14 @@ import com.monstrous.baseInvaders.worlddata.GameObject;
 import com.monstrous.baseInvaders.worlddata.World;
 
 import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
-//import org.ode4j.ode.DHinge2Joint;
 
+// enemy car behaviour
+// (lots of overlap with CarBehaviour)
 
-// captures car state and behaviour
-// assumes there is only one car type
+public class JeepBehaviour extends Behaviour {
 
-public class Car {
+    public final static float SPOTTING_DISTANCE = 100f;
+    public final static float LOSE_DISTANCE = 200f;
 
     public static int MAX_GEAR = 5;
     public static int REVERSE_GEAR = -1;
@@ -48,31 +50,12 @@ public class Car {
     private float shiftRPM;
 
     public DHinge2Joint[] joints;      // 4 for 4 wheels
-    public GameObject chassisObject;
 
-    public Car() {
+
+    public JeepBehaviour(GameObject go) {
+        super(go);
     }
 
-
-    private void startStopSound(){
-        if(rpm > 0 && prevRPM == 0)
-            engineId = Main.assets.sounds.ENGINE.loop();
-        else if(rpm == 0 && prevRPM > 0) {
-            Main.assets.sounds.ENGINE.stop();
-        }
-        if(!brakeSound && braking && rpm > 0) {
-            Main.assets.sounds.BRAKE.play();
-            brakeSound = true;
-        }
-        if(rpm == 0)
-            brakeSound = false;
-        prevRPM = rpm;
-
-        if(rpm > 0) {
-            Main.assets.sounds.ENGINE.setPitch(engineId, rpm / 6000f  );
-        }
-
-    }
 
     // automatic gear shifts....
     private void checkForGearChange( float deltaTime ){
@@ -109,19 +92,94 @@ public class Car {
 
     private Vector3 v = new Vector3();
 
-    public void update(World world, float deltaTime ){
-        // copy inputs from user controller
-        UserCarController controller = world.getUserCarController();
-        rpm = controller.rpm;
-        braking = controller.braking;
-        steerAngle = controller.steerAngle;
-        gear = controller.gear;
+    private int mode = WAITING;
+    private float timer = 5f;
+    private float previousDistance;
+    private Vector3 target = new Vector3();
+    private Vector3 dir = new Vector3();
+    private Vector3 targetDirection = new Vector3();
+    private Vector3 vTmp = new Vector3();
 
-        startStopSound();
+    private final static int WAITING = 0;
+    private final static int MOVING = 1;
+    private final static int TARGETING = 2;
+
+    public void update(World world, float deltaTime ) {
+
+        if((mode== WAITING || mode == MOVING) && go.getPosition().dst(world.getPlayer().getPosition()) < SPOTTING_DISTANCE){
+            mode = TARGETING;
+            braking = false;
+            gear = 1;
+            Gdx.app.log("jeep state", "-> following player");
+        }
+
+        if(mode == WAITING){
+            timer -= deltaTime;
+            if(timer < 0){
+                float x = (float) (Math.random())*0.5f*Settings.worldSize;    // not too close to the edge
+                float z = (float) (Math.random())*0.5f*Settings.worldSize;
+                target.set(x, 0, z);    // ignore Y
+                mode = MOVING;
+                braking = false;
+                gear = 1;
+                previousDistance = 9999f;
+                //Gdx.app.log("jeep state", "-> moving to target "+target);
+            }
+        }
+        if(mode == MOVING) {
+
+            if(rpm < 4000)
+                rpm+= deltaTime * 1000f;
+            Vector3 pos = go.getPosition();
+            target.y = pos.y;
+            float distance = target.dst(pos);
+            targetDirection.set(target).sub(pos).nor();
+            dir.set(go.getDirection());
+            vTmp.x = dir.z;     // rotate by 90 degrees
+            vTmp.z = -dir.x;
+            float dot = targetDirection.dot(vTmp);
+            steerAngle = dot*45f;
+            //Gdx.app.log("jeep dot", ""+dot+"position: "+pos+" distance: "+distance);
+            if(distance < 20f ) {// || distance > previousDistance){
+                rpm = 0;
+                braking = true;
+                mode = WAITING;
+                //Gdx.app.log("jeep state", "-> waiting");
+                timer = 8f;
+            }
+            previousDistance = distance;
+        }
+        if(mode == TARGETING) {
+
+            if(rpm < 6000)
+                rpm+= deltaTime * 1000f;
+            Vector3 pos = go.getPosition();
+            target.set(world.getPlayer().getPosition());
+            target.y = pos.y;
+            float distance = target.dst(pos);
+
+            targetDirection.set(target).sub(pos).nor();
+            dir.set(go.getDirection());
+            vTmp.x = dir.z;     // rotate by 90 degrees
+            vTmp.z = -dir.x;
+            float dot = targetDirection.dot(vTmp);
+            steerAngle = dot*45f;
+            //Gdx.app.log("jeep dot", ""+dot+"position: "+pos+" distance: "+distance);
+            if (distance > LOSE_DISTANCE){
+                rpm = 0;
+                braking = true;
+                mode = WAITING;
+                Gdx.app.log("jeep state", "lost track of player -> waiting");
+                timer = 8f;
+            }
+            previousDistance = distance;
+        }
+        updateCarStuff(deltaTime);
+    }
+
+    private void updateCarStuff(float deltaTime) {
+
         checkForGearChange(deltaTime);
-        controller.gear = gear;                 // update controller with any gear change
-
-        //update(deltaTime);
 
         gearRatio = gearRatios[gear+1];     // +1 because of the reverse gear
 
@@ -136,17 +194,13 @@ public class Car {
         if(braking)
             driveShaftRPM = targetDriveshaftRPM;
 
-        v.set(chassisObject.body.getVelocity());
-        //v.y = 0; // look only at horizontal
-        float speed = v.dot(chassisObject.direction);
+        v.set(go.body.getVelocity());
+
+        float speed = v.dot(go.direction);
 
         float rollAngVel = 2*speed / ((float)Math.PI *  Settings.wheelRadius); //??
 
         float wav = 0.01f*driveShaftRPM;
-
-        //steerAngle = -steerAngle;
-//        steerAngle *= (15f-speed)/15f;                      // reduce steer angle at high speeds
-        //Gdx.app.log("speed", ""+speed);
 
         if(braking)
             wav = 0;
@@ -164,12 +218,6 @@ public class Car {
             if( i < 2) {
                 double curturn = j2.getAngle1();
                 double delta = (Math.toRadians(steerAngle) - curturn);
-//                double max = 20.8f;
-//                if(delta > max)
-//                    delta = max;
-//                if(delta < -max)
-//                    delta = -max;
-               // Gdx.app.log("steer delta", ""+(float)curturn);
                 j2.setParamVel(30f*delta);      // ignored for non-steering wheels which are locked
 
                 // let front wheels roll and rear wheels slip
@@ -183,10 +231,9 @@ public class Car {
                 j2.setParamVel2(wheelAngularVelocity);
 
             }
-//            j2.getBody(0).enable();
-//            j2.getBody(1).enable();
         }
     }
+
 
     private void addCounterWeight(PhysicsWorld physicsWorld, GameObject chassis) {
         DMass massInfo = OdeHelper.createMass();
@@ -211,7 +258,6 @@ public class Car {
 
     public void connectWheels(PhysicsWorld physicsWorld, GameObject chassis, GameObject w0, GameObject w1, GameObject w2, GameObject w3 ) {
 
-        // todo also add weight below the car?
         addCounterWeight(physicsWorld, chassis);
 
         joints =new DHinge2Joint[4];
@@ -219,7 +265,7 @@ public class Car {
         joints[1]=makeWheelJoint(physicsWorld, chassis.body, w1.body,true);
         joints[2]=makeWheelJoint(physicsWorld, chassis.body, w2.body,false);
         joints[3]=makeWheelJoint(physicsWorld, chassis.body, w3.body,false);
-        chassisObject =chassis;
+        //chassisObject =chassis;
         chassis.body.geom.getBody().setAutoDisableFlag(false);
 
         // define surface properties for front and rear tyres
@@ -282,5 +328,7 @@ public class Car {
         wheel.geom.getBody().setAutoDisableFlag(false);
         return joint;
     }
+
+
 
 }

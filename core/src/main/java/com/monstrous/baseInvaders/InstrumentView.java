@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
+import com.monstrous.baseInvaders.behaviours.CarBehaviour;
 
 public class InstrumentView implements Disposable {
     SpriteBatch batch;
@@ -25,7 +26,7 @@ public class InstrumentView implements Disposable {
         indicatorSpeed.setRotation(45);
     }
 
-    public void render(Car car) {
+    public void render(CarBehaviour car) {
         batch.begin();
 
         indicatorRPM.setRotation(45-270f*car.rpm/8000f);

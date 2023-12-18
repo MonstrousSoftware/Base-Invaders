@@ -47,7 +47,13 @@ public class Populator {
         Vector3 carPos = new Vector3(Settings.worldSize/2,-1001,Settings.worldSize/2);
 
 
-        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(120,18,160), Settings.chassisDensity);
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(Settings.worldSize/3,18,Settings.worldSize/2), Settings.chassisDensity);
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(2*Settings.worldSize/3,18,Settings.worldSize/4), Settings.chassisDensity);
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(-Settings.worldSize/2,18,-Settings.worldSize/3), Settings.chassisDensity);
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(-Settings.worldSize/3,18,Settings.worldSize/3), Settings.chassisDensity);
+
+
+ //       world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(120,18,160), Settings.chassisDensity);
 //        world.spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.SPHERE, true,new Vector3(carPos.x, carPos.y-0.5f, carPos.z+1f), Settings.wheelDensity);
 
         GameObject go = world.spawnObject(GameObjectType.TYPE_PLAYER, "mustang","mustangProxy", CollisionShapeType.MESH, true, carPos, Settings.chassisDensity);

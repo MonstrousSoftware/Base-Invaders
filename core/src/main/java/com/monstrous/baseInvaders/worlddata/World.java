@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.Car;
+import com.monstrous.baseInvaders.behaviours.CarBehaviour;
+import com.monstrous.baseInvaders.behaviours.JeepBehaviour;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
@@ -20,7 +22,6 @@ import net.mgsx.gltf.scene3d.scene.SceneAsset;
 public class World implements Disposable {
 
     private final Array<GameObject> gameObjects;
-    private final Array<Car> cars;
     private GameObject player;
     public GameStats stats;
     private final SceneAsset sceneAsset;
@@ -28,7 +29,7 @@ public class World implements Disposable {
     private final PhysicsBodyFactory factory;
     private UserCarController userCarController;
     public final PhysicsRayCaster rayCaster;
-    private Car playerCar;
+    private CarBehaviour playerCar;
     public Terrain terrain;
     private Scenery scenery;
     private float ufoSpawnTimer;
@@ -38,21 +39,17 @@ public class World implements Disposable {
         Gdx.app.log("world", "constructor");
 
         gameObjects = new Array<>();
-        cars = new Array<>();
+
         stats = new GameStats();
         sceneAsset = Main.assets.sceneAsset;
-//        for (Node node : sceneAsset.scene.model.nodes) {  // print some debug info
-//            Gdx.app.log("Node ", node.id);
-//        }
+
         physicsWorld = new PhysicsWorld(this);
         factory = new PhysicsBodyFactory(physicsWorld);
         rayCaster = new PhysicsRayCaster(physicsWorld);
-        //userCarController = nullnew UserCarController();
         terrain = Main.terrain; //new Terrain();
         scenery = new Scenery(this);
 
-        playerCar = new Car();
-        userCarController = new UserCarController(playerCar);
+        userCarController = new UserCarController();
 
     }
 
@@ -62,7 +59,7 @@ public class World implements Disposable {
 
         stats.reset();
         gameObjects.clear();
-        cars.clear();
+        //cars.clear();
         player = null;
         scenery.populate();
         ufoSpawnTimer = 3f;
@@ -84,7 +81,7 @@ public class World implements Disposable {
         this.player = player;
     }
 
-    public Car getPlayerCar() {
+    public CarBehaviour getPlayerCar() {
         return playerCar;
     }
 
@@ -156,17 +153,14 @@ public class World implements Disposable {
         gameObjects.add(w2);
         gameObjects.add(w3);
 
-        Car car;
         if(chassis.type == GameObjectType.TYPE_PLAYER) {
-            car = playerCar;
+            playerCar = (CarBehaviour) chassis.behaviour;
+            playerCar.connectWheels(physicsWorld, chassis, w0, w1, w2, w3);
         }
-        else {// enemy car
-            //AICarController aiCarController = new AICarController();
-            car = new Car();
+        else {
+            JeepBehaviour jeep = (JeepBehaviour)chassis.behaviour;
+            jeep.connectWheels(physicsWorld, chassis, w0, w1, w2, w3);
         }
-
-        car.connectWheels(physicsWorld, chassis, w0, w1, w2, w3);
-        cars.add(car);
     }
 
     // index: 0=front left, 1=front right, 2 =rear left, 3 = rear right
@@ -256,11 +250,12 @@ public class World implements Disposable {
         for(GameObject go : gameObjects)
             go.update(this, deltaTime);
 
-        for(Car car: cars )
-            car.update(deltaTime);
-
         physicsWorld.update();
         syncToPhysics();
+
+        if(player.getPosition().y < -50)    // fallen off the edge of the map
+            Populator.populate(this);   // reset to start
+
     }
 
     private void syncToPhysics() {
@@ -288,15 +283,6 @@ public class World implements Disposable {
         if (go1.type.isPlayer && go2.type.canPickup) {
             pickup(go1, go2);
         }
-//        if (go1.type.isPlayer && go2.type.isEnemyBullet) {
-//            removeObject(go2);
-//            bulletHit(go1);
-//        }
-//
-//        if(go1.type.isEnemy && go2.type.isFriendlyBullet) {
-//            removeObject(go2);
-//            bulletHit(go1);
-//        }
     }
 
     private void pickup(GameObject character, GameObject pickup){
@@ -308,31 +294,12 @@ public class World implements Disposable {
 
 
         }
-//        else if(pickup.type == GameObjectType.TYPE_PICKUP_HEALTH) {
-//            character.health = Math.min(character.health + 0.5f, 1f);   // +50% health
-//            Main.assets.sounds.UPGRADE.play();
-//        }
-//        else if(pickup.type == GameObjectType.TYPE_PICKUP_GUN) {
-//            weaponState.haveGun = true;
-//            weaponState.currentWeaponType = WeaponType.GUN;
-//            Main.assets.sounds.UPGRADE.play();
-//        }
     }
 
-//    private void bulletHit(GameObject character) {
-//        character.health -= 0.25f;      // - 25% health
-//        Main.assets.sounds.HIT.play();
-//        if(character.isDead()) {
-//            removeObject(character);
-//            if (character.type.isPlayer)
-//                Main.assets.sounds.GAME_OVER.play();
-//        }
-//    }
 
     @Override
     public void dispose() {
         physicsWorld.dispose();
         rayCaster.dispose();
-        //terrain.dispose();
     }
 }

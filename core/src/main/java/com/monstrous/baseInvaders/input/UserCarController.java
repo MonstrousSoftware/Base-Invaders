@@ -14,7 +14,12 @@ public class UserCarController implements InputProcessor {
     public static float MAX_STEER_ANGLE =  45;        // degrees
     public static float BRAKE_RPM_SCALE = 5f;
 
-    private Car car;
+    // variables for export to car
+    public float steerAngle;
+    public float rpm;
+    public boolean braking;
+    public int gear;
+
     private boolean leftPressed;
     private boolean rightPressed;
     private boolean forwardPressed;
@@ -23,9 +28,8 @@ public class UserCarController implements InputProcessor {
     private boolean reversing;
 
 
-    public UserCarController( Car car )
+    public UserCarController()
     {
-        this.car = car;
         reset();
     }
 
@@ -35,9 +39,9 @@ public class UserCarController implements InputProcessor {
         forwardPressed = false;
         backwardPressed = false;
         gearShift = 0;
-        car.gear = 1;
-        car.steerAngle = 0;
-        car.rpm = 0;
+        gear = 1;
+        steerAngle = 0;
+        rpm = 0;
         reversing = false;
     }
 
@@ -46,26 +50,29 @@ public class UserCarController implements InputProcessor {
 
 
         // Steering
-        if(leftPressed && car.steerAngle<MAX_STEER_ANGLE)
-        {
-            car.steerAngle += STEER_SPEED*deltaTime;
+        if(leftPressed) {
+            if(steerAngle<MAX_STEER_ANGLE)
+                steerAngle += STEER_SPEED*deltaTime;
         }
-        if(rightPressed && car.steerAngle  >-MAX_STEER_ANGLE)
-        {
-            car.steerAngle -= STEER_SPEED*deltaTime;
+        else if(rightPressed) {
+            if (steerAngle > -MAX_STEER_ANGLE)
+                steerAngle -= STEER_SPEED * deltaTime;
         }
+        else
+            steerAngle -= Math.signum(steerAngle)*deltaTime*50f;
+
         // Accelerator
-        car.braking = (backwardPressed && !reversing) || (forwardPressed && reversing);
+        braking = (backwardPressed && !reversing) || (forwardPressed && reversing);
         if(forwardPressed) {
             if(!reversing){
-                if(car.rpm < Car.MAX_RPM)
-                    car.rpm += Car.RPM_REV * deltaTime;
+                if(rpm < Car.MAX_RPM)
+                    rpm += Car.RPM_REV * deltaTime;
             }else {
-                if( car.rpm > 0) {
-                    car.rpm-=BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
+                if( rpm > 0) {
+                    rpm-=BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
                 }
                 else {
-                    car.gear = 1;
+                    gear = 1;
                     reversing = false;
                 }
             }
@@ -73,30 +80,30 @@ public class UserCarController implements InputProcessor {
         else {
             if (backwardPressed) {
                 if (reversing) {
-                    if (car.rpm < Car.MAX_RPM)
-                        car.rpm += Car.RPM_REV * deltaTime;
+                    if (rpm < Car.MAX_RPM)
+                        rpm += Car.RPM_REV * deltaTime;
                 } else {
-                    if (car.rpm > 0)    // braking
-                        car.rpm -= BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
+                    if (rpm > 0)    // braking
+                        rpm -= BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
                     else {
-                        car.gear = -1;
+                        gear = -1;
                         reversing = true;
                     }
                 }
             } else {
-                if (car.rpm > 0) {  // coasting
-                    car.rpm -= Car.RPM_REV * 3f * deltaTime;
+                if (rpm > 0) {  // coasting
+                    rpm -= Car.RPM_REV * 3f * deltaTime;
                 }
             }
         }
-        car.rpm = MathUtils.clamp(car.rpm, 0, Car.MAX_RPM);
+        rpm = MathUtils.clamp(rpm, 0, Car.MAX_RPM);
 
 
         int gearShift = getGearShift();
-        if(gearShift > 0  && car.gear < Car.MAX_GEAR)
-            car.gear++;
-        else if(gearShift < 0 && car.gear > -1)
-            car.gear--;
+        if(gearShift > 0  && gear < Car.MAX_GEAR)
+            gear++;
+        else if(gearShift < 0 && gear > -1)
+            gear--;
     }
 
 

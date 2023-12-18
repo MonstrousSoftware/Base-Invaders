@@ -1,24 +1,24 @@
-package com.monstrous.baseInvaders;
+package com.monstrous.baseInvaders.behaviours;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.github.antzGames.gdx.ode4j.math.DVector3C;
 import com.github.antzGames.gdx.ode4j.ode.*;
+import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.physics.PhysicsBody;
 import com.monstrous.baseInvaders.physics.PhysicsWorld;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.GameObject;
+import com.monstrous.baseInvaders.worlddata.GameObjectType;
 import com.monstrous.baseInvaders.worlddata.World;
 
 import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
-//import org.ode4j.ode.DHinge2Joint;
+import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.dContactSoftCFM;
 
 
-// captures car state and behaviour
-// assumes there is only one car type
+public class CarBehaviour extends Behaviour {
 
-public class Car {
 
     public static int MAX_GEAR = 5;
     public static int REVERSE_GEAR = -1;
@@ -48,11 +48,13 @@ public class Car {
     private float shiftRPM;
 
     public DHinge2Joint[] joints;      // 4 for 4 wheels
-    public GameObject chassisObject;
+//    public GameObject chassisObject;
 
-    public Car() {
+
+    public CarBehaviour(GameObject go) {
+        super(go);
+        gear = 1;
     }
-
 
     private void startStopSound(){
         if(rpm > 0 && prevRPM == 0)
@@ -76,13 +78,14 @@ public class Car {
 
     // automatic gear shifts....
     private void checkForGearChange( float deltaTime ){
+
         if(shiftingUp){
             if(rpm <= shiftRPM){
                 //gear = nextGear;
                 shiftingUp = false;
             }
             else
-                rpm -= 8000*deltaTime;
+                rpm -= 3000*deltaTime;
         }
         else if(shiftingDown){
             if(rpm >= shiftRPM){
@@ -90,7 +93,7 @@ public class Car {
                 shiftingDown = false;
             }
             else
-                rpm += 8000*deltaTime;
+                rpm += 3000*deltaTime;
         }
         else if(rpm > 7000 && gear < MAX_GEAR && gear != REVERSE_GEAR && !shiftingUp) {
             shiftingUp = true;
@@ -112,14 +115,17 @@ public class Car {
     public void update(World world, float deltaTime ){
         // copy inputs from user controller
         UserCarController controller = world.getUserCarController();
-        rpm = controller.rpm;
+        if(!shiftingUp && !shiftingDown)    // declutch while shifting gears
+            rpm = controller.rpm;
+        else
+            controller.rpm = rpm;
         braking = controller.braking;
         steerAngle = controller.steerAngle;
-        gear = controller.gear;
+        //gear = controller.gear;
 
         startStopSound();
         checkForGearChange(deltaTime);
-        controller.gear = gear;                 // update controller with any gear change
+       // controller.gear = gear;                 // update controller with any gear change
 
         //update(deltaTime);
 
@@ -136,9 +142,9 @@ public class Car {
         if(braking)
             driveShaftRPM = targetDriveshaftRPM;
 
-        v.set(chassisObject.body.getVelocity());
+        v.set(go.body.getVelocity());
         //v.y = 0; // look only at horizontal
-        float speed = v.dot(chassisObject.direction);
+        float speed = v.dot(go.direction);
 
         float rollAngVel = 2*speed / ((float)Math.PI *  Settings.wheelRadius); //??
 
@@ -169,7 +175,7 @@ public class Car {
 //                    delta = max;
 //                if(delta < -max)
 //                    delta = -max;
-               // Gdx.app.log("steer delta", ""+(float)curturn);
+                // Gdx.app.log("steer delta", ""+(float)curturn);
                 j2.setParamVel(30f*delta);      // ignored for non-steering wheels which are locked
 
                 // let front wheels roll and rear wheels slip
@@ -187,6 +193,7 @@ public class Car {
 //            j2.getBody(1).enable();
         }
     }
+
 
     private void addCounterWeight(PhysicsWorld physicsWorld, GameObject chassis) {
         DMass massInfo = OdeHelper.createMass();
@@ -219,7 +226,7 @@ public class Car {
         joints[1]=makeWheelJoint(physicsWorld, chassis.body, w1.body,true);
         joints[2]=makeWheelJoint(physicsWorld, chassis.body, w2.body,false);
         joints[3]=makeWheelJoint(physicsWorld, chassis.body, w3.body,false);
-        chassisObject =chassis;
+        //chassisObject =chassis;
         chassis.body.geom.getBody().setAutoDisableFlag(false);
 
         // define surface properties for front and rear tyres
@@ -282,5 +289,7 @@ public class Car {
         wheel.geom.getBody().setAutoDisableFlag(false);
         return joint;
     }
+
+
 
 }
