@@ -19,8 +19,8 @@ import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
 
 public class JeepBehaviour extends Behaviour {
 
-    public final static float SPOTTING_DISTANCE = 100f;
-    public final static float LOSE_DISTANCE = 200f;
+    public final static float SPOTTING_DISTANCE = 200f;
+    public final static float LOSE_DISTANCE = 400f;
 
     public static int MAX_GEAR = 5;
     public static int REVERSE_GEAR = -1;
@@ -151,7 +151,7 @@ public class JeepBehaviour extends Behaviour {
         }
         if(mode == TARGETING) {
 
-            if(rpm < 6000)
+            if(rpm < 7500)
                 rpm+= deltaTime * 1000f;
             Vector3 pos = go.getPosition();
             target.set(world.getPlayer().getPosition());

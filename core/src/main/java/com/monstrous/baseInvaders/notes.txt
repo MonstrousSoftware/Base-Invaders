@@ -31,7 +31,11 @@ Fixed Assert error
 This was due to a bug in ODE4j checkign if axis1 == axis2 but not axis1 == -axis2 before calculating cross vectors.
 It was fixed by having the same direction for all wheels (the model was made symmetrical).
 
-Disabled FBO because the vignette is not with the aliasing.
+Disabled FBO because the vignette is not worth the aliasing.
+
+
+
+
 
 
 
