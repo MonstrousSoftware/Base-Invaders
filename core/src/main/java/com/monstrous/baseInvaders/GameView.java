@@ -14,6 +14,7 @@ import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRTextureAttribute;
 import net.mgsx.gltf.scene3d.lights.DirectionalLightEx;
+import net.mgsx.gltf.scene3d.lights.DirectionalShadowLight;
 import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
@@ -31,6 +32,7 @@ public class GameView implements Disposable {
     private final Cubemap specularCubemap;
     private final Texture brdfLUT;
     private SceneSkybox skybox;
+    private DirectionalShadowLight shadowLight;
     private final CameraController camController;
     private final boolean isOverlay;
     private CascadeShadowMap csm = null;
@@ -61,16 +63,17 @@ public class GameView implements Disposable {
 //        sceneManager.setCascadeShadowMap(csm);
 
         // setup light
-        DirectionalLightEx light = new net.mgsx.gltf.scene3d.lights.DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
-            .setViewport(5000,5000,10f,500);
-        light.direction.set(1, -3, 1).nor();
+        int viewPortSize = 64;  // smaller value gives sharper shadow
+        shadowLight = new DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
+            .setViewport(viewPortSize,viewPortSize,1f,100);
+        shadowLight.direction.set(1, -3, 1).nor();
 
-        light.color.set(Color.WHITE);
-        light.intensity = 5f;
-        sceneManager.environment.add(light);
+        shadowLight.color.set(Color.WHITE);
+        shadowLight.intensity = 5f;
+        sceneManager.environment.add(shadowLight);
 
         // setup quick IBL (image based lighting)
-        IBLBuilder iblBuilder = IBLBuilder.createOutdoor(light);
+        IBLBuilder iblBuilder = IBLBuilder.createOutdoor(shadowLight);
         environmentCubemap = iblBuilder.buildEnvMap(1024);
         diffuseCubemap = iblBuilder.buildIrradianceMap(256);
         specularCubemap = iblBuilder.buildRadianceMap(10);
@@ -83,7 +86,7 @@ public class GameView implements Disposable {
         sceneManager.environment.set(new PBRTextureAttribute(PBRTextureAttribute.BRDFLUTTexture, brdfLUT));
         sceneManager.environment.set(PBRCubemapAttribute.createSpecularEnv(specularCubemap));
         sceneManager.environment.set(PBRCubemapAttribute.createDiffuseEnv(diffuseCubemap));
-        sceneManager.environment.set(new PBRFloatAttribute(PBRFloatAttribute.ShadowBias, 1f/512f)); // reduce shadow acne
+        sceneManager.environment.set(new PBRFloatAttribute(PBRFloatAttribute.ShadowBias, 1f/256f)); // reduce shadow acne
 
         // setup skybox
         if(!isOverlay) {
@@ -150,6 +153,7 @@ public class GameView implements Disposable {
 //        csm.setCascades(sceneManager.camera, shadowLight, 400f, 3f);
 
             refresh(cam);
+            shadowLight.setCenter(cam.position);
             sceneManager.update(delta);
         }
         sceneManager.renderShadows();

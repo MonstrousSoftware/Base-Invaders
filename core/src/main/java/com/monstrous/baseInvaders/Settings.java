@@ -26,7 +26,7 @@ public class Settings {
 
     static public float gravity = -9.8f; // meters / s^2
 
-    static public final int shadowMapSize = 4096;
+    static public final int shadowMapSize = 2048; //4096;
 
     static public float playerLinearDamping = 0.05f;
     static public float playerAngularDamping = 0.5f;
