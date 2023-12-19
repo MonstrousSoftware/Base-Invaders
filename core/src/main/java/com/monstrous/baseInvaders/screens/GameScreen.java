@@ -3,18 +3,13 @@ package com.monstrous.baseInvaders.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
-import com.badlogic.gdx.math.Vector3;
 import com.monstrous.baseInvaders.*;
 import com.monstrous.baseInvaders.gui.GUI;
 import com.monstrous.baseInvaders.input.CameraController;
 import com.monstrous.baseInvaders.input.MyControllerAdapter;
-import com.monstrous.baseInvaders.physics.CollisionShapeType;
 import com.monstrous.baseInvaders.physics.PhysicsView;
-import com.monstrous.baseInvaders.screens.Main;
-import com.monstrous.baseInvaders.worlddata.GameObjectType;
 import com.monstrous.baseInvaders.worlddata.Populator;
 import com.monstrous.baseInvaders.terrain.TerrainChunk;
 import com.monstrous.baseInvaders.worlddata.World;
@@ -58,7 +53,8 @@ public class GameScreen extends StdScreenAdapter {
 
         world = new World();
 
-        Populator.populate(world);
+
+
         gameView = new GameView(world,false, 1.0f, 400f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
         //gameView.useFBO = !debugRender;
@@ -66,17 +62,6 @@ public class GameScreen extends StdScreenAdapter {
         physicsView = new PhysicsView(world);
         gridView = new GridView();
         minimap = new MiniMap(TerrainChunk.MAP_SIZE, TerrainChunk.MAP_SIZE);
-
-        gui = new GUI(world.getPlayerCar(), world);
-
-
-        InputMultiplexer im = new InputMultiplexer();
-        Gdx.input.setInputProcessor(im);
-        im.addProcessor(gui.stage);
-        im.addProcessor(gameView.getCameraController());
-        im.addProcessor(world.getUserCarController());
-
-        Gdx.app.log("No Controller enabled", "");
 
         // controller
         if (Settings.supportControllers) {
@@ -92,18 +77,37 @@ public class GameScreen extends StdScreenAdapter {
         }
 
 
-        instrumentView = new InstrumentView();
+        Populator.populate(world);
 
+        gui = new GUI(game, world.getPlayerCar(), world);
+
+
+        InputMultiplexer im = new InputMultiplexer();
+        Gdx.input.setInputProcessor(im);
+        im.addProcessor(gui.stage);
+        im.addProcessor(gameView.getCameraController());
+        im.addProcessor(world.getUserCarController());
+
+        instrumentView = new InstrumentView();
         if(Settings.musicOn)
             game.musicManager.startMusic("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", true);
+
     }
 
 
     public void restart() {
+        Gdx.app.log("GameScreen.restart()", "");
+        if(Settings.musicOn)
+            game.musicManager.startMusic("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", true);
+
         Populator.populate(world);
     }
 
 
+    private void showLeaderBoard() {
+        Gdx.input.setCursorCatched(false);
+        gui.showLeaderBoard();
+    }
 
 
     @Override
@@ -119,10 +123,10 @@ public class GameScreen extends StdScreenAdapter {
             game.setScreen( new MainMenuScreen(game));
             return;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.R)||
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)||
             (currentController != null && currentController.getButton(currentController.getMapping().buttonY)))
             restart();
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             debugRender = !debugRender;
             //gameView.useFBO = false; //!debugRender;
         }
@@ -137,6 +141,9 @@ public class GameScreen extends StdScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) {
             carSettingsWindow = !carSettingsWindow;
             gui.showCarSettings(carSettingsWindow);
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            showLeaderBoard();
         }
 
         world.update(delta);
@@ -155,8 +162,9 @@ public class GameScreen extends StdScreenAdapter {
 
         instrumentView.render(world.getPlayerCar());
 
-        if(world.stats.levelComplete)
-            gui.showLevelCompleted(true);
+        if(world.stats.gameCompleted && Settings.musicOn)
+            game.musicManager.stopMusic();
+        gui.showLevelCompleted(world.stats.gameCompleted);
         gui.render(delta);
 
     }

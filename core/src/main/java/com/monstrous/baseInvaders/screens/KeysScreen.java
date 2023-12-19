@@ -15,10 +15,11 @@ public class KeysScreen extends MenuScreen {
     private String[][] keyBindings = {
         { "W", "accelerate" }, {"A", "left"},
         { "S", "brake"}, {"D", "right"},
-        { "R", "restart" },
         { "Esc", "return to menu" },
-        { "F1", "debug view" },
-        { "F5", "toggle camera view" },
+        { "L", "leader board" },
+        { "F1", "restart" },
+        { "F4", "debug view" },
+        { "F5", "toggle camera control" },
         { "F11", "toggle full screen" },
     };
 

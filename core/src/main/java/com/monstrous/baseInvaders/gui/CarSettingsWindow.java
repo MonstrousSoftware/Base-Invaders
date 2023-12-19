@@ -15,6 +15,8 @@ public class CarSettingsWindow extends Window {
         super(title, skin);
         String style= "small";
 
+        Gdx.input.setCursorCatched(false);
+
         final Label labelMu = new Label(String.valueOf(Settings.mu), skin, style);
         final Slider sliderMu = new Slider(0, 3, 0.1f, false, skin);
         sliderMu.setAnimateDuration(0.1f);

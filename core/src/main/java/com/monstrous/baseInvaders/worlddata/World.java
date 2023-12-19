@@ -7,7 +7,6 @@ import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.monstrous.baseInvaders.Car;
 import com.monstrous.baseInvaders.behaviours.CarBehaviour;
 import com.monstrous.baseInvaders.behaviours.JeepBehaviour;
 import com.monstrous.baseInvaders.screens.Main;
@@ -54,6 +53,7 @@ public class World implements Disposable {
     }
 
     public void clear() {
+        Gdx.app.log("World.clear()", "");
         physicsWorld.reset();
         userCarController.reset();
 
@@ -131,12 +131,6 @@ public class World implements Disposable {
     }
 
     public ModelInstance spawnScenery(String name, Vector3 position) {
-
-        // a negative position Y means place it at terrain height plus ABS( y )
-//        if(position.y < -1000){
-//            position.y = terrain.getHeight(position.x, position.z)+1;
-//        }
-
         Scene scene = loadNode(name, true, position);
         return scene.modelInstance;
     }
@@ -226,8 +220,6 @@ public class World implements Disposable {
 
     public void removeObject(GameObject gameObject) {
         gameObject.health = 0;
-        if (gameObject.type == GameObjectType.TYPE_ENEMY_CAR)
-            stats.numEnemies--;
         gameObjects.removeValue(gameObject, true);
         gameObject.dispose();
     }
@@ -250,10 +242,10 @@ public class World implements Disposable {
 
     public void update( float deltaTime ) {
 
-        if(!stats.levelComplete)
+        if(!stats.gameCompleted)
             stats.gameTime += deltaTime;
         if(stats.techCollected == 7)
-            stats.levelComplete = true;
+            stats.gameCompleted = true;
         stats.speed = (int)playerCar.speedMPH;
         ufoSpawner(deltaTime);
         userCarController.update(deltaTime);

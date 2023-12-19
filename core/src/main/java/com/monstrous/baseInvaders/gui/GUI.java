@@ -34,6 +34,7 @@ public class GUI implements Disposable {
     private Vector3 tmpVec = new Vector3();
     private float timer = 0;
     private CarSettingsWindow settingsWindow;
+    private LeaderBoardWindow leaderBoardWindow;
     private Table techTable;
     private int numTechItems = 0;
     private Label timeLabel;
@@ -43,19 +44,23 @@ public class GUI implements Disposable {
     private final StringBuffer sb;
 
 
-    public GUI(CarBehaviour car, World world ) {
+    public GUI(Main game, CarBehaviour car, World world ) {
         Gdx.app.log("GUI constructor", "");
         this.car = car;
         this.world = world;
+        //skin = new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
         skin = Main.assets.skin; //Assets.new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
         stage = new Stage(new ScreenViewport());
         sb = new StringBuffer();
 
         settingsWindow = new CarSettingsWindow("Car Settings", skin, world);
+
+        leaderBoardWindow = new LeaderBoardWindow("Leader Board", skin, world, game.leaderBoard, game);
+        leaderBoardWindow.setVisible(false);
     }
 
     private void rebuild() {
-//        String style = "window";
+        String style = "default";
 
 //        BitmapFont bitmapFont= Main.assets.uiFont;
 //        Label.LabelStyle labelStyle = new Label.LabelStyle(bitmapFont, Color.BLUE);
@@ -99,7 +104,7 @@ public class GUI implements Disposable {
         if(Settings.showFPS)
             fpsTagLabel = new Label("FPS : ", skin, "small");
         else
-            fpsTagLabel = new Label("", skin, "small");
+            fpsTagLabel = new Label("", skin, style);
 
         fpsLabel = new Label("", skin, "small");
         speedLabel = new Label("---", skin );
@@ -124,11 +129,27 @@ public class GUI implements Disposable {
         settingsWindow.setVisible(false);
         stage.addActor(screenTable);
 
+        Table screenTable4 = new Table();
+        screenTable4.setFillParent(true);
+        screenTable4.add(leaderBoardWindow);
+        screenTable4.pack();
+        stage.addActor(screenTable4);
+
     }
 
     public void showLevelCompleted( boolean mode ){
         levelCompletedLabel.setText("GAME COMPLETED\nYOUR TIME: "+timeLabel.getText());
+        if(mode == true && !levelCompletedLabel.isVisible()){
+            Gdx.input.setCursorCatched(false);
+            showLeaderBoard();
+        }
         levelCompletedLabel.setVisible(mode);
+    }
+
+    public void showLeaderBoard() {
+        leaderBoardWindow.setModal(true);
+        leaderBoardWindow.refresh();  // refresh table (but without reloading from server)
+        leaderBoardWindow.setVisible(true);
     }
 
 
@@ -152,8 +173,8 @@ public class GUI implements Disposable {
         if(Settings.showFPS) {
             sb.setLength(0);
             sb.append(Gdx.graphics.getFramesPerSecond());
-            sb.append(" ");
-            sb.append(world.stats.itemsRendered);
+//            sb.append(" ");
+//            sb.append(world.stats.itemsRendered);
             fpsLabel.setText(sb.toString());
         }
 
