@@ -122,6 +122,9 @@ public class GameView implements Disposable {
     public void refresh(Camera cam) {
 
         sceneManager.getRenderableProviders().clear();        // remove all scenes
+
+        sceneManager.getRenderableProviders().add(world.scenery.getCache());        /// add model cache for scenery items
+
         int count = 0;
         // add scene for each game object
 
@@ -150,7 +153,7 @@ public class GameView implements Disposable {
             camController.update(delta, world.getPlayer());
 
 //        DirectionalShadowLight shadowLight = sceneManager.getFirstDirectionalShadowLight();
-//        csm.setCascades(sceneManager.camera, shadowLight, 400f, 3f);
+//            csm.setCascades(sceneManager.camera, shadowLight, 400f, 3f);
 
             refresh(cam);
             shadowLight.setCenter(cam.position);
@@ -181,6 +184,9 @@ public class GameView implements Disposable {
 
     public void resize(int width, int height){
         sceneManager.updateViewport(width, height);
+        cam.viewportWidth = width;
+        cam.viewportHeight = height;
+        cam.update();
         if(fbo != null)
             fbo.dispose();
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);

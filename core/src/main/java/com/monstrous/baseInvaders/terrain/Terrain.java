@@ -36,9 +36,7 @@ public class Terrain implements Disposable {
                 TerrainChunk chunk = new TerrainChunk(cx, cz);
                 int key = makeKey(cx, cz);
                 chunks.put(key, chunk);
-                ModelInstance modelInstance = chunk.getModelInstance();
-                modelInstance.transform.translate(cx * Settings.chunkSize, 0, cz * Settings.chunkSize);
-                instances.add(modelInstance);
+                instances.add(chunk.getModelInstance());
             }
         }
 
@@ -49,10 +47,6 @@ public class Terrain implements Disposable {
         return cx + 1000 * cz;
     }
 
-//    public ModelInstance getModelInstance() {
-//
-//        return chunks.get(0).getModelInstance();
-//    }
 
     // get terrain height at (x,z)
     public float getHeight(float x, float z) {

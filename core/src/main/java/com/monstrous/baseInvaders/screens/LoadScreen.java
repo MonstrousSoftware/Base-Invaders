@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.monstrous.baseInvaders.Settings;
 
 
 // on web this screen is to get a user key press, so we can start playing sound
@@ -69,6 +70,13 @@ public class LoadScreen extends StdScreenAdapter {
         screenTable.pack();
 
         stage.addActor(screenTable);
+
+        Table screenTable2 = new Table();
+        screenTable2.setFillParent(true);
+        screenTable2.add(new Label(Settings.version, skin, "small")).bottom().right().expand();
+        stage.addActor(screenTable2);
+
+
         loaded = false;
 
     }

@@ -31,7 +31,7 @@ public class World implements Disposable {
     public final PhysicsRayCaster rayCaster;
     private CarBehaviour playerCar;
     public Terrain terrain;
-    private Scenery scenery;
+    public Scenery scenery;
     private float ufoSpawnTimer;
 
 
@@ -128,6 +128,17 @@ public class World implements Disposable {
             gameObjects.add(go);
         }
         return null;
+    }
+
+    public ModelInstance spawnScenery(String name, Vector3 position) {
+
+        // a negative position Y means place it at terrain height plus ABS( y )
+//        if(position.y < -1000){
+//            position.y = terrain.getHeight(position.x, position.z)+1;
+//        }
+
+        Scene scene = loadNode(name, true, position);
+        return scene.modelInstance;
     }
 
     private Vector3 tmpPosition = new Vector3();

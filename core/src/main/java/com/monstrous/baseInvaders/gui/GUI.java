@@ -152,8 +152,8 @@ public class GUI implements Disposable {
         if(Settings.showFPS) {
             sb.setLength(0);
             sb.append(Gdx.graphics.getFramesPerSecond());
-            //sb.append(" ");
-            //sb.append(world.stats.itemsRendered);
+            sb.append(" ");
+            sb.append(world.stats.itemsRendered);
             fpsLabel.setText(sb.toString());
         }
 

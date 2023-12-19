@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controllers;
 import com.monstrous.baseInvaders.Assets;
+import com.monstrous.baseInvaders.MusicManager;
 import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.input.MyControllerMappings;
 import com.monstrous.baseInvaders.terrain.Terrain;
@@ -17,6 +18,7 @@ public class Main extends Game {
     public static Assets assets;
     public static Terrain terrain;
     public ControllerToInputAdapter controllerToInputAdapter;
+    public MusicManager musicManager;;
 
     @Override
     public void create() {
@@ -37,6 +39,8 @@ public class Main extends Game {
 
     public void onLoadingComplete(){
         assets.finishLoading();
+        musicManager = new MusicManager(assets);
+
         terrain = new Terrain();
         if(Settings.release)
             setScreen( new MainMenuScreen(this) );

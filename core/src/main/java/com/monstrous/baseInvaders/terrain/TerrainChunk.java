@@ -60,8 +60,8 @@ public class TerrainChunk implements Disposable {
         normalTexture.setFilter(Texture.TextureFilter.MipMap, Texture.TextureFilter.Nearest);
 
 
-        position = new Vector3(0, 0, 0);
-
+        position = new Vector3(xoffset * Settings.chunkSize, 0, yoffset * Settings.chunkSize);
+        //modelInstance.transform.translate(cx * Settings.chunkSize, 0, cz * Settings.chunkSize);
         Material material =  new Material();
         material.set(PBRTextureAttribute.createBaseColorTexture(terrainTexture));
         material.set(PBRTextureAttribute.createNormalTexture(normalTexture));
@@ -223,18 +223,22 @@ public class TerrainChunk implements Disposable {
 
     private Vector2 baryCoord = new Vector2();
 
-    public float getHeight(float x, float z) {
+    // x, z relative to terrain chunk
+    public float getHeight(float relx, float relz) {
         // position relative to terrain origin
-        float relx = x - position.x;
-        float relz = z - position.z;
+//        float relx = x - position.x;
+//        float relz = z - position.z;
 
-        // position in grid (rounded down)
-        int mx = (int)Math.floor(relx * (MAP_SIZE-1) / Settings.chunkSize);
-        int mz = (int)Math.floor(relz * (MAP_SIZE-1) / Settings.chunkSize);
+        // position in grid (rounded down) : grid cell coordinates [0.. MAP_SIZE-1]
+        int mx = (int)Math.floor((relx * MAP_SIZE) / Settings.chunkSize);
+        int mz = (int)Math.floor((relz * MAP_SIZE) / Settings.chunkSize);
 
-        if(mx < 0 ||mx >= (MAP_SIZE-1) || mz < 0 || mz >= (MAP_SIZE-1))
+        if(mx < 0 ||mx >= MAP_SIZE || mz < 0 || mz >= MAP_SIZE){
+            Gdx.app.error("getHeight", "coord out of bounds");
             return 0;
-        float cellSize = Settings.chunkSize / (MAP_SIZE-1);
+        }
+
+        float cellSize = Settings.chunkSize / (float)MAP_SIZE;
         float xCoord = (relx % cellSize)/cellSize;
         float zCoord = (relz % cellSize)/cellSize;
         float ht;

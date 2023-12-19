@@ -20,7 +20,7 @@ import com.monstrous.baseInvaders.terrain.TerrainChunk;
 import com.monstrous.baseInvaders.worlddata.World;
 
 
-public class GameScreen extends ScreenAdapter {
+public class GameScreen extends StdScreenAdapter {
 
     private Main game;
     private GameView gameView;
@@ -93,6 +93,9 @@ public class GameScreen extends ScreenAdapter {
 
 
         instrumentView = new InstrumentView();
+
+        if(Settings.musicOn)
+            game.musicManager.startMusic("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", true);
     }
 
 
@@ -102,23 +105,10 @@ public class GameScreen extends ScreenAdapter {
 
 
 
-    private void toggleFullScreen() {        // toggle full screen / windowed screen
-        if (!Gdx.graphics.isFullscreen()) {
-            windowedWidth = Gdx.graphics.getWidth();        // remember current width & height
-            windowedHeight = Gdx.graphics.getHeight();
-            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-            resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        } else {
-            Gdx.graphics.setWindowedMode(windowedWidth, windowedHeight);
-            resize(windowedWidth, windowedHeight);
-        }
-    }
-
-
 
     @Override
     public void render(float delta) {
-
+        super.render(delta);
         if(delta > 0.1f)    // in case we're running in the debugger
             delta = 0.1f;
 
@@ -188,6 +178,8 @@ public class GameScreen extends ScreenAdapter {
             Controllers.addListener(game.controllerToInputAdapter);
         }
         Gdx.input.setCursorCatched(false);
+        if(Settings.musicOn)
+            game.musicManager.stopMusic();
         dispose();
     }
 

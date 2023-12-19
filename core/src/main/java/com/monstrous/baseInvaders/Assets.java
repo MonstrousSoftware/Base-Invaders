@@ -2,6 +2,7 @@ package com.monstrous.baseInvaders;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -33,7 +34,8 @@ public class Assets implements Disposable {
     public AssetSounds sounds;
     public Skin skin;
     public SceneAsset sceneAsset;
-    public BitmapFont uiFont;
+    //public BitmapFont uiFont;
+    public Music gameMusic;
 
     private AssetManager assets;
 
@@ -61,6 +63,8 @@ public class Assets implements Disposable {
 
         assets.load("images/title.png", Texture.class);
 
+        assets.load("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", Music.class);
+
 
     }
 
@@ -87,6 +91,8 @@ public class Assets implements Disposable {
  //       uiFont = assets.get("font/Gasoek32.fnt");
         sceneAsset = assets.get(Settings.GLTF_FILE);
 //        scopeImage = assets.get("images/scope.png");
+
+        gameMusic = assets.get("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3");
     }
 
     public <T> T get(String name ) {

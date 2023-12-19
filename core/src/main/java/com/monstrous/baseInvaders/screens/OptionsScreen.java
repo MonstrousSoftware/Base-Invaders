@@ -107,6 +107,9 @@ public class OptionsScreen extends MenuScreen {
        CheckBox fps = new CheckBox("Show FPS", skin);
        freeLook.setChecked(Settings.showFPS);
 
+       CheckBox music = new CheckBox("Music", skin);
+       music.setChecked(Settings.musicOn);
+
 
        controllerLabel = new Label("None", skin);
        if(controller != null)
@@ -118,6 +121,7 @@ public class OptionsScreen extends MenuScreen {
 
        screenTable.add(fullScreen).pad(pad).left().row();
        screenTable.add(fps).pad(pad).left().row();
+       screenTable.add(music).pad(pad).left().row();
 //       screenTable.add(invertLook).pad(pad).left().row();
 //       screenTable.add(freeLook).pad(pad).left().row();
 //       screenTable.add(weather).pad(pad).left().row();
@@ -140,6 +144,7 @@ public class OptionsScreen extends MenuScreen {
            cStage.clearFocusableActors();
            cStage.addFocusableActor(fullScreen);
            cStage.addFocusableActor(fps);
+           cStage.addFocusableActor(music);
 //           cStage.addFocusableActor(invertLook);
 //           cStage.addFocusableActor(freeLook);
 //           cStage.addFocusableActor(weather);
@@ -169,6 +174,14 @@ public class OptionsScreen extends MenuScreen {
            public void changed(ChangeEvent event, Actor actor) {
                playSelectNoise();
                Settings.showFPS = fps.isChecked();
+           }
+       });
+
+       music.addListener(new ChangeListener() {
+           @Override
+           public void changed(ChangeEvent event, Actor actor) {
+               playSelectNoise();
+               Settings.musicOn = music.isChecked();
            }
        });
 
