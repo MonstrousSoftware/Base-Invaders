@@ -3,7 +3,7 @@ package com.monstrous.baseInvaders;
 
 public class Settings {
     static public boolean release = true;
-    static public String version = "v1.0.2 Dec 2023";
+    static public String version = "v1.0.3 Dec 2023";
     static public String preferencesName = "base-invaders";
 
     static public boolean musicOn = true;

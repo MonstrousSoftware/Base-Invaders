@@ -232,7 +232,7 @@ public class CarBehaviour extends Behaviour {
         joints[1]=makeWheelJoint(physicsWorld, chassis.body, w1.body,true);
         joints[2]=makeWheelJoint(physicsWorld, chassis.body, w2.body,false);
         joints[3]=makeWheelJoint(physicsWorld, chassis.body, w3.body,false);
-        //chassisObject =chassis;
+
         chassis.body.geom.getBody().setAutoDisableFlag(false);
 
         // define surface properties for front and rear tyres

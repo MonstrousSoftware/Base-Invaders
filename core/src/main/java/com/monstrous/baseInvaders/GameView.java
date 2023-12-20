@@ -37,9 +37,6 @@ public class GameView implements Disposable {
     private final boolean isOverlay;
     private CascadeShadowMap csm = null;
     private ParticleEffects particleEffects = null;
-    private FrameBuffer fbo;
-    private PostFilter postFilter;
-    public boolean useFBO = false;
 
     // if the view is an overlay, we don't clear screen on render, only depth buffer
     //
@@ -93,13 +90,9 @@ public class GameView implements Disposable {
             skybox = new SceneSkybox(environmentCubemap);
             sceneManager.setSkyBox(skybox);
 
-            particleEffects = new ParticleEffects(cam);
-
-            particleEffects.addFire( new Vector3(Settings.worldSize/2,8,Settings.worldSize/2));
+//            particleEffects = new ParticleEffects(cam);
+//            particleEffects.addFire( new Vector3(Settings.worldSize/2,8,Settings.worldSize/2));
         }
-
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, 1500, 1500, true);
-        postFilter = new PostFilter();
     }
 
 
@@ -159,26 +152,18 @@ public class GameView implements Disposable {
             shadowLight.setCenter(cam.position);
             sceneManager.update(delta);
         }
-        sceneManager.renderShadows();
+//        sceneManager.renderShadows();
 
-        if(useFBO)
-            fbo.begin();
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);   // clear depth buffer only
 
         sceneManager.renderColors();
 
         if (!isOverlay) {
-            particleEffects.update(delta);
-            particleEffects.render();
+//            particleEffects.update(delta);
+//            particleEffects.render();
         }
-
-
-        if(useFBO) {
-            fbo.end();
             // post-processing of game screen content : vignette effect and underwater wavy effect
 
-            postFilter.render(fbo);
-        }
     }
 
 
@@ -187,10 +172,6 @@ public class GameView implements Disposable {
         cam.viewportWidth = width;
         cam.viewportHeight = height;
         cam.update();
-        if(fbo != null)
-            fbo.dispose();
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, true);
-        postFilter.resize(width, height);
     }
 
 
@@ -204,7 +185,7 @@ public class GameView implements Disposable {
         brdfLUT.dispose();
         if(!isOverlay) {
             skybox.dispose();
-            particleEffects.dispose();
+//            particleEffects.dispose();
         }
     }
 }

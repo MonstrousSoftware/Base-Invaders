@@ -246,7 +246,8 @@ public class World implements Disposable {
             stats.gameTime += deltaTime;
         if(stats.techCollected == 7)
             stats.gameCompleted = true;
-        stats.speed = (int)playerCar.speedMPH;
+        if(playerCar != null)
+            stats.speed = (int)playerCar.speedMPH;
         ufoSpawner(deltaTime);
         userCarController.update(deltaTime);
 

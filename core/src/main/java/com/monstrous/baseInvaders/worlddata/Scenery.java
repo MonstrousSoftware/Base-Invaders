@@ -38,6 +38,8 @@ public class Scenery implements Disposable {
         placeRandom(world, "warningSign", 60);
         placeRandom(world, "squadronSign", 60);
 
+        placeFences(world, "fence");
+
         // put all items in a model cache
         // this make a huge difference to the number of draw calls, and therefore performance
         cache.begin();
@@ -56,7 +58,7 @@ public class Scenery implements Disposable {
         Vector3 tmpPosition = new Vector3();
 
         for(int n = 0; n < count; n++) {
-            float x = (float) (Math.random())*(Settings.worldSize);    // don't plant trees to close to the edge
+            float x = (float) (Math.random())*(Settings.worldSize);
             float z = (float) (Math.random())*(Settings.worldSize);
             float r = (float) (Math.random()*360f);
 
@@ -66,6 +68,27 @@ public class Scenery implements Disposable {
             modelInstance.transform.rotate(Vector3.Y, r);
             instances.add(modelInstance);
         }
+    }
+
+    private Vector3 tmpPosition = new Vector3();
+
+    private void placeFences(World world, String name){
+        float fenceLength = 10f;
+        int count =  (int)(Settings.worldSize / fenceLength);
+        for(float u = 0; u <= Settings.worldSize+1f; u+= fenceLength) {
+            placeFence(world, name, u, 1, 0);
+            placeFence(world, name, u, Settings.worldSize-1, 0);
+            placeFence(world, name, 1, u, 90);
+            placeFence(world, name, Settings.worldSize-1, u, 90);
+        }
+    }
+
+    private void placeFence(World world, String name, float x, float z, float r){
+        float y = world.terrain.getHeight(x, z);
+        tmpPosition.set(x, y, z);
+        ModelInstance modelInstance = world.spawnScenery( name,  tmpPosition);
+        modelInstance.transform.rotate(Vector3.Y, r);
+        instances.add(modelInstance);
     }
 
     @Override

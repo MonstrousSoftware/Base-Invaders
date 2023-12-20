@@ -36,21 +36,21 @@ public class Populator {
        // world.spawnObject(GameObjectType.TYPE_PICKUP_ITEM, "alienTech", null, CollisionShapeType.BOX, true, new Vector3(32, 2, 5));
 
 
-        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(0, 0, -100), 1f);
-        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(10, 0, -100), 1f);
-        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(20, 0, -100), 1f);
+//        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(0, 0, -100), 1f);
+//        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(10, 0, -100), 1f);
+//        world.spawnObject(GameObjectType.TYPE_STATIC, "fence", null, CollisionShapeType.BOX, true, new Vector3(20, 0, -100), 1f);
 
 
 
         world.spawnObject(GameObjectType.TYPE_DYNAMIC, "wheel", null, CollisionShapeType.CYLINDER, true,new Vector3(8,10,5), Settings.wheelDensity);
 
         Vector3 carPos = new Vector3(Settings.worldSize/2,-1001,Settings.worldSize/2);
-
+        carPos.x = 10f;
 
         world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(Settings.worldSize/3,18,Settings.worldSize/2), Settings.chassisDensity);
         world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(2*Settings.worldSize/3,18,Settings.worldSize/4), Settings.chassisDensity);
-        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(-Settings.worldSize/2,18,-Settings.worldSize/3), Settings.chassisDensity);
-        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(-Settings.worldSize/3,18,Settings.worldSize/3), Settings.chassisDensity);
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(-Settings.worldSize/2,18,2*Settings.worldSize/3), Settings.chassisDensity);
+        world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(2*Settings.worldSize/3,18,Settings.worldSize/3), Settings.chassisDensity);
 
 
  //       world.spawnObject(GameObjectType.TYPE_ENEMY_CAR, "jeep",null, CollisionShapeType.BOX, true, new Vector3(120,18,160), Settings.chassisDensity);
