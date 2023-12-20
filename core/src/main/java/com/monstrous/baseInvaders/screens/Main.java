@@ -51,7 +51,7 @@ public class Main extends Game {
             gameJolt.init(leaderBoard);
         }
 
-        setScreen( new LoadScreen(this) );
+        setScreen( new LoadAssetsScreen(this) );
     }
 
     public void onLoadingComplete(){

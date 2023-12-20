@@ -25,7 +25,6 @@ public class GameScreen extends StdScreenAdapter {
     private InstrumentView instrumentView;
     private GUI gui;
     private World world;
-    private int windowedWidth, windowedHeight;
     private boolean debugRender = !Settings.release;
     private boolean carSettingsWindow = false;
     private int techCollected = 0;
@@ -44,20 +43,14 @@ public class GameScreen extends StdScreenAdapter {
         Gdx.input.setCursorCatched(true);
         Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
-
-        Gdx.input.setCatchKey(Input.Keys.F1, true);
-        Gdx.input.setCatchKey(Input.Keys.F2, true);
-        Gdx.input.setCatchKey(Input.Keys.F3, true);
-        Gdx.input.setCatchKey(Input.Keys.F5, true);
+        Gdx.input.setCatchKey(Input.Keys.F4, true);
+        Gdx.input.setCatchKey(Input.Keys.F10, true);
         Gdx.input.setCatchKey(Input.Keys.F11, true);
 
         world = new World();
 
-
-
         gameView = new GameView(world,false, 1.0f, 400f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
-        //gameView.useFBO = !debugRender;
 
         physicsView = new PhysicsView(world);
         gridView = new GridView();
@@ -95,13 +88,13 @@ public class GameScreen extends StdScreenAdapter {
     }
 
 
-    public void restart() {
-        Gdx.app.log("GameScreen.restart()", "");
-        if(Settings.musicOn)
-            game.musicManager.startMusic("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", true);
-
-        Populator.populate(world);
-    }
+//    public void restart() {
+//        Gdx.app.log("GameScreen.restart()", "");
+//        if(Settings.musicOn)
+//            game.musicManager.startMusic("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", true);
+//
+//        Populator.populate(world);
+//    }
 
 
     private void showLeaderBoard() {
@@ -123,27 +116,33 @@ public class GameScreen extends StdScreenAdapter {
             game.setScreen( new MainMenuScreen(game));
             return;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)||
-            (currentController != null && currentController.getButton(currentController.getMapping().buttonY)))
-            restart();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.HOME)||
+            (currentController != null && currentController.getButton(currentController.getMapping().buttonY))) {
+            game.setScreen(new PreGameScreen(game));
+            return;
+            //restart();
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             debugRender = !debugRender;
-            //gameView.useFBO = false; //!debugRender;
         }
-        if( world.stats.techCollected > techCollected) {
-            gui.addTechIcon();
-            techCollected++;
-        }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F10)) {
             autoCam = !autoCam;
             ((CameraController)gameView.getCameraController()).autoCam = autoCam;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F8)) {
             carSettingsWindow = !carSettingsWindow;
             gui.showCarSettings(carSettingsWindow);
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F9)) {
+            Settings.showFPS = !Settings.showFPS;
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             showLeaderBoard();
+        }
+
+        if( world.stats.techCollected > techCollected) {
+            gui.addTechIcon();
+            techCollected++;
         }
 
         world.update(delta);

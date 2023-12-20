@@ -1,6 +1,9 @@
 package com.monstrous.baseInvaders;
 
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+
 public class Settings {
     static public boolean release = true;
     static public String version = "v1.0.3 Dec 2023";
@@ -27,6 +30,9 @@ public class Settings {
     static public boolean freeLook = true;
     static public float degreesPerPixel = 0.1f; // mouse sensitivity
     static public boolean showFPS = !release;
+
+    // suppress shadows from scenery items for WebGL because it crashes the depth sorter
+    static public boolean sceneryShadows = (Gdx.app.getType() != Application.ApplicationType.WebGL);
 
     static public float gravity = -9.8f; // meters / s^2
 

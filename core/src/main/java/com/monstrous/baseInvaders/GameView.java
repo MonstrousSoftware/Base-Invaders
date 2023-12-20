@@ -152,7 +152,12 @@ public class GameView implements Disposable {
             shadowLight.setCenter(cam.position);
             sceneManager.update(delta);
         }
-//        sceneManager.renderShadows();
+
+        if(!Settings.sceneryShadows)
+            sceneManager.getRenderableProviders().removeValue(world.scenery.getCache(), true);
+        sceneManager.renderShadows();
+        if(!Settings.sceneryShadows)
+            sceneManager.getRenderableProviders().add(world.scenery.getCache());        /// add model cache for scenery items
 
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);   // clear depth buffer only
 

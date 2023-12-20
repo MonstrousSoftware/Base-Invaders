@@ -56,7 +56,7 @@ public class World implements Disposable {
         rayCaster = new PhysicsRayCaster(physicsWorld);
         terrain = Main.terrain; //new Terrain();
         scenery = new Scenery(this);
-
+        scenery.populate();
         userCarController = new UserCarController();
 
     }
@@ -70,7 +70,7 @@ public class World implements Disposable {
         gameObjects.clear();
         //cars.clear();
         player = null;
-        scenery.populate();
+        //scenery.populate();
         ufoSpawnTimer = 3f;
 
         // build invisible boxes outside the world boundary

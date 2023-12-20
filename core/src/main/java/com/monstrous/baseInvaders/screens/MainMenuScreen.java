@@ -70,7 +70,7 @@ public class MainMenuScreen extends MenuScreen {
                super.clicked(event, x, y);
                playSelectNoise();
              //  game.musicManager.stopMusic();
-               game.setScreen(new GameScreen( game ));
+               game.setScreen(new PreGameScreen( game ));
            }
        });
 

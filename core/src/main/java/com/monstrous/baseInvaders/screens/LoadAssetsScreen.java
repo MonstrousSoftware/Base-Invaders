@@ -17,7 +17,7 @@ import com.monstrous.baseInvaders.Settings;
 // on web this screen is to get a user key press, so we can start playing sound
 // also shows progress on asset loading
 
-public class LoadScreen extends StdScreenAdapter {
+public class LoadAssetsScreen extends StdScreenAdapter {
 
     private Main game;
     private Stage stage;
@@ -29,7 +29,7 @@ public class LoadScreen extends StdScreenAdapter {
     private Label prompt;
 
 
-    public LoadScreen(Main game) {
+    public LoadAssetsScreen(Main game) {
         Gdx.app.log("LoadScreen constructor", "");
         this.game = game;
 

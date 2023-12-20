@@ -27,7 +27,6 @@ public class GUI implements Disposable {
     public Stage stage;
     private World world;
     private CarBehaviour car;
-    //private UserCarController carController;
     private Label rpmValue;
     private Label gearValue;
     private Label steerAngleValue;
@@ -48,8 +47,8 @@ public class GUI implements Disposable {
         Gdx.app.log("GUI constructor", "");
         this.car = car;
         this.world = world;
-        //skin = new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
-        skin = Main.assets.skin; //Assets.new Skin(Gdx.files.internal("Particle Park UI Skin/Particle Park UI.json"));
+
+        skin = Main.assets.skin;
         stage = new Stage(new ScreenViewport());
         sb = new StringBuffer();
 
@@ -62,12 +61,10 @@ public class GUI implements Disposable {
     private void rebuild() {
         String style = "default";
 
-//        BitmapFont bitmapFont= Main.assets.uiFont;
-//        Label.LabelStyle labelStyle = new Label.LabelStyle(bitmapFont, Color.BLUE);
-
         stage.clear();
         rpmValue = new Label("", skin);
         gearValue = new Label("",skin);
+        gearValue.setWidth(200);
         steerAngleValue = new Label("",skin);
         levelCompletedLabel = new Label("LEVEL COMPLETED!", skin);
         levelCompletedLabel.setVisible(false);
@@ -77,41 +74,20 @@ public class GUI implements Disposable {
         table.setFillParent(true);        // size to match stage size
 
 
-//        Table stats = new Table();
-//        stats.setBackground(skin.getDrawable("black"));
-//        stats.add(new Label("RPM (W/S) : ", labelStyle));
-//        stats.add(rpmValue);
-//        stats.row();
-//        stats.add(new Label("Gear (UP/DN) :", labelStyle));
-//        stats.add(gearValue);
-//        stats.row();
-//        stats.add(new Label("Steer angle (A/D) : ", labelStyle));
-//        stats.add(steerAngleValue);
-//        stats.row();
-//
-//        stats.pack();
-//
-//        table.add(stats);
-//        stage.addActor(table);
-
         techTable = new Table();
         stage.addActor(techTable);
 
         Table screenTable2 = new Table();
         screenTable2.setFillParent(true);
         timeLabel = new Label("00:00", skin);
-        Label fpsTagLabel;
-        if(Settings.showFPS)
-            fpsTagLabel = new Label("FPS : ", skin, "small");
-        else
-            fpsTagLabel = new Label("", skin, style);
 
         fpsLabel = new Label("", skin, "small");
+        fpsLabel.setWidth(200);
         speedLabel = new Label("---", skin );
         screenTable2.add().top();
         screenTable2.add();
         screenTable2.add(timeLabel).top().right().expand().row();
-        screenTable2.add(fpsTagLabel).bottom().left();
+        //screenTable2.add(fpsTagLabel).bottom().left();
         screenTable2.add(fpsLabel).bottom().left().expandX();
         screenTable2.add(gearValue).bottom().left();
         screenTable2.add(speedLabel).bottom().pad(80).right();
@@ -172,11 +148,12 @@ public class GUI implements Disposable {
 
         if(Settings.showFPS) {
             sb.setLength(0);
+            sb.append("FPS : ");
             sb.append(Gdx.graphics.getFramesPerSecond());
-//            sb.append(" ");
-//            sb.append(world.stats.itemsRendered);
             fpsLabel.setText(sb.toString());
         }
+        else
+            fpsLabel.setText("");
 
         sb.setLength(0);
         int mm = (int) (world.stats.gameTime/60);
@@ -198,19 +175,29 @@ public class GUI implements Disposable {
 
 
     private void update( float deltaTime ){
-        updateLabels();
+
 
         timer -= deltaTime;
         if(timer <= 0) {
+            numTechItems = world.stats.techCollected;
+            if(numTechItems == 0)
+                techTable.clear();
+
+            updateLabels();
+
             rpmValue.setText((int)car.rpm);
             steerAngleValue.setText((int) car.steerAngle);
             //car.transform.getTranslation(tmpVec);
+
+            sb.setLength(0);
+            sb.append("GEAR: ");
             if(car.gear == -1)
-                gearValue.setText("R");
+                sb.append("R");
             else if(car.gear == 0)
-                gearValue.setText("N");
+                sb.append("N");
             else
-                gearValue.setText(car.gear);
+                sb.append(car.gear);
+            gearValue.setText(sb.toString());
             timer = 0.25f;
         }
     }
