@@ -124,7 +124,7 @@ public class GameView implements Disposable {
         int num = world.getNumGameObjects();
         for(int i = 0; i < num; i++){
             GameObject go = world.getGameObject(i);
-            if (!go.visible)
+            if (!go.visible || go.scene == null)
                 continue;
 
             go.boundingBox.getCenter(pos);

@@ -36,9 +36,11 @@ public class GameObject implements Disposable {
         behaviour = Behaviour.createBehaviour(this);
         surface = null;
         dimensions = new Vector3();
-        scene.modelInstance.calculateBoundingBox(boundingBox);
-        boundingBox.getDimensions(dimensions);
-        scene.modelInstance.transform.getTranslation(position);
+        if(scene != null) {
+            scene.modelInstance.calculateBoundingBox(boundingBox);
+            boundingBox.getDimensions(dimensions);
+            scene.modelInstance.transform.getTranslation(position);
+        }
     }
 
     public void update(World world, float deltaTime ){

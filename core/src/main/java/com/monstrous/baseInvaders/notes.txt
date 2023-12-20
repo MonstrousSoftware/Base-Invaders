@@ -34,7 +34,9 @@ It was fixed by having the same direction for all wheels (the model was made sym
 Disabled FBO because the vignette is not worth the aliasing.
 
 
-
+bug: tech items remain on screen after reset
+bug: drops off grid?
+jeeps should slow down on approach?
 
 
 

@@ -3,6 +3,8 @@ package com.monstrous.baseInvaders.leaderboard;
 // from sanfoundry.com
 
 
+import com.badlogic.gdx.Gdx;
+
 public class MD5
 {
         private static final int   INIT_A     = 0x67452301;
@@ -113,4 +115,29 @@ public class MD5
             }
             return sb.toString();
         }
+
+        public static byte[] fromHexString(String s)   // assumes s is a string like "312b4c...."
+        {
+            byte[] bytes = s.getBytes();
+            byte[] output = new byte[ bytes.length / 2 ];
+            for (int i = 0; i < s.length(); i+=2)
+            {
+                byte hi = digitValue((char) bytes[i]);
+                byte lo = digitValue((char) bytes[i+1]);
+                output[i/2] = (byte) ((hi&0x0f) << 4 | ( lo & 0x0F));
+            }
+            return output;
+        }
+
+        private static byte digitValue(char digit){
+            if( digit >= '0' && digit <= '9')
+                return (byte) (digit - '0');
+            if( digit >= 'a' && digit <= 'f')
+                return (byte) (10 + digit - 'a');
+            if( digit >= 'A' && digit <= 'F')
+                return (byte) (10+ digit - 'A');
+            Gdx.app.error("Invalid hex digit", "["+digit+"]");
+            return 0;
+        }
+
 }

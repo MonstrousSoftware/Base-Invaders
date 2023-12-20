@@ -1,8 +1,17 @@
 package com.monstrous.baseInvaders.worlddata;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Material;
+import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.model.Node;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
@@ -63,6 +72,16 @@ public class World implements Disposable {
         player = null;
         scenery.populate();
         ufoSpawnTimer = 3f;
+
+        // build invisible boxes outside the world boundary
+        Vector3 pos = new Vector3(0, -5, Settings.worldSize/2);
+        spawnBoundary(pos, 1, 30f, Settings.worldSize);
+        pos.x = Settings.worldSize;
+        spawnBoundary(pos, 1, 30f, Settings.worldSize);
+        pos.set(Settings.worldSize/2, -5, 0);
+        spawnBoundary(pos, Settings.worldSize, 30f, 1f );
+        pos.z = Settings.worldSize;
+        spawnBoundary(pos, Settings.worldSize, 30f, 1f);
     }
 
     public int getNumGameObjects() {
@@ -115,6 +134,22 @@ public class World implements Disposable {
         if (type.isCar)
             addWheels(go);
 
+        return go;
+    }
+
+    // create invisible collision boundary to block off world edges
+    public GameObject spawnBoundary(Vector3 pos, float w, float h, float d) {
+        ModelBuilder modelBuilder = new ModelBuilder();
+        modelBuilder.begin();
+        MeshPartBuilder meshBuilder;
+        meshBuilder = modelBuilder.part("box", GL20.GL_LINES, VertexAttributes.Usage.Position, new Material(ColorAttribute.createDiffuse(Color.WHITE)));
+        BoxShapeBuilder.build(meshBuilder, w, h, d);
+        Model modelShape = modelBuilder.end();
+        ModelInstance instance = new ModelInstance(modelShape, pos);
+
+        PhysicsBody body = factory.createBody(instance, CollisionShapeType.BOX, true, 1f);
+        GameObject go = new GameObject(GameObjectType.TYPE_STATIC, null, body);
+        gameObjects.add(go);
         return go;
     }
 
@@ -230,8 +265,8 @@ public class World implements Disposable {
         ufoSpawnTimer -= deltaTime;
         if(ufoSpawnTimer<=0) {
 
-            float x = (float) (Math.random())*0.5f*Settings.worldSize;    // not too close to the edge
-            float z = (float) (Math.random())*0.5f*Settings.worldSize;
+            float x = (float) (Math.random())*0.7f*Settings.worldSize;    // not too close to the edge
+            float z = (float) (Math.random())*0.7f*Settings.worldSize;
             float y = terrain.getHeight(x, z);
             spawnObject(GameObjectType.TYPE_UFO, "ufo", null, CollisionShapeType.SPHERE, true, new Vector3(x, y+5f, z), 1f);
             stats.ufosSpawned++;
@@ -251,13 +286,15 @@ public class World implements Disposable {
         ufoSpawner(deltaTime);
         userCarController.update(deltaTime);
 
-        for(GameObject go : gameObjects)
+        for(GameObject go : gameObjects) {
             go.update(this, deltaTime);
-
+            if(go.getPosition().y < -50)    // fallen off the edge
+                go.health = 0;
+        }
         physicsWorld.update();
         syncToPhysics();
 
-        if(player.getPosition().y < -50)    // fallen off the edge of the map
+        if(player.health <= 0)    // fallen off the edge of the map
             Populator.populate(this);   // reset to start
 
     }

@@ -74,12 +74,11 @@ public class Scenery implements Disposable {
 
     private void placeFences(World world, String name){
         float fenceLength = 10f;
-        int count =  (int)(Settings.worldSize / fenceLength);
-        for(float u = 0; u <= Settings.worldSize+1f; u+= fenceLength) {
-            placeFence(world, name, u, 1, 0);
-            placeFence(world, name, u, Settings.worldSize-1, 0);
-            placeFence(world, name, 1, u, 90);
-            placeFence(world, name, Settings.worldSize-1, u, 90);
+        for(float u = 0; u < Settings.worldSize; u+= fenceLength) {
+            placeFence(world, name, u, 0, 0);
+            placeFence(world, name, u, Settings.worldSize-.5f, 180);
+            placeFence(world, name, 0, u, 90);
+            placeFence(world, name, Settings.worldSize-0.5f, u, -90);
         }
     }
 

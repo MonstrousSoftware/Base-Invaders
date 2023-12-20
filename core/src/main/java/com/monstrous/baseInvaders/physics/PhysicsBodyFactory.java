@@ -55,6 +55,8 @@ public class PhysicsBodyFactory implements Disposable {
         disposables = new Array<>();
     }
 
+
+
     public PhysicsBody createBody(ModelInstance collisionInstance, CollisionShapeType shapeType, boolean isStatic, float density) {
         BoundingBox bbox = new BoundingBox();
         Node node = collisionInstance.nodes.first();

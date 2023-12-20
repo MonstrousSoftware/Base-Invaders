@@ -38,9 +38,9 @@ public class MiniMap implements Disposable {
         border = 10;    // pixels
         fboMiniMap = new FrameBuffer(Pixmap.Format.RGBA8888, mapSize, mapSize, true);
         //mapFrame = new Texture(Gdx.files.internal("images/frame220.png"));
-        carMarker = new Texture(Gdx.files.internal("textures/greenMarker.png"));
-        jeepMarker = new Texture(Gdx.files.internal("textures/orangeMarker.png"));
-        techMarker = new Texture(Gdx.files.internal("textures/purpleMarker.png"));
+        carMarker = new Texture(Gdx.files.internal("textures/orangeMarker.png"));
+        jeepMarker = new Texture(Gdx.files.internal("textures/purpleMarker.png"));
+        techMarker = new Texture(Gdx.files.internal("textures/greenMarker.png"));
         miniMapRect = new Rectangle();
         mapFrameRect = new Rectangle();
         batch = new SpriteBatch();
@@ -115,6 +115,8 @@ public class MiniMap implements Disposable {
                 GameObject go = world.getGameObject(i);
                 if(go.type.isCar || go.type == GameObjectType.TYPE_PICKUP_ITEM) {
 
+                    if(go.health <=0)       // hide dead objects from map
+                        continue;
                     position.set(go.getPosition());
 
                     float wx = (position.x - carPosition.x)/ Settings.worldSize;

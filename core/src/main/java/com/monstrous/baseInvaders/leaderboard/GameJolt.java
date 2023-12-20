@@ -19,33 +19,33 @@ public class GameJolt {
     private static final String GAME_ID = "862678";
     private static final String TABLE_ID = "873573";
     private static final String LIMIT = "10";        // top # scores to show
-    private String privateKey;
+    private String suffix;
     private Array<LeaderBoardEntry> leaderBoard;
 
 
     public void init( Array<LeaderBoardEntry> leaderBoard ) {
         this.leaderBoard = leaderBoard;
 
-//        testMD5("Message Digest");
-//        testMD5("abcdefghijklmnopqrstuvwxyz");
-//        testMD5("Hello!");
-
         try {
-
-
-            FileHandle handle = Gdx.files.internal("private.txt");
+            FileHandle handle = Gdx.files.internal("noise.png");
 
             String text = handle.readString();
             String words[] = text.split("\\r?\\n");
-            privateKey = words[0];
-
+            suffix = mix(words[0], md5("It Came From Above"));
             getScores();
-
-            //addScore("Guest3", "00:09:52", 9*60+52);
         } catch (GdxRuntimeException e) {
-            Gdx.app.error("Cannot read key file", "private.txt");
+            Gdx.app.error("Cannot read file", "noise.png");
         }
+    }
 
+    public String mix(String as, String bs) {
+        byte[] a = MD5.fromHexString(as);
+        byte[] b = MD5.fromHexString(bs);;
+        byte[] res = new byte[a.length];
+        for(int i = 0; i < a.length; i++){
+            res[i] = (byte) (a[i] ^b[i]);
+        }
+        return MD5.toHexString(res);
     }
 
 
@@ -166,10 +166,10 @@ public class GameJolt {
 
         request += HttpParametersUtils.convertHttpParameters(params);
 
-        String concat = request + privateKey;
+        String concat = request + suffix;
 
         /* Generate signature */
-        final String signature = md5(request + privateKey);
+        final String signature = md5(request + suffix);
 
         /* Append signature */
         String complete = request;
