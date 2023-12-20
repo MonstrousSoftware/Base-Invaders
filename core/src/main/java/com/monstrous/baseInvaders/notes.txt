@@ -33,6 +33,9 @@ It was fixed by having the same direction for all wheels (the model was made sym
 
 Disabled FBO because the vignette is not worth the aliasing.
 
+PointSpriteParticleBatch uses
+		Gdx.gl.glEnable(GL20.GL_VERTEX_PROGRAM_POINT_SIZE); which gives a warning in WebGL
+
 
 bug: tech items remain on screen after reset
 bug: drops off grid?

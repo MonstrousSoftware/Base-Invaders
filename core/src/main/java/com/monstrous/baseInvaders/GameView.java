@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -21,6 +22,7 @@ import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
 import net.mgsx.gltf.scene3d.scene.Scene;
 import net.mgsx.gltf.scene3d.scene.SceneManager;
 import net.mgsx.gltf.scene3d.scene.SceneSkybox;
+import net.mgsx.gltf.scene3d.shaders.PBRShaderProvider;
 import net.mgsx.gltf.scene3d.utils.IBLBuilder;
 //import net.mgsx.gltf.scene3d.scene.CascadeShadowMap;
 
@@ -57,6 +59,12 @@ public class GameView implements Disposable {
 
         sceneManager.setCamera(cam);
         camController = new CameraController(cam);
+
+        ModelBatch depthBatch = new ModelBatch(PBRShaderProvider.createDefaultDepth(24), new MyRenderableSorter());
+        sceneManager.setDepthBatch(depthBatch);
+
+
+
 
         // setup light
         int viewPortSize = 64;  // smaller value gives sharper shadow
@@ -156,7 +164,7 @@ public class GameView implements Disposable {
             sceneManager.update(delta);
         }
 
-        if(Gdx.app.getType() != Application.ApplicationType.WebGL )
+ //       if(Gdx.app.getType() != Application.ApplicationType.WebGL )
             sceneManager.renderShadows();
 
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);   // clear depth buffer only

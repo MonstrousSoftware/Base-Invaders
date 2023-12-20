@@ -29,9 +29,9 @@ public class Scenery implements Disposable {
         // place all scenery in a model cache
         // we can delete all the items as game objects once we have the cache constructed.
         //
-        placeRandom(world, "cactus", 800);
-        placeRandom(world, "cactus.001", 800);
-        placeRandom(world, "cactus.002", 800);
+        placeRandom(world, "cactus", 1800);
+        placeRandom(world, "cactus.001", 1800);
+        placeRandom(world, "cactus.002", 1800);
         placeRandom(world, "Stone1", 6800);
         placeRandom(world, "Stone2", 3800);
         placeRandom(world, "Stone3", 3800);
