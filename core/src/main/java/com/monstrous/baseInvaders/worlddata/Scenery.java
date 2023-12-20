@@ -32,7 +32,7 @@ public class Scenery implements Disposable {
         placeRandom(world, "cactus", 800);
         placeRandom(world, "cactus.001", 800);
         placeRandom(world, "cactus.002", 800);
-        placeRandom(world, "Stone1", 3800);
+        placeRandom(world, "Stone1", 6800);
         placeRandom(world, "Stone2", 3800);
         placeRandom(world, "Stone3", 3800);
         placeRandom(world, "warningSign", 60);

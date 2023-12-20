@@ -17,6 +17,7 @@ import com.monstrous.baseInvaders.behaviours.CarBehaviour;
 import com.monstrous.baseInvaders.input.UserCarController;
 import com.monstrous.baseInvaders.screens.Main;
 import com.monstrous.baseInvaders.worlddata.World;
+import de.golfgl.gdx.controllers.ControllerMenuStage;
 
 import static com.badlogic.gdx.scenes.scene2d.actions.Actions.*;
 
@@ -49,7 +50,9 @@ public class GUI implements Disposable {
         this.world = world;
 
         skin = Main.assets.skin;
-        stage = new Stage(new ScreenViewport());
+        //stage = new Stage(new ScreenViewport());
+        stage = new ControllerMenuStage(new ScreenViewport());          // we can use this even without controllers
+
         sb = new StringBuffer();
 
         settingsWindow = new CarSettingsWindow("Car Settings", skin, world);
@@ -177,11 +180,14 @@ public class GUI implements Disposable {
     private void update( float deltaTime ){
 
 
-        timer -= deltaTime;
+        timer -= deltaTime;     // we don't need to update this every frame
         if(timer <= 0) {
-            numTechItems = world.stats.techCollected;
-            if(numTechItems == 0)
+            timer = 0.25f;
+
+            if( world.stats.techCollected == 0) {       // reset?
                 techTable.clear();
+                numTechItems = 0;
+            }
 
             updateLabels();
 
@@ -198,7 +204,7 @@ public class GUI implements Disposable {
             else
                 sb.append(car.gear);
             gearValue.setText(sb.toString());
-            timer = 0.25f;
+
         }
     }
 

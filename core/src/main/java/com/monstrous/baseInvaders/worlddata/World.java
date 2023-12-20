@@ -12,10 +12,12 @@ import com.badlogic.gdx.graphics.g3d.model.Node;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.shapebuilders.BoxShapeBuilder;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.monstrous.baseInvaders.ParticleEffects;
 import com.monstrous.baseInvaders.behaviours.CarBehaviour;
 import com.monstrous.baseInvaders.behaviours.JeepBehaviour;
 import com.monstrous.baseInvaders.screens.Main;
@@ -58,7 +60,6 @@ public class World implements Disposable {
         scenery = new Scenery(this);
         scenery.populate();
         userCarController = new UserCarController();
-
     }
 
     public void clear() {
@@ -68,9 +69,7 @@ public class World implements Disposable {
 
         stats.reset();
         gameObjects.clear();
-        //cars.clear();
         player = null;
-        //scenery.populate();
         ufoSpawnTimer = 3f;
 
         // build invisible boxes outside the world boundary
@@ -169,6 +168,9 @@ public class World implements Disposable {
         Scene scene = loadNode(name, true, position);
         return scene.modelInstance;
     }
+
+
+
 
     private Vector3 tmpPosition = new Vector3();
 
@@ -332,8 +334,6 @@ public class World implements Disposable {
         removeObject(pickup);
         if(pickup.type == GameObjectType.TYPE_PICKUP_ITEM) {
             stats.techCollected++;
-
-
         }
     }
 

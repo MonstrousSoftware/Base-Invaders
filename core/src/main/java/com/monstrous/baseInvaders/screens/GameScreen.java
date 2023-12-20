@@ -44,12 +44,13 @@ public class GameScreen extends StdScreenAdapter {
         Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
         Gdx.input.setCatchKey(Input.Keys.F4, true);
+        Gdx.input.setCatchKey(Input.Keys.F9, true);
         Gdx.input.setCatchKey(Input.Keys.F10, true);
         Gdx.input.setCatchKey(Input.Keys.F11, true);
 
         world = new World();
 
-        gameView = new GameView(world,false, 1.0f, 400f);
+        gameView = new GameView(world,false, 1.0f, 1000f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
 
         physicsView = new PhysicsView(world);

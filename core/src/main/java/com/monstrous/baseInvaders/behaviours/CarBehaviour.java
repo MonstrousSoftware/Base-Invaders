@@ -118,6 +118,9 @@ public class CarBehaviour extends Behaviour {
     private Vector3 v = new Vector3();
 
     public void update(World world, float deltaTime ){
+
+        //spawnSmokeTrail(world.getPlayer().scene.modelInstance.transform);
+
         // copy inputs from user controller
         UserCarController controller = world.getUserCarController();
         if(!shiftingUp && !shiftingDown)    // declutch while shifting gears

@@ -27,6 +27,8 @@ public class ParticleEffects implements Disposable {
     private ParticleEffect ringEffect;
     private ParticleEffect exhaustFumesEffect;
 
+    private Matrix4 tmpTransform = new Matrix4();
+
     public ParticleEffects(Camera cam) {
         // create a particle system
         particleSystem = new ParticleSystem();
@@ -57,7 +59,9 @@ public class ParticleEffects implements Disposable {
     // puff of smoke effect where character lands
     public void addExhaustFumes(Matrix4 transform) {
         // we cannot use the originalEffect, we must make a copy each time we create new particle effect
-        addEffect( exhaustFumesEffect.copy(), transform );
+        tmpTransform.set(transform);
+        tmpTransform.translate(0.7f,-0.5f,-2.9f);           // offset for tail pipe
+        addEffect( exhaustFumesEffect.copy(), tmpTransform );
     }
 
     // add effect
@@ -113,11 +117,13 @@ public class ParticleEffects implements Disposable {
     }
 
 
-    public void render() {
+    public void render(Camera cam ) {
+        modelBatch.begin(cam);
         particleSystem.begin();
         particleSystem.draw();
         particleSystem.end();
         modelBatch.render(particleSystem);
+        modelBatch.end();
     }
 
 

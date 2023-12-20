@@ -42,7 +42,6 @@ public class MainMenuScreen extends MenuScreen {
        TextButton keys = new TextButton("Keys", skin);
        TextButton options = new TextButton("Options", skin);
        TextButton scores = new TextButton("High Scores", skin);
-       //TextButton credits = new TextButton("Credits", skin);
        TextButton quit = new TextButton("Quit", skin);
 
        float pad = 10f;
@@ -51,7 +50,6 @@ public class MainMenuScreen extends MenuScreen {
        screenTable.add(keys).pad(pad).row();
        screenTable.add(scores).pad(pad).row();
        screenTable.add(options).pad(pad).row();
-       //screenTable.add(credits).pad(pad).row();
        // hide quit on web unless we have an outro screen
        if(!(Gdx.app.getType() == Application.ApplicationType.WebGL) )
             screenTable.add(quit).pad(pad).row();
@@ -69,7 +67,6 @@ public class MainMenuScreen extends MenuScreen {
            public void clicked(InputEvent event, float x, float y) {
                super.clicked(event, x, y);
                playSelectNoise();
-             //  game.musicManager.stopMusic();
                game.setScreen(new PreGameScreen( game ));
            }
        });
@@ -105,7 +102,6 @@ public class MainMenuScreen extends MenuScreen {
                         return;
                     }
                 }
-                //Skin windowSkin = game.assets.get("Particle Park UI Skin/Particle Park UI.json");
                 LeaderBoardWindow leaderBoardWindow = new LeaderBoardWindow("Leader Board", skin, null, game.leaderBoard, game);
                 float wx = (stage.getWidth() - leaderBoardWindow.getWidth())/2;
                 float wy = (stage.getHeight() - leaderBoardWindow.getHeight())/2;
@@ -114,29 +110,21 @@ public class MainMenuScreen extends MenuScreen {
                 leaderBoardWindow.setPosition(wx,stage.getHeight());
                 leaderBoardWindow.addAction(Actions.moveTo(wx, wy, .6f, Interpolation.swingOut));
                 stage.addActor(leaderBoardWindow);
+                ControllerMenuStage cStage = (ControllerMenuStage)stage;
+                Actor actor = leaderBoardWindow.findActor("OK");
+                cStage.addFocusableActor(actor);
+                cStage.setFocusedActor(actor);
             }
         });
 
-
-//        credits.addListener(new ClickListener() {
-//            @Override
-//            public void clicked(InputEvent event, float x, float y) {
-//                super.clicked(event, x, y);
-//                playSelectNoise();
-//                //game.setScreen(new CreditsScreen( game ));
-//            }
-//        });
 
        quit.addListener(new ClickListener() {
            @Override
            public void clicked(InputEvent event, float x, float y) {
                super.clicked(event, x, y);
                playSelectNoise();
-              // game.musicManager.stopMusic();
-//               if(!Settings.skipExitScreen)
-//                    game.setScreen(new ExitScreen( game ));
-//               else
-                    Gdx.app.exit();
+               game.musicManager.stopMusic();
+               Gdx.app.exit();
            }
        });
 
@@ -146,10 +134,14 @@ public class MainMenuScreen extends MenuScreen {
             cStage.clearFocusableActors();
             cStage.addFocusableActor(play);
             cStage.addFocusableActor(keys);
+            cStage.addFocusableActor(scores);
             cStage.addFocusableActor(options);
-//            cStage.addFocusableActor(credits);
             cStage.addFocusableActor(quit);
             cStage.setFocusedActor(play);
+//
+//            InputEvent event = new InputEvent();
+//            event.setType(InputEvent.Type.enter);
+//            play.fire(event);
         }
    }
 

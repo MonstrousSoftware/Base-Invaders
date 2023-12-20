@@ -1,9 +1,11 @@
 package com.monstrous.baseInvaders;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Disposable;
@@ -56,9 +58,6 @@ public class GameView implements Disposable {
         sceneManager.setCamera(cam);
         camController = new CameraController(cam);
 
-//        csm = new CascadeShadowMap(2);
-//        sceneManager.setCascadeShadowMap(csm);
-
         // setup light
         int viewPortSize = 64;  // smaller value gives sharper shadow
         shadowLight = new DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
@@ -90,8 +89,11 @@ public class GameView implements Disposable {
             skybox = new SceneSkybox(environmentCubemap);
             sceneManager.setSkyBox(skybox);
 
-//            particleEffects = new ParticleEffects(cam);
-//            particleEffects.addFire( new Vector3(Settings.worldSize/2,8,Settings.worldSize/2));
+            particleEffects = new ParticleEffects(cam);
+            float x = Settings.worldSize/2;
+            float z = Settings.worldSize/2;
+            float y = world.terrain.getHeight(x, z);
+            particleEffects.addFire( new Vector3(x, y, z));
         }
     }
 
@@ -112,6 +114,8 @@ public class GameView implements Disposable {
 
     private Vector3 pos = new Vector3();
 
+
+    // Synchronize scene manager with world contents
     public void refresh(Camera cam) {
 
         sceneManager.getRenderableProviders().clear();        // remove all scenes
@@ -135,6 +139,8 @@ public class GameView implements Disposable {
                 sceneManager.addScene(scene, false);
                 count++;
             }
+            if(go.type.isCar)       // bit hacky to do this here
+                spawnSmokeTrail(go.scene.modelInstance.transform);
         }
         world.stats.itemsRendered = count;
     }
@@ -145,32 +151,30 @@ public class GameView implements Disposable {
         if(!isOverlay) {
             camController.update(delta, world.getPlayer());
 
-//        DirectionalShadowLight shadowLight = sceneManager.getFirstDirectionalShadowLight();
-//            csm.setCascades(sceneManager.camera, shadowLight, 400f, 3f);
-
             refresh(cam);
-            shadowLight.setCenter(cam.position);
+            shadowLight.setCenter(cam.position);            // keep shadow casting light near camera
             sceneManager.update(delta);
         }
 
-        if(!Settings.sceneryShadows)
-            sceneManager.getRenderableProviders().removeValue(world.scenery.getCache(), true);
-        sceneManager.renderShadows();
-        if(!Settings.sceneryShadows)
-            sceneManager.getRenderableProviders().add(world.scenery.getCache());        /// add model cache for scenery items
+        if(Gdx.app.getType() != Application.ApplicationType.WebGL )
+            sceneManager.renderShadows();
 
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);   // clear depth buffer only
 
         sceneManager.renderColors();
 
         if (!isOverlay) {
-//            particleEffects.update(delta);
-//            particleEffects.render();
+
+            particleEffects.update(delta);
+            particleEffects.render(cam);
         }
-            // post-processing of game screen content : vignette effect and underwater wavy effect
 
     }
 
+    public  void spawnSmokeTrail(Matrix4 transform) {
+
+        particleEffects.addExhaustFumes(transform);
+    }
 
     public void resize(int width, int height){
         sceneManager.updateViewport(width, height);

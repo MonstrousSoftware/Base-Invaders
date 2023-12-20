@@ -1,6 +1,8 @@
 package com.monstrous.baseInvaders.gui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -33,7 +35,6 @@ public class LeaderBoardWindow extends Window {
     }
 
     public void refresh() {
-
         clear();
 
         // do we have a new score to upload?
@@ -41,6 +42,7 @@ public class LeaderBoardWindow extends Window {
 
 
         TextButton okButton = new TextButton("OKAY", skin);
+        okButton.setName("OK");
         if(newScore[0])
             okButton.setText("SAVE");
 
@@ -103,6 +105,7 @@ public class LeaderBoardWindow extends Window {
                     Gdx.input.setCursorCatched(true);   // hide cursor in game screen
             }
         });
+
     }
 
 
