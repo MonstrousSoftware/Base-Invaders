@@ -6,13 +6,17 @@ import com.badlogic.gdx.Gdx;
 
 public class Settings {
     static public boolean release = true;
-    static public String version = "v1.0.3 Dec 2023";
+    static public String version = "v1.0.4 Dec 2023";       // keep in synch with build.gradle
     static public String preferencesName = "base-invaders";
 
     static public boolean musicOn = true;
 
     static public boolean supportControllers = true;       // disable in case it causes issues
     static public boolean fullScreen = false;
+
+    // performance
+    static public boolean showShadows = true;
+    static public boolean sparseScenery = false;
 
     static public float verticalReadjustSpeed = 4f;
 

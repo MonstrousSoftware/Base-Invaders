@@ -62,6 +62,8 @@ public class World implements Disposable {
         userCarController = new UserCarController();
     }
 
+
+
     public void clear() {
         Gdx.app.log("World.clear()", "");
         physicsWorld.reset();

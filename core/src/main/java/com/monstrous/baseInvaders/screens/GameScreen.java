@@ -27,13 +27,17 @@ public class GameScreen extends StdScreenAdapter {
     private World world;
     private boolean debugRender = !Settings.release;
     private boolean carSettingsWindow = false;
-    private int techCollected = 0;
+    //private int techCollected = 0;
     private boolean autoCam = Settings.release;
     private MyControllerAdapter controllerAdapter;
     private Controller currentController;
 
     public GameScreen(Main game) {
+
         this.game = game;
+
+        world = new World();
+        Populator.populate(world);
     }
 
     @Override
@@ -47,8 +51,6 @@ public class GameScreen extends StdScreenAdapter {
         Gdx.input.setCatchKey(Input.Keys.F9, true);
         Gdx.input.setCatchKey(Input.Keys.F10, true);
         Gdx.input.setCatchKey(Input.Keys.F11, true);
-
-        world = new World();
 
         gameView = new GameView(world,false, 1.0f, 1000f);
         ((CameraController)gameView.getCameraController()).autoCam = autoCam;
@@ -71,8 +73,6 @@ public class GameScreen extends StdScreenAdapter {
         }
 
 
-        Populator.populate(world);
-
         gui = new GUI(game, world.getPlayerCar(), world);
 
 
@@ -86,6 +86,8 @@ public class GameScreen extends StdScreenAdapter {
         if(Settings.musicOn)
             game.musicManager.startMusic("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", true);
 
+
+        world.scenery.populate();   // adjust to current performance settings
     }
 
 
@@ -114,7 +116,7 @@ public class GameScreen extends StdScreenAdapter {
             (currentController != null && currentController.getButton(currentController.getMapping().buttonX))) {
             if(!Settings.release)
                 Gdx.app.exit();
-            game.setScreen( new MainMenuScreen(game));
+            game.setScreen( new PauseMenuScreen(game, this));
             return;
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.HOME)||
@@ -141,10 +143,9 @@ public class GameScreen extends StdScreenAdapter {
             showLeaderBoard();
         }
 
-        if( world.stats.techCollected > techCollected) {
-            gui.addTechIcon();
-            techCollected++;
-        }
+//        if( world.stats.techCollected > gui.numTechItems) {
+//            gui.addTechIcon(true);
+//        }
 
         world.update(delta);
         minimap.update(gameView.getCamera(), world);
@@ -188,17 +189,17 @@ public class GameScreen extends StdScreenAdapter {
         Gdx.input.setCursorCatched(false);
         if(Settings.musicOn)
             game.musicManager.stopMusic();
-        dispose();
+
+        gameView.dispose();
+        physicsView.dispose();
+        gridView.dispose();
+        gui.dispose();
+        minimap.dispose();
+        instrumentView.dispose();
     }
 
     @Override
     public void dispose() {
-        gameView.dispose();
-        physicsView.dispose();
-        gridView.dispose();
         world.dispose();
-        gui.dispose();
-        minimap.dispose();
-        instrumentView.dispose();
     }
 }

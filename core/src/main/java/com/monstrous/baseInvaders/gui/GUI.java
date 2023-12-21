@@ -36,7 +36,7 @@ public class GUI implements Disposable {
     private CarSettingsWindow settingsWindow;
     private LeaderBoardWindow leaderBoardWindow;
     private Table techTable;
-    private int numTechItems = 0;
+    public int numTechItems = 0;
     private Label timeLabel;
     private Label fpsLabel;
     private Label speedLabel;
@@ -136,13 +136,18 @@ public class GUI implements Disposable {
        settingsWindow.setVisible(mode);
     }
 
-    public void addTechIcon() {
+    public void addTechIcon(boolean animate) {
         Image techIcon = new Image(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/alienTech-64.png")))));
         techTable.addActor(techIcon);
-        techIcon.addAction( sequence(   moveTo(stage.getWidth()/2, stage.getHeight()/2, 0), scaleTo(5f,5f,0f),
-                                        parallel(
-                                                scaleTo(1f,1f,1f),
-                                                moveTo(numTechItems*64f, stage.getHeight()-techIcon.getHeight(), 1))));
+        if(animate) {
+            techIcon.addAction(sequence(moveTo(stage.getWidth() / 2, stage.getHeight() / 2, 0), scaleTo(5f, 5f, 0f),
+                parallel(
+                    scaleTo(1f, 1f, 1f),
+                    moveTo(numTechItems * 64f, stage.getHeight() - techIcon.getHeight(), 1))));
+        }
+        else
+            techIcon.addAction( moveTo(numTechItems * 64f, stage.getHeight() - techIcon.getHeight(), 0.1f));
+
         numTechItems++;
     }
 
@@ -184,9 +189,15 @@ public class GUI implements Disposable {
         if(timer <= 0) {
             timer = 0.25f;
 
-            if( world.stats.techCollected == 0) {       // reset?
-                techTable.clear();
-                numTechItems = 0;
+            if( world.stats.techCollected != numTechItems) {
+                if(world.stats.techCollected == numTechItems+1)
+                    addTechIcon(true);
+                else {// reset? or resume after pause menu?
+                    techTable.clear();
+                    for (int i = 0; i < world.stats.techCollected; i++)
+                        addTechIcon(false);
+                }
+                //numTechItems = world.stats.techCollected;
             }
 
             updateLabels();

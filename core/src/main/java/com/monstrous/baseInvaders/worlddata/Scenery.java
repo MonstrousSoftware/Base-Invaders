@@ -16,25 +16,38 @@ public class Scenery implements Disposable {
     private World world;
     private ModelCache cache;
     private Array<ModelInstance> instances;
+    public boolean sparse;
 
     public Scenery(World world ) {
 
         this.world = world;
-        cache = new ModelCache();
         instances = new Array<>();
     }
 
     public void populate() {
 
+        if(cache != null && sparse == Settings.sparseScenery)
+            return;
+
+        instances.clear();
+        if(cache != null)
+            cache.dispose();
+        cache = new ModelCache();
+        // performance setting for less scenery
+        sparse = Settings.sparseScenery;
+        int divisor = 1;
+        if(Settings.sparseScenery)
+            divisor = 50;
+
         // place all scenery in a model cache
         // we can delete all the items as game objects once we have the cache constructed.
         //
-        placeRandom(world, "cactus", 1800);
-        placeRandom(world, "cactus.001", 1800);
-        placeRandom(world, "cactus.002", 1800);
-        placeRandom(world, "Stone1", 6800);
-        placeRandom(world, "Stone2", 3800);
-        placeRandom(world, "Stone3", 3800);
+        placeRandom(world, "cactus", 1800/divisor);
+        placeRandom(world, "cactus.001", 1800/divisor);
+        placeRandom(world, "cactus.002", 1800/divisor);
+        placeRandom(world, "Stone1", 6800/divisor);
+        placeRandom(world, "Stone2", 3800/divisor);
+        placeRandom(world, "Stone3", 3800/divisor);
         placeRandom(world, "warningSign", 60);
         placeRandom(world, "squadronSign", 60);
 

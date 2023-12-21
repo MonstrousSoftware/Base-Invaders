@@ -67,7 +67,7 @@ public class GameView implements Disposable {
 
 
         // setup light
-        int viewPortSize = 64;  // smaller value gives sharper shadow
+        int viewPortSize = 128;  // smaller value gives sharper shadow
         shadowLight = new DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
             .setViewport(viewPortSize,viewPortSize,1f,100);
         shadowLight.direction.set(1, -3, 1).nor();
@@ -164,7 +164,7 @@ public class GameView implements Disposable {
             sceneManager.update(delta);
         }
 
- //       if(Gdx.app.getType() != Application.ApplicationType.WebGL )
+        if(Settings.showShadows)
             sceneManager.renderShadows();
 
         Gdx.gl.glClear(GL20.GL_DEPTH_BUFFER_BIT);   // clear depth buffer only

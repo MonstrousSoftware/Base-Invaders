@@ -107,6 +107,12 @@ public class OptionsScreen extends MenuScreen {
        CheckBox fps = new CheckBox("Show FPS", skin);
        freeLook.setChecked(Settings.showFPS);
 
+       CheckBox shadows = new CheckBox("Shadows", skin);
+       shadows.setChecked(Settings.showShadows);
+
+       CheckBox scenery = new CheckBox("Less Scenery", skin);
+       scenery.setChecked(Settings.sparseScenery);
+
        CheckBox music = new CheckBox("Music", skin);
        music.setChecked(Settings.musicOn);
 
@@ -121,6 +127,8 @@ public class OptionsScreen extends MenuScreen {
 
        screenTable.add(fullScreen).pad(pad).left().row();
        screenTable.add(fps).pad(pad).left().row();
+       screenTable.add(shadows).pad(pad).left().row();
+       screenTable.add(scenery).pad(pad).left().row();
        screenTable.add(music).pad(pad).left().row();
 //       screenTable.add(invertLook).pad(pad).left().row();
 //       screenTable.add(freeLook).pad(pad).left().row();
@@ -144,6 +152,8 @@ public class OptionsScreen extends MenuScreen {
            cStage.clearFocusableActors();
            cStage.addFocusableActor(fullScreen);
            cStage.addFocusableActor(fps);
+           cStage.addFocusableActor(shadows);
+           cStage.addFocusableActor(scenery);
            cStage.addFocusableActor(music);
 //           cStage.addFocusableActor(invertLook);
 //           cStage.addFocusableActor(freeLook);
@@ -177,11 +187,27 @@ public class OptionsScreen extends MenuScreen {
            }
        });
 
-       music.addListener(new ChangeListener() {
+       fps.addListener(new ChangeListener() {
            @Override
            public void changed(ChangeEvent event, Actor actor) {
                playSelectNoise();
-               Settings.musicOn = music.isChecked();
+               Settings.showFPS = fps.isChecked();
+           }
+       });
+
+       shadows.addListener(new ChangeListener() {
+           @Override
+           public void changed(ChangeEvent event, Actor actor) {
+               playSelectNoise();
+               Settings.showShadows = shadows.isChecked();
+           }
+       });
+
+       scenery.addListener(new ChangeListener() {
+           @Override
+           public void changed(ChangeEvent event, Actor actor) {
+               playSelectNoise();
+               Settings.sparseScenery = scenery.isChecked();
            }
        });
 
