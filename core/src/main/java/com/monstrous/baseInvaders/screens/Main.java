@@ -10,6 +10,7 @@ import com.monstrous.baseInvaders.input.MyControllerMappings;
 import com.monstrous.baseInvaders.leaderboard.GameJolt;
 import com.monstrous.baseInvaders.leaderboard.LeaderBoardEntry;
 import com.monstrous.baseInvaders.terrain.Terrain;
+import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 import de.golfgl.gdx.controllers.mapping.ControllerToInputAdapter;
 
 import static com.badlogic.gdx.Application.ApplicationType.Desktop;

@@ -19,8 +19,8 @@ public class Terrain implements Disposable {
 
 
     private HashMap<Integer, TerrainChunk> chunks;   // map of terrain chunk per grid point
-    public Array<ModelInstance> instances; // model instances to be rendered
-    private SpriteBatch batch;
+    public Array<ModelInstance> instances;          // model instances to be rendered
+    private SpriteBatch batch;                      // for debug map view
 
     public Terrain() {
         Gdx.app.log("terrain", "generate...");

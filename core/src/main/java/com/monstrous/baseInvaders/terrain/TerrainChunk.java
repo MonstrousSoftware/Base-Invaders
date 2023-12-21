@@ -117,9 +117,6 @@ public class TerrainChunk implements Disposable {
                 float posx = ((float) x / (float) N);        // x in [0.0 .. 1.0]
 
                 posz = heightMap[y][x];
-//                // have a slope down on the edges
-//                if(x == 0 || x == N || y == 0 || y == N)
-//                    posz = -10f;
                 pos.set(posx * scale, posz, posy * scale);            // swapping z,y to orient horizontally
 
                 positions[y * (N + 1) + x] = new Vector3(pos);

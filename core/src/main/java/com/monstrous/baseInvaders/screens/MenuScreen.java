@@ -32,21 +32,6 @@ public class MenuScreen extends StdScreenAdapter {
         this.game = game;
     }
 
-//    public class MyControllerMenuStage extends ControllerMenuStage {
-//        public MyControllerMenuStage(Viewport viewport) {
-//            super(viewport);
-//        }
-//
-//        @Override
-//        public boolean isGoNextKeyCode(int keyCode) {
-//            return (keyCode == Input.Keys.DOWN);
-//        }
-//        @Override
-//        public boolean isGoBackKeyCode(int keyCode) {
-//            return (keyCode == Input.Keys.UP);
-//        }
-//    }
-
     @Override
     public void show() {
         viewport = new ScreenViewport();

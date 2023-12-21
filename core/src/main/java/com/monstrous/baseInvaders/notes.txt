@@ -44,3 +44,12 @@ Music: Sunny Day - Copyright Free Background Rock Music for Vlog
 
 v1.0.5
 - Fixed navigation in the menu's with up/down or with controller (bug in gdx-controller).
+- highlight focused button on entering a menu
+
+
+
+
+
+things to do:
+- would it be possible to do frustum culling on the model cache that holds the scenery?
+- should terrain go in a model cache?

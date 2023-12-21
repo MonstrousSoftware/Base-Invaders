@@ -15,6 +15,10 @@ import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
 //import org.ode4j.ode.DHinge2Joint;
 
 
+// OBSOLETE
+
+
+
 // captures car state and behaviour
 // assumes there is only one car type
 

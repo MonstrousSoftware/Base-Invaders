@@ -55,16 +55,9 @@ public class Assets implements Disposable {
         assets.load("sound/pick-up-sfx.ogg", Sound.class);
         assets.load("sound/click_002.ogg", Sound.class);
 
-//        assets.load("sound/hit1.ogg", Sound.class);
-//        assets.load("sound/jump1.ogg", Sound.class);
-//        assets.load("sound/secret1.ogg", Sound.class);
-//        assets.load("sound/upgrade1.ogg", Sound.class);
-//        assets.load("sound/9mm-pistol-shoot-short-reverb-7152.mp3", Sound.class);
-
         assets.load("images/title.png", Texture.class);
 
         assets.load("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", Music.class);
-
 
     }
 
@@ -88,9 +81,7 @@ public class Assets implements Disposable {
     private void initConstants() {
         sounds = new AssetSounds();
         skin = assets.get("skin/invaders.json");
- //       uiFont = assets.get("font/Gasoek32.fnt");
         sceneAsset = assets.get(Settings.GLTF_FILE);
-//        scopeImage = assets.get("images/scope.png");
 
         gameMusic = assets.get("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3");
     }
