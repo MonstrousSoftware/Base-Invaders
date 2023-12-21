@@ -16,7 +16,8 @@ public class Settings {
 
     // performance
     static public boolean showShadows = true;
-    static public boolean sparseScenery = false;
+    static public boolean extraScenery = true;     // sparse is default for performance
+    static public boolean particleFX = false;
 
     static public float verticalReadjustSpeed = 4f;
 
@@ -33,7 +34,7 @@ public class Settings {
     static public boolean invertLook = false;
     static public boolean freeLook = true;
     static public float degreesPerPixel = 0.1f; // mouse sensitivity
-    static public boolean showFPS = !release;
+    static public boolean showFPS = true; //!release;
 
     // suppress shadows from scenery items for WebGL because it crashes the depth sorter
     static public boolean sceneryShadows = (Gdx.app.getType() != Application.ApplicationType.WebGL);

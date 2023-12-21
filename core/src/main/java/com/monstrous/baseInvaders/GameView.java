@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.badlogic.gdx.graphics.g3d.ModelCache;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -128,7 +129,8 @@ public class GameView implements Disposable {
 
         sceneManager.getRenderableProviders().clear();        // remove all scenes
 
-        sceneManager.getRenderableProviders().add(world.scenery.getCache());        /// add model cache for scenery items
+        ModelCache cache = world.scenery.getCache();
+        sceneManager.getRenderableProviders().add(cache);        /// add model cache for scenery items
 
         int count = 0;
         // add scene for each game object
@@ -153,6 +155,7 @@ public class GameView implements Disposable {
         world.stats.itemsRendered = count;
     }
 
+
     public void render(float delta ) {
 
         // animate camera
@@ -160,6 +163,7 @@ public class GameView implements Disposable {
             camController.update(delta, world.getPlayer());
 
             refresh(cam);
+
             shadowLight.setCenter(cam.position);            // keep shadow casting light near camera
             sceneManager.update(delta);
         }

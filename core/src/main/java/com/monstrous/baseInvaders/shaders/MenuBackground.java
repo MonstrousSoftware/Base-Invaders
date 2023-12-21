@@ -23,6 +23,7 @@ public class MenuBackground implements Disposable {
     Array<Mover> movers;
     Array<Disposable> disposables;
     private Texture grade;
+    private Texture tex1, tex2, tex3, tex4, tex5, tex6;
 
     class Mover {
         Sprite sprite;
@@ -37,12 +38,16 @@ public class MenuBackground implements Disposable {
         }
 
         public void move(float delta){
-            float x = sprite.getX()+vx*delta;
-            float y = sprite.getY()+vy*delta;
-            if(x < 0 )
-                x += width;
+            sprite.translate(vx*delta, vy*delta);
+            float x = sprite.getX();
+
+            float w = sprite.getWidth();
+            if(x < -w )
+                x += (width+w);
             if(x  > width)
-                x -= width;
+                x -= (width+w);
+
+            float y = sprite.getY();
             if(y < 0)
                 y += height;
             if(y > height)
@@ -62,69 +67,72 @@ public class MenuBackground implements Disposable {
 
         grade = new Texture("textures/grade.png");
 
-        Texture tex1 = new Texture("textures/redStar.png");
+        tex1 = new Texture("textures/redStar.png");
         disposables.add(tex1);
-        Texture tex2 = new Texture("textures/blueStar.png");
+        tex2 = new Texture("textures/blueStar.png");
         disposables.add(tex2);
-        Texture tex3 = new Texture("textures/redChevron.png");
+        tex3 = new Texture("textures/redChevron.png");
         disposables.add(tex3);
-        Texture tex4= new Texture("textures/blueBar.png");
+        tex4 = new Texture("textures/blueBar.png");
         disposables.add(tex4);
-        Texture tex5= new Texture("textures/redBar.png");
+        tex5 = new Texture("textures/redBar.png");
         disposables.add(tex5);
-        Texture tex6= new Texture("textures/greyUFO.png");
+        tex6 = new Texture("textures/greyUFO.png");
         disposables.add(tex6);
+    }
 
-
+    private void rebuild() {    // called by resize()
+        movers.clear();
         for(int i = 0; i < height; i+=40) {
-            Mover mover = new Mover(tex4, 100, i, 0, 40);
+            Mover mover = new Mover(tex4, 100, i, 0, 40f);
             movers.add(mover);
         }
         for(int i = 0; i < height; i+=40) {
-            Mover mover = new Mover(tex5, width-i/2, i+20, -50, 40);
+            Mover mover = new Mover(tex5, width-i/2, i+20, -50f, 40f);
             movers.add(mover);
         }
 
         for(int i = 0; i < width; i+=100) {
-            Mover mover = new Mover(tex1, i, height / 2, 10, 0);
+            Mover mover = new Mover(tex1, i, height / 2, 10f, 0f);
             movers.add(mover);
         }
         for(int i = 0; i < width; i+=100) {
-            Mover mover = new Mover(tex2, i, height / 3, -10, 0);
+            Mover mover = new Mover(tex2, i, height / 3, -10f, 0f);
             movers.add(mover);
         }
         for(int i = 0; i < width; i+=100) {
-            Mover mover = new Mover(tex3, i, 50, 5, 0);
+            Mover mover = new Mover(tex3, i, 50, 15f, 0f);
             movers.add(mover);
         }
         for(int i = 0; i < width; i+=width/5) {
             Mover mover = new Mover(tex6, i, height-100, 15, 0);
             movers.add(mover);
         }
-
     }
 
     public void resize (int width, int height) {
+        Gdx.app.log("resize", ""+width+"x "+ height);
         this.width = width;
         this.height = height;
         batch.getProjectionMatrix().setToOrtho2D(0, 0, width, height);  // to ensure the fbo is rendered to the full window after a resize
-
+        rebuild();
     }
 
     private void update(float delta){
+        //delta = 0.1f;
         for(Mover mover : movers)
             mover.move(delta);
     }
 
     public void render( float delta ) {
         update(delta);
-        //ScreenUtils.clear(Color.LIGHT_GRAY);
+
         batch.begin();
-        batch.draw(grade, 0,0, width, height);
+        batch.draw(grade, 0,0, width, height);  // background
         for(Mover mover : movers)
             mover.sprite.draw(batch);
         batch.end();
-
+        //Gdx.app.log("fps", ""+Gdx.graphics.getFramesPerSecond());
     }
 
 

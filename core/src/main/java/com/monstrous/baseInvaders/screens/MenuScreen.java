@@ -32,7 +32,7 @@ public class MenuScreen extends StdScreenAdapter {
     public void show() {
         viewport = new ScreenViewport();
 
-        skin = Main.assets.skin; //game.assets.get("ui/uiskin.json"); //"skin/fright/fright.json");
+        skin = Main.assets.skin;
         stage = new ControllerMenuStage(new ScreenViewport());          // we can use this even without controllers, although it doesn't seem to work with teavm + Chrome browser
         rebuild();
         input.setInputProcessor(stage);

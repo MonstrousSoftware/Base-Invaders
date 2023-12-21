@@ -101,6 +101,9 @@ public class ParticleEffects implements Disposable {
     }
 
     public void update( float deltaTime ) {
+        if(!Settings.particleFX)
+            return;
+
         particleSystem.update(deltaTime);
 
         // remove effects that have finished
@@ -118,6 +121,9 @@ public class ParticleEffects implements Disposable {
 
 
     public void render(Camera cam ) {
+        if(!Settings.particleFX)
+            return;
+
         modelBatch.begin(cam);
         particleSystem.begin();
         particleSystem.draw();

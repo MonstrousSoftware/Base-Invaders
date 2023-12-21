@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.Settings;
 
+import java.util.Comparator;
+
 
 // rocks, vegetation, etc.
 
@@ -16,7 +18,20 @@ public class Scenery implements Disposable {
     private World world;
     private ModelCache cache;
     private Array<ModelInstance> instances;
-    public boolean sparse;
+    public boolean extra;
+    private static Vector3 v1 = new Vector3();
+    private static Vector3 v2 = new Vector3();
+
+    static class InstanceComparator implements Comparator<ModelInstance> {
+
+
+        @Override
+        public int compare(ModelInstance instance, ModelInstance other) {
+            instance.transform.getTranslation(v1);
+            other.transform.getTranslation(v2);
+            return (int)  Math.signum(v1.x - v2.x);
+        }
+    }
 
     public Scenery(World world ) {
 
@@ -26,7 +41,7 @@ public class Scenery implements Disposable {
 
     public void populate() {
 
-        if(cache != null && sparse == Settings.sparseScenery)
+        if(cache != null && extra == Settings.extraScenery)
             return;
 
         instances.clear();
@@ -34,25 +49,28 @@ public class Scenery implements Disposable {
             cache.dispose();
         cache = new ModelCache();
         // performance setting for less scenery
-        sparse = Settings.sparseScenery;
-        int divisor = 1;
-        if(Settings.sparseScenery)
-            divisor = 50;
+        extra = Settings.extraScenery;
+        int factor = 1;
+        if(Settings.extraScenery)
+            factor = 100;
 
         // place all scenery in a model cache
         // we can delete all the items as game objects once we have the cache constructed.
         //
-        placeRandom(world, "cactus", 1800/divisor);
-        placeRandom(world, "cactus.001", 1800/divisor);
-        placeRandom(world, "cactus.002", 1800/divisor);
-        placeRandom(world, "Stone1", 6800/divisor);
-        placeRandom(world, "Stone2", 3800/divisor);
-        placeRandom(world, "Stone3", 3800/divisor);
+        placeRandom(world, "cactus", 18 * factor);
+        placeRandom(world, "cactus.001", 18 * factor);
+        placeRandom(world, "cactus.002", 18 * factor);
+        if(Settings.extraScenery) {
+            placeRandom(world, "Stone1", 6800);
+            placeRandom(world, "Stone2", 3800);
+            placeRandom(world, "Stone3", 3800);
+        }
         placeRandom(world, "warningSign", 60);
         placeRandom(world, "squadronSign", 60);
 
         placeFences(world, "fence");
 
+        instances.sort(new InstanceComparator() );
         // put all items in a model cache
         // this make a huge difference to the number of draw calls, and therefore performance
         cache.begin();

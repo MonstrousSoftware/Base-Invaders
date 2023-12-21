@@ -105,13 +105,13 @@ public class OptionsScreen extends MenuScreen {
        freeLook.setChecked(Settings.freeLook);
 
        CheckBox fps = new CheckBox("Show FPS", skin);
-       freeLook.setChecked(Settings.showFPS);
+       fps.setChecked(Settings.showFPS);
 
        CheckBox shadows = new CheckBox("Shadows", skin);
        shadows.setChecked(Settings.showShadows);
 
-       CheckBox scenery = new CheckBox("Less Scenery", skin);
-       scenery.setChecked(Settings.sparseScenery);
+       CheckBox scenery = new CheckBox("More Scenery", skin);
+       scenery.setChecked(Settings.extraScenery);
 
        CheckBox music = new CheckBox("Music", skin);
        music.setChecked(Settings.musicOn);
@@ -207,7 +207,7 @@ public class OptionsScreen extends MenuScreen {
            @Override
            public void changed(ChangeEvent event, Actor actor) {
                playSelectNoise();
-               Settings.sparseScenery = scenery.isChecked();
+               Settings.extraScenery = scenery.isChecked();
            }
        });
 

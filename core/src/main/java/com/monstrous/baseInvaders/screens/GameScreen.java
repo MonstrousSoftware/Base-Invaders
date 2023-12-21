@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.Controllers;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.monstrous.baseInvaders.*;
 import com.monstrous.baseInvaders.gui.GUI;
 import com.monstrous.baseInvaders.input.CameraController;
@@ -27,10 +28,10 @@ public class GameScreen extends StdScreenAdapter {
     private World world;
     private boolean debugRender = !Settings.release;
     private boolean carSettingsWindow = false;
-    //private int techCollected = 0;
     private boolean autoCam = Settings.release;
     private MyControllerAdapter controllerAdapter;
     private Controller currentController;
+    public GLProfiler glProfiler;
 
     public GameScreen(Main game) {
 
@@ -38,6 +39,9 @@ public class GameScreen extends StdScreenAdapter {
 
         world = new World();
         Populator.populate(world);
+
+        glProfiler = new GLProfiler(Gdx.graphics);
+        glProfiler.enable();
     }
 
     @Override
@@ -91,15 +95,6 @@ public class GameScreen extends StdScreenAdapter {
     }
 
 
-//    public void restart() {
-//        Gdx.app.log("GameScreen.restart()", "");
-//        if(Settings.musicOn)
-//            game.musicManager.startMusic("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", true);
-//
-//        Populator.populate(world);
-//    }
-
-
     private void showLeaderBoard() {
         Gdx.input.setCursorCatched(false);
         gui.showLeaderBoard();
@@ -108,6 +103,8 @@ public class GameScreen extends StdScreenAdapter {
 
     @Override
     public void render(float delta) {
+        glProfiler.reset();
+
         super.render(delta);
         if(delta > 0.1f)    // in case we're running in the debugger
             delta = 0.1f;
@@ -123,7 +120,6 @@ public class GameScreen extends StdScreenAdapter {
             (currentController != null && currentController.getButton(currentController.getMapping().buttonY))) {
             game.setScreen(new PreGameScreen(game));
             return;
-            //restart();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             debugRender = !debugRender;
@@ -143,15 +139,14 @@ public class GameScreen extends StdScreenAdapter {
             showLeaderBoard();
         }
 
-//        if( world.stats.techCollected > gui.numTechItems) {
-//            gui.addTechIcon(true);
-//        }
+        if( world.stats.techCollected > gui.numTechItems) {
+            gui.addTechIcon(true);
+        }
 
         world.update(delta);
         minimap.update(gameView.getCamera(), world);
 
         gameView.render(delta) ;
-
 
         if(debugRender) {
             //gridView.render(gameView.getCamera());
@@ -168,6 +163,8 @@ public class GameScreen extends StdScreenAdapter {
         gui.showLevelCompleted(world.stats.gameCompleted);
         gui.render(delta);
 
+        Gdx.app.log("draw calls", "drawcalls:"+glProfiler.getDrawCalls()
+        +"tex binds:"+glProfiler.getTextureBindings()+" sdr swtch:"+glProfiler.getShaderSwitches());
     }
 
     @Override
@@ -196,10 +193,12 @@ public class GameScreen extends StdScreenAdapter {
         gui.dispose();
         minimap.dispose();
         instrumentView.dispose();
+        Main.assets.sounds.ENGINE.stop();
     }
 
     @Override
     public void dispose() {
         world.dispose();
+//        glProfiler.disable();
     }
 }
