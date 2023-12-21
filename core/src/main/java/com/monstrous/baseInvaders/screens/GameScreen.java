@@ -32,6 +32,7 @@ public class GameScreen extends StdScreenAdapter {
     private MyControllerAdapter controllerAdapter;
     private Controller currentController;
     public GLProfiler glProfiler;
+    public boolean doProfiling = false;
 
     public GameScreen(Main game) {
 
@@ -40,8 +41,10 @@ public class GameScreen extends StdScreenAdapter {
         world = new World();
         Populator.populate(world);
 
-        glProfiler = new GLProfiler(Gdx.graphics);
-        glProfiler.enable();
+        if(doProfiling){
+            glProfiler = new GLProfiler(Gdx.graphics);
+            glProfiler.enable();
+        }
     }
 
     @Override
@@ -103,7 +106,8 @@ public class GameScreen extends StdScreenAdapter {
 
     @Override
     public void render(float delta) {
-        glProfiler.reset();
+        if(doProfiling)
+            glProfiler.reset();
 
         super.render(delta);
         if(delta > 0.1f)    // in case we're running in the debugger
@@ -139,9 +143,9 @@ public class GameScreen extends StdScreenAdapter {
             showLeaderBoard();
         }
 
-        if( world.stats.techCollected > gui.numTechItems) {
-            gui.addTechIcon(true);
-        }
+//        if( world.stats.techCollected > gui.numTechItems) {
+//            gui.addTechIcon(true);
+//        }
 
         world.update(delta);
         minimap.update(gameView.getCamera(), world);
@@ -152,19 +156,18 @@ public class GameScreen extends StdScreenAdapter {
             //gridView.render(gameView.getCamera());
             physicsView.render(gameView.getCamera());
         }
-
-
         minimap.render();
-
         instrumentView.render(world.getPlayerCar());
+
+        if(doProfiling) {
+            Gdx.app.log("draw calls", "drawcalls:" + glProfiler.getDrawCalls()
+                + "tex binds:" + glProfiler.getTextureBindings() + " sdr swtch:" + glProfiler.getShaderSwitches() + " items rendered:" + world.stats.itemsRendered);
+        }
 
         if(world.stats.gameCompleted && Settings.musicOn)
             game.musicManager.stopMusic();
         gui.showLevelCompleted(world.stats.gameCompleted);
         gui.render(delta);
-
-        Gdx.app.log("draw calls", "drawcalls:"+glProfiler.getDrawCalls()
-        +"tex binds:"+glProfiler.getTextureBindings()+" sdr swtch:"+glProfiler.getShaderSwitches());
     }
 
     @Override
@@ -199,6 +202,7 @@ public class GameScreen extends StdScreenAdapter {
     @Override
     public void dispose() {
         world.dispose();
-//        glProfiler.disable();
+        if(doProfiling)
+            glProfiler.disable();
     }
 }

@@ -44,7 +44,7 @@ public class MainMenuScreen extends MenuScreen {
        TextButton scores = new TextButton("High Scores", skin);
        TextButton quit = new TextButton("Quit", skin);
 
-       float pad = 10f;
+       float pad = 7f;
        screenTable.add(title).pad(50).row();
        screenTable.add(play).pad(pad).row();
        screenTable.add(keys).pad(pad).row();
@@ -57,7 +57,7 @@ public class MainMenuScreen extends MenuScreen {
        screenTable.pack();
 
        screenTable.setColor(1,1,1,0);                   // set alpha to zero
-       screenTable.addAction(Actions.fadeIn(3f));           // fade in
+       screenTable.addAction(Actions.fadeIn(1f));           // fade in
        stage.addActor(screenTable);
 
 
@@ -110,10 +110,11 @@ public class MainMenuScreen extends MenuScreen {
                 leaderBoardWindow.setPosition(wx,stage.getHeight());
                 leaderBoardWindow.addAction(Actions.moveTo(wx, wy, .6f, Interpolation.swingOut));
                 stage.addActor(leaderBoardWindow);
-                ControllerMenuStage cStage = (ControllerMenuStage)stage;
+
                 Actor actor = leaderBoardWindow.findActor("OK");
-                cStage.addFocusableActor(actor);
-                cStage.setFocusedActor(actor);
+                stage.addFocusableActor(actor);
+                stage.setFocusedActor(actor);
+
             }
         });
 
@@ -130,18 +131,15 @@ public class MainMenuScreen extends MenuScreen {
 
        // set up for keyboard/controller navigation
         if(Settings.supportControllers) {
-            ControllerMenuStage cStage = (ControllerMenuStage)stage;
-            cStage.clearFocusableActors();
-            cStage.addFocusableActor(play);
-            cStage.addFocusableActor(keys);
-            cStage.addFocusableActor(scores);
-            cStage.addFocusableActor(options);
-            cStage.addFocusableActor(quit);
-            cStage.setFocusedActor(play);
-//
-//            InputEvent event = new InputEvent();
-//            event.setType(InputEvent.Type.enter);
-//            play.fire(event);
+            stage.clearFocusableActors();
+            stage.addFocusableActor(play);
+            stage.addFocusableActor(keys);
+            stage.addFocusableActor(scores);
+            stage.addFocusableActor(options);
+            stage.addFocusableActor(quit);
+            stage.setFocusedActor(play);
+            super.focusActor(play);    // highlight focused actor
+
         }
    }
 

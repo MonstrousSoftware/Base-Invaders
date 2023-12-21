@@ -86,14 +86,14 @@ public class GUI implements Disposable {
 
         fpsLabel = new Label("", skin, "small");
         fpsLabel.setWidth(200);
-        speedLabel = new Label("---", skin );
+//        speedLabel = new Label("---", skin );
         screenTable2.add().top();
         screenTable2.add();
         screenTable2.add(timeLabel).top().right().expand().row();
         //screenTable2.add(fpsTagLabel).bottom().left();
         screenTable2.add(fpsLabel).bottom().left().expandX();
         screenTable2.add(gearValue).bottom().left();
-        screenTable2.add(speedLabel).bottom().pad(80).right();
+//        screenTable2.add(speedLabel).bottom().pad(80).right();
 
         stage.addActor(screenTable2);
 
@@ -147,7 +147,6 @@ public class GUI implements Disposable {
         }
         else
             techIcon.addAction( moveTo(numTechItems * 64f, stage.getHeight() - techIcon.getHeight(), 0.1f));
-
         numTechItems++;
     }
 
@@ -178,9 +177,9 @@ public class GUI implements Disposable {
         sb.append(ss);
         timeLabel.setText(sb.toString());
 
-        sb.setLength(0);
-        sb.append(world.stats.speed);
-        speedLabel.setText(sb.toString());
+//        sb.setLength(0);
+//        sb.append(world.stats.speed);
+//        speedLabel.setText(sb.toString());
     }
 
 
@@ -197,17 +196,17 @@ public class GUI implements Disposable {
                     addTechIcon(true);
                 else {// reset? or resume after pause menu?
                     techTable.clear();
+                    numTechItems = 0;
                     for (int i = 0; i < world.stats.techCollected; i++)
                         addTechIcon(false);
                 }
-                //numTechItems = world.stats.techCollected;
+                numTechItems = world.stats.techCollected;
             }
 
             updateLabels();
 
             rpmValue.setText((int)car.rpm);
             steerAngleValue.setText((int) car.steerAngle);
-            //car.transform.getTranslation(tmpVec);
 
             sb.setLength(0);
             sb.append("GEAR: ");
@@ -241,7 +240,6 @@ public class GUI implements Disposable {
     public void dispose () {
         Gdx.app.log("GUI dispose()", "");
         stage.dispose();
-        //skin.dispose();
     }
 
 }

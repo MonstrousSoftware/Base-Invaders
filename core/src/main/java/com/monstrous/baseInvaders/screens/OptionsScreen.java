@@ -6,6 +6,7 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerPowerLevel;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -25,8 +26,6 @@ public class OptionsScreen extends MenuScreen {
     private GameScreen gameScreen;    // to keep track where we were called from
     private Controller controller;
     private Label controllerLabel;
-    //private Table screenTable;
-
 
     public OptionsScreen(Main game, GameScreen gameScreen) {
         super(game);
@@ -98,17 +97,14 @@ public class OptionsScreen extends MenuScreen {
        CheckBox fullScreen = new CheckBox("Full Screen", skin);
        fullScreen.setChecked(Settings.fullScreen);
 
-       CheckBox invertLook = new CheckBox("Invert Look", skin);
-       invertLook.setChecked(Settings.invertLook);
-
-       CheckBox freeLook = new CheckBox("Free Look", skin);
-       freeLook.setChecked(Settings.freeLook);
-
        CheckBox fps = new CheckBox("Show FPS", skin);
        fps.setChecked(Settings.showFPS);
 
        CheckBox shadows = new CheckBox("Shadows", skin);
        shadows.setChecked(Settings.showShadows);
+
+       CheckBox particles = new CheckBox("Particle effects", skin);
+       particles.setChecked(Settings.particleFX);
 
        CheckBox scenery = new CheckBox("More Scenery", skin);
        scenery.setChecked(Settings.extraScenery);
@@ -116,54 +112,50 @@ public class OptionsScreen extends MenuScreen {
        CheckBox music = new CheckBox("Music", skin);
        music.setChecked(Settings.musicOn);
 
+       TextButton done = new TextButton("Done", skin);
 
        controllerLabel = new Label("None", skin);
        if(controller != null)
            controllerLabel.setText(controller.getName());
 
-       TextButton done = new TextButton("Done", skin);
 
        int pad = 10;
 
        screenTable.add(fullScreen).pad(pad).left().row();
        screenTable.add(fps).pad(pad).left().row();
        screenTable.add(shadows).pad(pad).left().row();
+       screenTable.add(particles).pad(pad).left().row();
        screenTable.add(scenery).pad(pad).left().row();
        screenTable.add(music).pad(pad).left().row();
-//       screenTable.add(invertLook).pad(pad).left().row();
-//       screenTable.add(freeLook).pad(pad).left().row();
-//       screenTable.add(weather).pad(pad).left().row();
-//       screenTable.add(hints).pad(pad).left().row();
-//       screenTable.add(narrator).pad(pad).left().row();
-       screenTable.add(new Label("Controller: ", skin)).pad(pad).left();
-       screenTable.add(controllerLabel).left().row();
+
        screenTable.add(done).pad(20).row();
 
+       screenTable.add(new Label("Controller:", skin)).pad(pad).right();
+       screenTable.add(controllerLabel).left().row();
+
+
        screenTable.pack();
+       screenTable.validate();
 
        screenTable.setColor(1,1,1,0);                   // set alpha to zero
-       screenTable.addAction(Actions.fadeIn(3f));           // fade in
+       screenTable.addAction(Actions.fadeIn(1f));           // fade in
 
        stage.addActor(screenTable);
 
        // set up for keyboard/controller navigation
        if(Settings.supportControllers) {
-           ControllerMenuStage cStage = (ControllerMenuStage) stage;
-           cStage.clearFocusableActors();
-           cStage.addFocusableActor(fullScreen);
-           cStage.addFocusableActor(fps);
-           cStage.addFocusableActor(shadows);
-           cStage.addFocusableActor(scenery);
-           cStage.addFocusableActor(music);
-//           cStage.addFocusableActor(invertLook);
-//           cStage.addFocusableActor(freeLook);
-//           cStage.addFocusableActor(weather);
-//           cStage.addFocusableActor(hints);
-//           cStage.addFocusableActor(narrator);
-           //stage.addFocusableActor(controllerLabel);
-           cStage.addFocusableActor(done);
-           cStage.setFocusedActor(fullScreen);
-           cStage.setEscapeActor(done);
+           // add menu items in order
+           stage.clearFocusableActors();
+           stage.addFocusableActor(fullScreen);
+           stage.addFocusableActor(fps);
+           stage.addFocusableActor(shadows);
+           stage.addFocusableActor(particles);
+           stage.addFocusableActor(scenery);
+           stage.addFocusableActor(music);
+           stage.addFocusableActor(done);
+           stage.setFocusedActor(fullScreen);
+           stage.setEscapeActor(done);
+           super.focusActor(fullScreen);    // highlight focused actor
        }
 
        fullScreen.addListener(new ChangeListener() {
@@ -211,41 +203,13 @@ public class OptionsScreen extends MenuScreen {
            }
        });
 
-       invertLook.addListener(new ChangeListener() {
+       particles.addListener(new ChangeListener() {
            @Override
            public void changed(ChangeEvent event, Actor actor) {
                playSelectNoise();
-               Settings.invertLook = invertLook.isChecked();
+               Settings.particleFX = particles.isChecked();
            }
        });
-       freeLook.addListener(new ChangeListener() {
-           @Override
-           public void changed(ChangeEvent event, Actor actor) {
-               playSelectNoise();
-               Settings.freeLook = freeLook.isChecked();
-           }
-       });
-//       weather.addListener(new ChangeListener() {
-//           @Override
-//           public void changed(ChangeEvent event, Actor actor) {
-//               playSelectNoise();
-//               Settings.enableWeather = weather.isChecked();
-//           }
-//       });
-//       hints.addListener(new ChangeListener() {
-//           @Override
-//           public void changed(ChangeEvent event, Actor actor) {
-//               playSelectNoise();
-//               Settings.enableHints = hints.isChecked();
-//           }
-//       });
-//       narrator.addListener(new ChangeListener() {
-//           @Override
-//           public void changed(ChangeEvent event, Actor actor) {
-//               playSelectNoise();
-//               Settings.enableNarrator = narrator.isChecked();
-//           }
-//       });
 
        done.addListener(new ClickListener() {
            @Override

@@ -295,10 +295,10 @@ public class World implements Disposable {
             if(go.getPosition().y < -50)    // fallen off the edge
                 go.health = 0;
         }
-        physicsWorld.update();
+        physicsWorld.update(deltaTime);
         syncToPhysics();
 
-        if(player.health <= 0)    // fallen off the edge of the map
+        if(player != null && player.health <= 0)    // fallen off the edge of the map
             Populator.populate(this);   // reset to start
 
     }

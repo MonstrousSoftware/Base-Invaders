@@ -187,7 +187,7 @@
 			"mesh":15,
 			"name":"fence",
 			"translation":[
-				16.13887596130371,
+				18.52566909790039,
 				0,
 				0
 			]
@@ -1093,7 +1093,6 @@
 	],
 	"materials":[
 		{
-			"doubleSided":true,
 			"extensions":{
 				"KHR_materials_specular":{
 					"specularColorFactor":[
@@ -1320,7 +1319,6 @@
 			}
 		},
 		{
-			"doubleSided":true,
 			"name":"proxy",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -1522,7 +1520,6 @@
 			}
 		},
 		{
-			"doubleSided":true,
 			"name":"jeep",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -1574,7 +1571,6 @@
 			}
 		},
 		{
-			"doubleSided":true,
 			"name":"Stone",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -1588,7 +1584,6 @@
 			}
 		},
 		{
-			"doubleSided":true,
 			"name":"Stone.001",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[
@@ -1602,7 +1597,6 @@
 			}
 		},
 		{
-			"doubleSided":true,
 			"name":"Stone.002",
 			"pbrMetallicRoughness":{
 				"baseColorFactor":[

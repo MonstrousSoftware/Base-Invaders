@@ -267,10 +267,8 @@ atlasData: {
 			type: NINE_PATCH
 			hidden: false
 		}
-	]
-	fontDrawables: [
 		{
-			file: C:/Coding/IdeaProjects/Base-Invaders/assets/skin/invaders_data/OpenSans_Regular16.png
+			file: C:/Coding/skin/source images/checkbox-off.png
 			bgColor: {
 				r: 1
 				g: 1
@@ -279,16 +277,38 @@ atlasData: {
 			}
 			tint: null
 			tintName: null
-			name: OpenSans_Regular16
+			name: checkbox-off
 			tiled: false
 			minWidth: -1
 			minHeight: -1
 			customized: false
 			tenPatchData: null
 			tvgData: null
-			type: FONT
+			type: TEXTURE
 			hidden: false
 		}
+		{
+			file: C:/Coding/skin/source images/checkbox-on.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			tint: null
+			tintName: null
+			name: checkbox-on
+			tiled: false
+			minWidth: -1
+			minHeight: -1
+			customized: false
+			tenPatchData: null
+			tvgData: null
+			type: TEXTURE
+			hidden: false
+		}
+	]
+	fontDrawables: [
 		{
 			file: C:/Coding/IdeaProjects/Base-Invaders/assets/skin/GasoekOne-Regular(1).png
 			bgColor: {
@@ -309,6 +329,26 @@ atlasData: {
 			type: FONT
 			hidden: false
 		}
+		{
+			file: C:/Coding/skin/source ttf/OpenSans-Bold.png
+			bgColor: {
+				r: 1
+				g: 1
+				b: 1
+				a: 1
+			}
+			tint: null
+			tintName: null
+			name: OpenSans-Bold
+			tiled: false
+			minWidth: -1
+			minHeight: -1
+			customized: false
+			tenPatchData: null
+			tvgData: null
+			type: FONT
+			hidden: false
+		}
 	]
 }
 jsonData: {
@@ -316,9 +356,9 @@ jsonData: {
 		{
 			class: com.ray3k.skincomposer.data.ColorData
 			color: {
-				r: 0.29803923
-				g: 0.54509807
-				b: 0.8901961
+				r: 0.8901961
+				g: 0.29803923
+				b: 0.29803923
 				a: 1
 			}
 			name: blue
@@ -326,12 +366,22 @@ jsonData: {
 		{
 			class: com.ray3k.skincomposer.data.ColorData
 			color: {
-				r: 0.9254902
-				g: 0.78431374
-				b: 0.13333334
+				r: 0.95686275
+				g: 0.83137256
+				b: 0.14117648
 				a: 1
 			}
 			name: honey
+		}
+		{
+			class: com.ray3k.skincomposer.data.ColorData
+			color: {
+				r: 0.09803922
+				g: 0.45490196
+				b: 0.8784314
+				a: 1
+			}
+			name: lightblue
 		}
 		{
 			class: com.ray3k.skincomposer.data.ColorData
@@ -355,11 +405,11 @@ jsonData: {
 		}
 		{
 			class: com.ray3k.skincomposer.data.FontData
-			name: OpenSans_Regular16
+			name: OpenSans-Bold20
 			flip: false
 			markupEnabled: false
 			scaling: -1
-			file: C:/Coding/IdeaProjects/Base-Invaders/assets/skin/invaders_data/OpenSans_Regular16.fnt
+			file: C:/Coding/skin/source ttf/OpenSans-Bold.fnt
 		}
 	]
 	freeTypeFonts: []
@@ -374,25 +424,25 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: checkboxOn
 						optional: false
-						value: checkbox_on
+						value: checkbox-on
 					}
 					checkboxOff: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: checkboxOff
 						optional: false
-						value: checkbox_off
+						value: checkbox-off
 					}
 					checkboxOnOver: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: checkboxOnOver
 						optional: true
-						value: checkbox_on_over
+						value: checkbox-on
 					}
 					checkboxOver: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: checkboxOver
 						optional: true
-						value: checkbox_off_over
+						value: checkbox-off
 					}
 					checkboxOnDisabled: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -416,7 +466,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: true
-						value: white
+						value: lightblue
 					}
 					downFontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -732,7 +782,7 @@ jsonData: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
 						name: background
 						optional: true
-						value: window-grey
+						value: window
 					}
 					titleFont: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
@@ -744,7 +794,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: titleFontColor
 						optional: true
-						value: white
+						value: honey
 					}
 					stageBackground: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -1321,13 +1371,13 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: OpenSans_Regular16
+						value: OpenSans-Bold20
 					}
 					fontColor: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: false
-						value: white
+						value: lightblue
 					}
 					focusedFontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -1404,7 +1454,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: true
-						value: white
+						value: lightblue
 					}
 					background: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -1431,7 +1481,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: true
-						value: blue
+						value: honey
 					}
 					background: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -1452,13 +1502,13 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.g2d.BitmapFont
 						name: font
 						optional: false
-						value: OpenSans_Regular16
+						value: OpenSans-Bold20
 					}
 					fontColor: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: true
-						value: white
+						value: lightblue
 					}
 					background: {
 						type: com.badlogic.gdx.scenes.scene2d.utils.Drawable
@@ -1611,7 +1661,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: true
-						value: white
+						value: honey
 					}
 					downFontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -1623,7 +1673,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: overFontColor
 						optional: true
-						value: honey
+						value: blue
 					}
 					focusedFontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -1770,7 +1820,7 @@ jsonData: {
 						type: com.badlogic.gdx.graphics.Color
 						name: fontColor
 						optional: true
-						value: null
+						value: lightblue
 					}
 					downFontColor: {
 						type: com.badlogic.gdx.graphics.Color
@@ -2169,8 +2219,8 @@ preferences: {
 	}
 	preview-bg-color: {
 		class: com.badlogic.gdx.graphics.Color
-		r: 1
-		g: 0.20224719
+		r: 0.9764706
+		g: 0.98039216
 		b: 1
 		a: 1
 	}

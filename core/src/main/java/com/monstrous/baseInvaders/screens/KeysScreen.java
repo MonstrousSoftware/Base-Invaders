@@ -64,11 +64,12 @@ public class KeysScreen extends MenuScreen {
 
        // set up for keyboard/controller navigation
         if(Settings.supportControllers) {
-            ControllerMenuStage cStage = (ControllerMenuStage) stage;
-            cStage.clearFocusableActors();
-            cStage.addFocusableActor(continueButton);
-            cStage.setFocusedActor(continueButton);
-            cStage.setEscapeActor(continueButton);
+            stage.clearFocusableActors();
+            stage.addFocusableActor(continueButton);
+            stage.setFocusedActor(continueButton);
+            super.focusActor(continueButton);    // highlight focused actor
+
+            stage.setEscapeActor(continueButton);
         }
 
         continueButton.addListener(new ClickListener() {

@@ -17,11 +17,15 @@ import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
 //
 public class PhysicsWorld implements Disposable {
 
+    static final float TIME_STEP = 1f/60f;  // fixed physics time step
+
+
     public DWorld world;
     public DSpace space;
     private final DJointGroup contactGroup;
     private final World gameWorld;
     private DContact.DSurfaceParameters defaultSurface;
+    private float timeElapsed;
 
     public PhysicsWorld(World gameWorld) {
         this.gameWorld = gameWorld;
@@ -62,11 +66,17 @@ public class PhysicsWorld implements Disposable {
         world.setAutoDisableTime(2);
     }
 
-    // update the physics with one (fixed) time step
-    public void update() {
-        space.collide(null, nearCallback);
-        world.quickStep(0.025f);
-        contactGroup.empty();
+    // update the physics with fixed time steps
+    public void update(float deltaTime) {
+
+        timeElapsed += deltaTime;
+        while(timeElapsed > TIME_STEP) {
+            space.collide(null, nearCallback);
+            world.quickStep(1.5f*TIME_STEP);
+            contactGroup.empty();
+
+            timeElapsed -= TIME_STEP;
+        }
     }
 
     private Vector3 dir1 = new Vector3();

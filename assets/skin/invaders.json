@@ -6,8 +6,8 @@
 		"markupEnabled": false,
 		"flip": false
 	},
-	"OpenSans_Regular16": {
-		"file": "OpenSans_Regular16.fnt",
+	"OpenSans-Bold20": {
+		"file": "OpenSans-Bold.fnt",
 		"scaledSize": -1,
 		"markupEnabled": false,
 		"flip": false
@@ -15,15 +15,21 @@
 },
 "com.badlogic.gdx.graphics.Color": {
 	"blue": {
-		"r": 0.29803923,
-		"g": 0.54509807,
-		"b": 0.8901961,
+		"r": 0.8901961,
+		"g": 0.29803923,
+		"b": 0.29803923,
 		"a": 1
 	},
 	"honey": {
-		"r": 0.9254902,
-		"g": 0.78431374,
-		"b": 0.13333334,
+		"r": 0.95686275,
+		"g": 0.83137256,
+		"b": 0.14117648,
+		"a": 1
+	},
+	"lightblue": {
+		"r": 0.09803922,
+		"g": 0.45490196,
+		"b": 0.8784314,
 		"a": 1
 	},
 	"white": {
@@ -59,27 +65,27 @@
 },
 "com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle": {
 	"default": {
-		"checkboxOn": "checkbox_on",
-		"checkboxOff": "checkbox_off",
-		"checkboxOnOver": "checkbox_on_over",
-		"checkboxOver": "checkbox_off_over",
+		"checkboxOn": "checkbox-on",
+		"checkboxOff": "checkbox-off",
+		"checkboxOnOver": "checkbox-on",
+		"checkboxOver": "checkbox-off",
 		"font": "GasoekOne-Regular32",
-		"fontColor": "white",
+		"fontColor": "lightblue",
 		"overFontColor": "blue"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle": {
 	"default": {
 		"font": "GasoekOne-Regular32",
-		"fontColor": "white"
+		"fontColor": "lightblue"
 	},
 	"title": {
 		"font": "GasoekOne-Regular32",
-		"fontColor": "blue"
+		"fontColor": "honey"
 	},
 	"small": {
-		"font": "OpenSans_Regular16",
-		"fontColor": "white"
+		"font": "OpenSans-Bold20",
+		"fontColor": "lightblue"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle": {
@@ -96,8 +102,8 @@
 "com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle": {
 	"default": {
 		"font": "GasoekOne-Regular32",
-		"fontColor": "white",
-		"overFontColor": "honey",
+		"fontColor": "honey",
+		"overFontColor": "blue",
 		"up": "button-up",
 		"down": "button-down",
 		"pressedOffsetX": 2,
@@ -105,13 +111,14 @@
 	},
 	"noframe": {
 		"font": "GasoekOne-Regular32",
+		"fontColor": "lightblue",
 		"overFontColor": "blue"
 	}
 },
 "com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle": {
 	"default": {
-		"font": "OpenSans_Regular16",
-		"fontColor": "white",
+		"font": "OpenSans-Bold20",
+		"fontColor": "lightblue",
 		"background": "dark",
 		"cursor": "cursor"
 	}
@@ -123,9 +130,9 @@
 },
 "com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle": {
 	"default": {
-		"background": "window-grey",
+		"background": "window",
 		"titleFont": "GasoekOne-Regular32",
-		"titleFontColor": "white"
+		"titleFontColor": "honey"
 	}
 }
 }

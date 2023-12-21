@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 
 public class Settings {
     static public boolean release = true;
-    static public String version = "v1.0.4 Dec 2023";       // keep in synch with build.gradle
+    static public String version = "v1.0.5 Dec 2023";       // keep in synch with build.gradle
     static public String preferencesName = "base-invaders";
 
     static public boolean musicOn = true;
@@ -17,7 +17,7 @@ public class Settings {
     // performance
     static public boolean showShadows = true;
     static public boolean extraScenery = true;     // sparse is default for performance
-    static public boolean particleFX = false;
+    static public boolean particleFX = true;
 
     static public float verticalReadjustSpeed = 4f;
 
@@ -34,7 +34,7 @@ public class Settings {
     static public boolean invertLook = false;
     static public boolean freeLook = true;
     static public float degreesPerPixel = 0.1f; // mouse sensitivity
-    static public boolean showFPS = true; //!release;
+    static public boolean showFPS = !release;
 
     // suppress shadows from scenery items for WebGL because it crashes the depth sorter
     static public boolean sceneryShadows = (Gdx.app.getType() != Application.ApplicationType.WebGL);

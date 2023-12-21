@@ -32,10 +32,10 @@ public class PauseMenuScreen extends MenuScreen {
        Table screenTable = new Table();
        screenTable.setFillParent(true);
 
-       TextButton options = new TextButton("Options", skin);
+
        TextButton resume = new TextButton("Resume", skin);
        TextButton keys = new TextButton("Keys", skin);
-
+       TextButton options = new TextButton("Options", skin);
        TextButton stop = new TextButton("Stop", skin);
 
        float pad = 10f;
@@ -55,13 +55,15 @@ public class PauseMenuScreen extends MenuScreen {
 
        // set up for keyboard/controller navigation
         if(Settings.supportControllers) {
-            ControllerMenuStage cStage = (ControllerMenuStage) stage;
-            cStage.clearFocusableActors();
-            cStage.addFocusableActor(options);
-            cStage.addFocusableActor(resume);
-            cStage.addFocusableActor(stop);
-            cStage.setFocusedActor(resume);
-            cStage.setEscapeActor(resume);
+            stage.clearFocusableActors();
+            stage.addFocusableActor(resume);
+            stage.addFocusableActor(keys);
+            stage.addFocusableActor(options);
+            stage.addFocusableActor(stop);
+            stage.setFocusedActor(resume);
+            super.focusActor(resume);    // highlight focused actor
+
+            stage.setEscapeActor(resume);
         }
 
 

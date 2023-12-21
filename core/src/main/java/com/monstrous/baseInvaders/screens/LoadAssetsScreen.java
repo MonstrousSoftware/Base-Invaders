@@ -104,7 +104,7 @@ public class LoadAssetsScreen extends StdScreenAdapter {
             }
         }
 
-        ScreenUtils.clear(.2f, .5f, .6f, 1f);
+        ScreenUtils.clear(.4f, .7f, .9f, 1f);
         stage.act(deltaTime);
         stage.draw();
 

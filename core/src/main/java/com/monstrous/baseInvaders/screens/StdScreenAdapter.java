@@ -16,7 +16,7 @@ public class StdScreenAdapter extends ScreenAdapter {
         super.render(delta);
 
         // Use F11 key to toggle full screen / windowed screen
-        if (Gdx.input.isKeyPressed(Input.Keys.F11)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F11)) {
             if (!Gdx.graphics.isFullscreen()) {
                 width = Gdx.graphics.getWidth();
                 height = Gdx.graphics.getHeight();

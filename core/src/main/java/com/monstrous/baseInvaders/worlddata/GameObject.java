@@ -53,7 +53,7 @@ public class GameObject implements Disposable {
     }
 
     public Vector3 getPosition() {
-        if(body == null)
+        if(body == null || type.isStatic)
             return position;
         return body.getPosition();
     }

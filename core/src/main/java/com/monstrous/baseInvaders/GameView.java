@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Disposable;
 import com.monstrous.baseInvaders.input.CameraController;
 import com.monstrous.baseInvaders.worlddata.GameObject;
+import com.monstrous.baseInvaders.worlddata.GameObjectType;
 import com.monstrous.baseInvaders.worlddata.World;
 import net.mgsx.gltf.scene3d.attributes.PBRCubemapAttribute;
 import net.mgsx.gltf.scene3d.attributes.PBRFloatAttribute;
@@ -65,8 +66,6 @@ public class GameView implements Disposable {
         sceneManager.setDepthBatch(depthBatch);
 
 
-
-
         // setup light
         int viewPortSize = 128;  // smaller value gives sharper shadow
         shadowLight = new DirectionalShadowLight(Settings.shadowMapSize, Settings.shadowMapSize)
@@ -99,10 +98,12 @@ public class GameView implements Disposable {
             sceneManager.setSkyBox(skybox);
 
             particleEffects = new ParticleEffects(cam);
-            float x = Settings.worldSize/2;
-            float z = Settings.worldSize/2;
-            float y = world.terrain.getHeight(x, z);
-            particleEffects.addFire( new Vector3(x, y, z));
+            if(world.stats.gameTime < 1) {      // not on a resume from pause menu
+                float x = Settings.worldSize / 2;
+                float z = Settings.worldSize / 2;
+                float y = world.terrain.getHeight(x, z);
+                particleEffects.addFire(new Vector3(x, y, z));
+            }
         }
     }
 
@@ -125,11 +126,12 @@ public class GameView implements Disposable {
 
 
     // Synchronize scene manager with world contents
-    public void refresh(Camera cam) {
+    public void refresh(float delta, Camera cam) {
 
         sceneManager.getRenderableProviders().clear();        // remove all scenes
 
         ModelCache cache = world.scenery.getCache();
+
         sceneManager.getRenderableProviders().add(cache);        /// add model cache for scenery items
 
         int count = 0;
@@ -144,13 +146,12 @@ public class GameView implements Disposable {
             go.boundingBox.getCenter(pos);
             pos.add( go.getPosition() );
 
-            if(!go.type.isStatic || cam.frustum.boundsInFrustum(pos, go.dimensions)) {
-                Scene scene = world.getGameObject(i).scene;
-                sceneManager.addScene(scene, false);
+            if(cam.frustum.boundsInFrustum(pos, go.dimensions)) {
+                sceneManager.addScene(go.scene, false);
                 count++;
             }
             if(go.type.isCar)       // bit hacky to do this here
-                spawnSmokeTrail(go.scene.modelInstance.transform);
+                spawnSmokeTrail(delta, go.scene.modelInstance.transform);
         }
         world.stats.itemsRendered = count;
     }
@@ -162,7 +163,7 @@ public class GameView implements Disposable {
         if(!isOverlay) {
             camController.update(delta, world.getPlayer());
 
-            refresh(cam);
+            refresh(delta, cam);
 
             shadowLight.setCenter(cam.position);            // keep shadow casting light near camera
             sceneManager.update(delta);
@@ -183,9 +184,14 @@ public class GameView implements Disposable {
 
     }
 
-    public  void spawnSmokeTrail(Matrix4 transform) {
+    private float puffTime = 0;
 
-        particleEffects.addExhaustFumes(transform);
+    public  void spawnSmokeTrail(float delta, Matrix4 transform) {
+        puffTime-=delta;
+        if(puffTime < 0) {       // for better performance, do this every so often
+            particleEffects.addExhaustFumes(transform);
+            puffTime = 0.05f;
+        }
     }
 
     public void resize(int width, int height){

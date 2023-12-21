@@ -2,7 +2,7 @@
 - done: front wheel sometimes turns very fast - fixed, clamp delta to reasonable value
 - done: car collision box is not well aligned
 
-- to do : keep shadow light close to view
+done : keep shadow light close to view
 done- keep camera behind car, zoom out when going fast
 done- larger terrain, e.g. tiles & culling
 done: hungry owl
@@ -20,7 +20,7 @@ done- minimap transparent, rotate
 done- bigger terrain
 done- gear shift more smoothly
 done- roll over, wheelies
-- move jeeps
+done- move jeeps
 
 
 To get CascadeShadows use gdxGltfVersion=-SNAPSHOT instead of 2.1.0 which is the latest release.
@@ -37,12 +37,10 @@ PointSpriteParticleBatch uses
 		Gdx.gl.glEnable(GL20.GL_VERTEX_PROGRAM_POINT_SIZE); which gives a warning in WebGL
 
 
-bug: tech items remain on screen after reset
-bug: drops off grid?
-jeeps should slow down on approach?
-
-
-
-
 Music: Sunny Day - Copyright Free Background Rock Music for Vlog
        by Kushal Rajkarnikar "noisysymphony" from Pixabay
+
+
+
+v1.0.5
+- Fixed navigation in the menu's with up/down or with controller (bug in gdx-controller).

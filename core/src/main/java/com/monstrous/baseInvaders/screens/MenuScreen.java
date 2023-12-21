@@ -2,9 +2,13 @@ package com.monstrous.baseInvaders.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.monstrous.baseInvaders.MyControllerMenuStage;
 import com.monstrous.baseInvaders.Settings;
 import com.monstrous.baseInvaders.shaders.MenuBackground;
 import de.golfgl.gdx.controllers.ControllerMenuStage;
@@ -19,7 +23,7 @@ public class MenuScreen extends StdScreenAdapter {
 
     protected Main game;
     protected Viewport viewport;
-    protected ControllerMenuStage stage;      // from gdx-controllers-utils
+    protected MyControllerMenuStage stage;      // from gdx-controllers-utils
     protected Skin skin;
     private MenuBackground background;
 
@@ -28,12 +32,27 @@ public class MenuScreen extends StdScreenAdapter {
         this.game = game;
     }
 
+//    public class MyControllerMenuStage extends ControllerMenuStage {
+//        public MyControllerMenuStage(Viewport viewport) {
+//            super(viewport);
+//        }
+//
+//        @Override
+//        public boolean isGoNextKeyCode(int keyCode) {
+//            return (keyCode == Input.Keys.DOWN);
+//        }
+//        @Override
+//        public boolean isGoBackKeyCode(int keyCode) {
+//            return (keyCode == Input.Keys.UP);
+//        }
+//    }
+
     @Override
     public void show() {
         viewport = new ScreenViewport();
 
         skin = Main.assets.skin;
-        stage = new ControllerMenuStage(new ScreenViewport());          // we can use this even without controllers, although it doesn't seem to work with teavm + Chrome browser
+        stage = new MyControllerMenuStage(new ScreenViewport());      // we can use this even without controllers, although it doesn't seem to work with teavm + Chrome browser
         rebuild();
         input.setInputProcessor(stage);
         input.setCatchKey(Input.Keys.UP, true);
@@ -85,5 +104,20 @@ public class MenuScreen extends StdScreenAdapter {
         // Destroy screen's assets here.
         stage.dispose();
         background.dispose();
+    }
+
+
+    // This is like stage.setFocusedActor(actor) but works when actor is not hittable.
+    // (perhaps not yet while we rebuild the stage?)
+    //
+    public void focusActor(Actor actor) {
+        InputEvent event = new InputEvent();
+        event.setType(InputEvent.Type.enter);
+        event.setStage(stage);
+        event.setPointer(-1);
+        event.setButton(-1);
+        event.setStageX(0);
+        event.setStageY(0);
+        actor.fire(event);
     }
 }

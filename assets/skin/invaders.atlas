@@ -6,35 +6,28 @@ filter: Linear, Linear
 repeat: none
 GasoekOne-Regular(1)
   rotate: false
-  xy: 1, 206
+  xy: 1, 269
   size: 506, 239
   orig: 506, 239
   offset: 0, 0
   index: -1
-OpenSans_Regular16
-  rotate: false
-  xy: 1, 447
-  size: 506, 61
-  orig: 506, 61
-  offset: 0, 0
-  index: -1
 checkbox_off
   rotate: false
-  xy: 57, 178
+  xy: 57, 151
   size: 50, 26
   orig: 50, 26
   offset: 0, 0
   index: -1
 checkbox_on
   rotate: false
-  xy: 1, 54
+  xy: 1, 27
   size: 50, 26
   orig: 50, 26
   offset: 0, 0
   index: -1
 progressbar_square
   rotate: false
-  xy: 57, 120
+  xy: 1, 16
   size: 9, 9
   split: 4, 4, 4, 4
   orig: 9, 9
@@ -42,7 +35,7 @@ progressbar_square
   index: -1
 progressbar_square_knob
   rotate: false
-  xy: 109, 154
+  xy: 109, 127
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -50,7 +43,7 @@ progressbar_square_knob
   index: -1
 button-down
   rotate: false
-  xy: 109, 159
+  xy: 109, 132
   size: 50, 45
   split: 7, 7, 11, 7
   pad: 9, 9, 11, 7
@@ -59,7 +52,7 @@ button-down
   index: -1
 button-up
   rotate: false
-  xy: 57, 131
+  xy: 57, 104
   size: 50, 45
   split: 7, 7, 7, 11
   pad: 11, 12, 9, 13
@@ -68,15 +61,36 @@ button-up
   index: -1
 cursor
   rotate: false
-  xy: 1, 18
+  xy: 91, 68
   size: 15, 34
   split: 0, 0, 0, 0
   orig: 15, 34
   offset: 0, 0
   index: -1
+checkbox-off
+  rotate: false
+  xy: 57, 70
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+checkbox-on
+  rotate: false
+  xy: 161, 145
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+OpenSans-Bold
+  rotate: false
+  xy: 1, 179
+  size: 506, 88
+  orig: 506, 88
+  offset: 0, 0
+  index: -1
 window
   rotate: false
-  xy: 1, 144
+  xy: 1, 117
   size: 54, 60
   split: 13, 15, 37, 14
   pad: 13, 15, 37, 13
@@ -85,7 +99,7 @@ window
   index: -1
 window-grey
   rotate: false
-  xy: 1, 82
+  xy: 1, 55
   size: 54, 60
   split: 13, 15, 37, 14
   pad: 13, 15, 37, 13
