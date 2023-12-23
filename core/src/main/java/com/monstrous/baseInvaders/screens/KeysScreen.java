@@ -67,7 +67,7 @@ public class KeysScreen extends MenuScreen {
             stage.clearFocusableActors();
             stage.addFocusableActor(continueButton);
             stage.setFocusedActor(continueButton);
-            super.focusActor(continueButton);    // highlight focused actor
+            super.focusActor(stage, continueButton);    // highlight focused actor
 
             stage.setEscapeActor(continueButton);
         }

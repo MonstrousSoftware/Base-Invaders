@@ -155,7 +155,7 @@ public class OptionsScreen extends MenuScreen {
            stage.addFocusableActor(done);
            stage.setFocusedActor(fullScreen);
            stage.setEscapeActor(done);
-           super.focusActor(fullScreen);    // highlight focused actor
+           super.focusActor(stage, fullScreen);    // highlight focused actor
        }
 
        fullScreen.addListener(new ChangeListener() {
@@ -179,13 +179,7 @@ public class OptionsScreen extends MenuScreen {
            }
        });
 
-       fps.addListener(new ChangeListener() {
-           @Override
-           public void changed(ChangeEvent event, Actor actor) {
-               playSelectNoise();
-               Settings.showFPS = fps.isChecked();
-           }
-       });
+
 
        shadows.addListener(new ChangeListener() {
            @Override
@@ -195,6 +189,15 @@ public class OptionsScreen extends MenuScreen {
            }
        });
 
+       particles.addListener(new ChangeListener() {
+           @Override
+           public void changed(ChangeEvent event, Actor actor) {
+               playSelectNoise();
+               Settings.particleFX = particles.isChecked();
+           }
+       });
+
+
        scenery.addListener(new ChangeListener() {
            @Override
            public void changed(ChangeEvent event, Actor actor) {
@@ -203,11 +206,11 @@ public class OptionsScreen extends MenuScreen {
            }
        });
 
-       particles.addListener(new ChangeListener() {
+       music.addListener(new ChangeListener() {
            @Override
            public void changed(ChangeEvent event, Actor actor) {
                playSelectNoise();
-               Settings.particleFX = particles.isChecked();
+               Settings.musicOn = music.isChecked();
            }
        });
 

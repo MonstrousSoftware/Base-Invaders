@@ -76,13 +76,13 @@ public class World implements Disposable {
 
         // build invisible boxes outside the world boundary
         Vector3 pos = new Vector3(0, -5, Settings.worldSize/2);
-        spawnBoundary(pos, 1, 30f, Settings.worldSize);
+        spawnBoundary(pos, 5, 40f, Settings.worldSize);
         pos.x = Settings.worldSize;
-        spawnBoundary(pos, 1, 30f, Settings.worldSize);
+        spawnBoundary(pos, 5, 40f, Settings.worldSize);
         pos.set(Settings.worldSize/2, -5, 0);
-        spawnBoundary(pos, Settings.worldSize, 30f, 1f );
+        spawnBoundary(pos, Settings.worldSize, 40f, 5f );
         pos.z = Settings.worldSize;
-        spawnBoundary(pos, Settings.worldSize, 30f, 1f);
+        spawnBoundary(pos, Settings.worldSize, 40f, 5f);
     }
 
     public int getNumGameObjects() {

@@ -107,8 +107,8 @@ public class Scenery implements Disposable {
         float fenceLength = 10f;
         for(float u = 0; u < Settings.worldSize; u+= fenceLength) {
             placeFence(world, name, u, 0, 0);
-            placeFence(world, name, u, Settings.worldSize-.5f, 180);
-            placeFence(world, name, 0, u, 90);
+            placeFence(world, name, u+fenceLength, Settings.worldSize-.5f, 180);
+            placeFence(world, name, 0, u+fenceLength, 90);
             placeFence(world, name, Settings.worldSize-0.5f, u, -90);
         }
     }

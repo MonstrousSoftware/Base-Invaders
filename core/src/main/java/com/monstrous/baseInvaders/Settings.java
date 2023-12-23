@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 
 public class Settings {
     static public boolean release = true;
-    static public String version = "v1.0.5 Dec 2023";       // keep in synch with build.gradle
+    static public String version = "v1.0.6 Dec 2023";       // keep in synch with build.gradle
     static public String preferencesName = "base-invaders";
 
     static public boolean musicOn = true;

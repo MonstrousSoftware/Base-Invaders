@@ -61,7 +61,7 @@ public class PauseMenuScreen extends MenuScreen {
             stage.addFocusableActor(options);
             stage.addFocusableActor(stop);
             stage.setFocusedActor(resume);
-            super.focusActor(resume);    // highlight focused actor
+            super.focusActor(stage, resume);    // highlight focused actor
 
             stage.setEscapeActor(resume);
         }

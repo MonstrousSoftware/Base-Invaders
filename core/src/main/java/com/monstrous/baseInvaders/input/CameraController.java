@@ -108,7 +108,7 @@ public class CameraController extends InputAdapter {
             return false;
         if(amount > 0 && distance > 1500f)
             return false;
-        distance += amount;
+        distance += amount*10f;
         return true;
     }
 }

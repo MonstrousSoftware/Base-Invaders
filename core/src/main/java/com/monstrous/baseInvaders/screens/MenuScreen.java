@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -95,7 +96,7 @@ public class MenuScreen extends StdScreenAdapter {
     // This is like stage.setFocusedActor(actor) but works when actor is not hittable.
     // (perhaps not yet while we rebuild the stage?)
     //
-    public void focusActor(Actor actor) {
+    public static void focusActor(Stage stage, Actor actor) {
         InputEvent event = new InputEvent();
         event.setType(InputEvent.Type.enter);
         event.setStage(stage);

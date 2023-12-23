@@ -138,7 +138,7 @@ public class MainMenuScreen extends MenuScreen {
             stage.addFocusableActor(options);
             stage.addFocusableActor(quit);
             stage.setFocusedActor(play);
-            super.focusActor(play);    // highlight focused actor
+            super.focusActor(stage, play);    // highlight focused actor
 
         }
    }
