@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerAdapter;
+import com.monstrous.baseInvaders.screens.Main;
 
 
 // to handle game controllers
@@ -62,20 +63,19 @@ public class MyControllerAdapter extends ControllerAdapter {
 
     @Override
     public boolean axisMoved(Controller controller, int axisIndex, float value) {
-        Gdx.app.log("controller", "axis moved: "+axisIndex+" : "+value);
+        //Gdx.app.log("controller", "axis moved: "+axisIndex+" : "+value);
 
-        if(axisIndex == controller.getMapping().axisRightX)     // right stick for looking around (X-axis)
-            carController.horizontalAxisMoved(-value);           // rotate view left/right
-//        if(axisIndex == controller.getMapping().axisRightY)     // right stick for looking around (Y-axis)
-//            carController.verticalAxisMoved(value);           // rotate view left/right
-//
-//        if(axisIndex == controller.getMapping().axisLeftX)     // left stick for strafing (X-axis)
-//            carController.setStrafeSpeed(value);
-        if(axisIndex == controller.getMapping().axisLeftY)     // right stick for forward/backwards (Y-axis)
-            carController.verticalAxisMoved(-value);
+        ControllerConfiguration config = Main.controllerConfiguration;
 
-        if(axisIndex == 5)     // right button
-            carController.reverseAxisMoved(value);
+        if(axisIndex == config.axis[0])
+            carController.steeringAxisMoved(value*config.sign[0]);
+        if(axisIndex == config.axis[1])
+            carController.throttleAxisMoved(value*config.sign[1]);
+        if(axisIndex == config.axis[2])
+            carController.brakingAxisMoved(value*config.sign[2]);
+        if(axisIndex == config.axis[3])
+            carController.reverseAxisMoved(value*config.sign[3]);
+
         return super.axisMoved(controller, axisIndex, value);
     }
 

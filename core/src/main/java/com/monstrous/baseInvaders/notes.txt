@@ -46,10 +46,16 @@ v1.0.5
 - Fixed navigation in the menu's with up/down or with controller (bug in gdx-controller).
 - highlight focused button on entering a menu
 
+v1.0.6
+- Closed gaps in fence
 
+v1.0.7
+- Changed controller buttons
 
 
 
 things to do:
 - would it be possible to do frustum culling on the model cache that holds the scenery?
 - should terrain go in a model cache?
+- on resize the icons of collected artifacts clear
+- configure controller settings?

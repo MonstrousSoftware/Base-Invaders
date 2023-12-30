@@ -7,8 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.monstrous.baseInvaders.Settings;
-import de.golfgl.gdx.controllers.ControllerMenuStage;
-
 
 public class KeysScreen extends MenuScreen {
 
@@ -51,7 +49,7 @@ public class KeysScreen extends MenuScreen {
            screenTable.add(new Label(keyBindings[i][1], skin)).pad(pad).left().row();
        }
 
-       screenTable.add(continueButton).colspan(2).pad(20).row();
+         screenTable.add(continueButton).colspan(2).pad(20).row();
 
 
        screenTable.pack();
@@ -71,6 +69,8 @@ public class KeysScreen extends MenuScreen {
 
             stage.setEscapeActor(continueButton);
         }
+
+
 
         continueButton.addListener(new ClickListener() {
            @Override

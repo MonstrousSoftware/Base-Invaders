@@ -1,6 +1,5 @@
 package com.monstrous.baseInvaders;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.github.antzGames.gdx.ode4j.math.DVector3C;
 import com.github.antzGames.gdx.ode4j.ode.*;
@@ -119,11 +118,11 @@ public class Car {
         rpm = controller.rpm;
         braking = controller.braking;
         steerAngle = controller.steerAngle;
-        gear = controller.gear;
+   //     gear = controller.gear;
 
         startStopSound();
         checkForGearChange(deltaTime);
-        controller.gear = gear;                 // update controller with any gear change
+   //     controller.gear = gear;                 // update controller with any gear change
 
         //update(deltaTime);
 

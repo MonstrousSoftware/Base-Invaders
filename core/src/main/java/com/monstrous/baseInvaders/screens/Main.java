@@ -6,11 +6,11 @@ import com.badlogic.gdx.utils.Array;
 import com.monstrous.baseInvaders.Assets;
 import com.monstrous.baseInvaders.MusicManager;
 import com.monstrous.baseInvaders.Settings;
+import com.monstrous.baseInvaders.input.ControllerConfiguration;
 import com.monstrous.baseInvaders.input.MyControllerMappings;
 import com.monstrous.baseInvaders.leaderboard.GameJolt;
 import com.monstrous.baseInvaders.leaderboard.LeaderBoardEntry;
 import com.monstrous.baseInvaders.terrain.Terrain;
-import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 import de.golfgl.gdx.controllers.mapping.ControllerToInputAdapter;
 
 import static com.badlogic.gdx.Application.ApplicationType.Desktop;
@@ -25,10 +25,12 @@ public class Main extends Game {
     public GameJolt gameJolt;
     private Preferences preferences;
     public String userName;
+    public static ControllerConfiguration controllerConfiguration;
 
     @Override
     public void create() {
         Settings.supportControllers = (Gdx.app.getType() == Desktop);
+        controllerConfiguration = new ControllerConfiguration();
 
         assets = new Assets();
 
@@ -40,7 +42,7 @@ public class Main extends Game {
             Controllers.addListener(controllerToInputAdapter);
         }
 
-        Gdx.app.log("Gdx version", com.badlogic.gdx.Version.VERSION);
+        Gdx.app.log("Gdx version", Version.VERSION);
         Gdx.app.log("OpenGL version", Gdx.gl.glGetString(Gdx.gl.GL_VERSION));
 
         preferences = Gdx.app.getPreferences(Settings.preferencesName);
@@ -71,6 +73,10 @@ public class Main extends Game {
         // save username for next time
         preferences.putString("username", userName);   // save
         preferences.flush();
+
+        controllerConfiguration.save();
+
+
 
         assets.dispose();
         terrain.dispose();

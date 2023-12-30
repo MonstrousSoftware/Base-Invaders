@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.monstrous.baseInvaders.Settings;
-import de.golfgl.gdx.controllers.ControllerMenuStage;
 
 
 // pause menu (called from game screen on Escape key)
@@ -35,6 +34,7 @@ public class PauseMenuScreen extends MenuScreen {
 
        TextButton resume = new TextButton("Resume", skin);
        TextButton keys = new TextButton("Keys", skin);
+       TextButton controller = new TextButton("Controller", skin);
        TextButton options = new TextButton("Options", skin);
        TextButton stop = new TextButton("Stop", skin);
 
@@ -42,6 +42,7 @@ public class PauseMenuScreen extends MenuScreen {
 
        screenTable.add(resume).pad(pad).row();
        screenTable.add(keys).pad(pad).row();
+       screenTable.add(controller).pad(pad).row();
        screenTable.add(options).pad(pad).row();
        screenTable.add(stop).pad(pad).row();
 
@@ -58,6 +59,7 @@ public class PauseMenuScreen extends MenuScreen {
             stage.clearFocusableActors();
             stage.addFocusableActor(resume);
             stage.addFocusableActor(keys);
+            stage.addFocusableActor(controller);
             stage.addFocusableActor(options);
             stage.addFocusableActor(stop);
             stage.setFocusedActor(resume);
@@ -82,6 +84,15 @@ public class PauseMenuScreen extends MenuScreen {
                 super.clicked(event, x, y);
                 playSelectNoise();
                 game.setScreen(new KeysScreen( game, gameScreen ));
+            }
+        });
+
+        controller.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                super.clicked(event, x, y);
+                playSelectNoise();
+                game.setScreen(new ControllerScreen( game, gameScreen ));
             }
         });
 

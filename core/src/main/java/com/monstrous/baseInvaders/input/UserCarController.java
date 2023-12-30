@@ -1,10 +1,10 @@
 package com.monstrous.baseInvaders.input;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
 import com.monstrous.baseInvaders.Car;
-import com.monstrous.baseInvaders.Settings;
 
 //  captures key presses and updates car control variables
 
@@ -19,7 +19,7 @@ public class UserCarController implements InputProcessor {
     public float steerAngle;
     public float rpm;
     public boolean braking;
-    public int gear;
+ //   public int gear;
     public boolean reversing;
 
     private boolean leftPressed;
@@ -28,8 +28,9 @@ public class UserCarController implements InputProcessor {
     private boolean backwardPressed;
     private int gearShift;       // -1, 0, 1, to be reset to 0 on processing
 
-    private float stickHorizontal = 0;
-    private float stickVertical = 0;
+    private float stickSteering = 0;
+    private float stickThrottle = 0;
+    private float stickBraking = 0;
     private float stickReverse = 0;
 
 
@@ -44,15 +45,13 @@ public class UserCarController implements InputProcessor {
         forwardPressed = false;
         backwardPressed = false;
         gearShift = 0;
-        gear = 1;
+        //gear = 1;
         steerAngle = 0;
         rpm = 0;
         reversing = false;
     }
 
     public void update(float deltaTime) {
-
-
 
         // Steering
         if(leftPressed) {
@@ -64,9 +63,7 @@ public class UserCarController implements InputProcessor {
                 steerAngle -= STEER_SPEED * deltaTime;
         }
         else //if (Math.abs(steerAngle) > 0.1f)
-            steerAngle = stickHorizontal*MAX_STEER_ANGLE;
-//        else
-//            steerAngle -= Math.signum(steerAngle)*deltaTime*50f;
+            steerAngle = stickSteering *MAX_STEER_ANGLE;
 
         // Accelerator
         braking = (backwardPressed && !reversing) || (forwardPressed && reversing);
@@ -79,7 +76,7 @@ public class UserCarController implements InputProcessor {
                     rpm-=BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
                 }
                 else {
-                    gear = 1;
+                    //gear = 1;
                     reversing = false;
                 }
             }
@@ -93,40 +90,41 @@ public class UserCarController implements InputProcessor {
                     if (rpm > 0)    // braking
                         rpm -= BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
                     else {
-                        gear = -1;
+                        //gear = -1;
                         reversing = true;
                     }
                 }
             } else {
-                if(Math.abs(stickVertical) > 0.1f) {
-                    braking = (stickVertical < 0);
-                    rpm = stickVertical * Car.MAX_RPM;
+
+                if(stickThrottle > 0.1f) {  // beyond dead zone
+                    rpm = stickThrottle * Car.MAX_RPM;
                     reversing = false;
-                } else if (rpm > 0) {  // coasting
+                }
+                braking = false;
+                if(stickBraking > 0.1f) {
+                    braking = true;
+                    rpm = -stickBraking * Car.MAX_RPM;
+                }
+                if (stickThrottle <= 0.1f && stickBraking <= 0.1f && rpm > 0) {  // coasting
                     rpm -= Car.RPM_REV * 3f * deltaTime;
                 }
             }
         }
-        rpm = MathUtils.clamp(rpm, 0, Car.MAX_RPM);
 
-        if(stickReverse > 0){
+        if(stickReverse > 0.1f){
             rpm = stickReverse * 3000f;
             reversing = true;
-            gear = -1;
+            //gear = -1;
         }
 
 
-        int gearShift = getGearShift();
-        if(gearShift > 0  && gear < Car.MAX_GEAR)
-            gear++;
-        else if(gearShift < 0 && gear > -1)
-            gear--;
+        rpm = MathUtils.clamp(rpm, 0, Car.MAX_RPM);
     }
 
 
 
     // -1, 0, 1 : shift down, do nothing, shift up
-    private int getGearShift() {
+    public int getGearShift() {
         int ret = gearShift;
         gearShift = 0;              // make sure each shift change is only reported once
         return ret;
@@ -215,18 +213,23 @@ public class UserCarController implements InputProcessor {
 
     // rotate view left/right
     // we only get events when the stick angle changes so once it is fully left or fully right we don't get events anymore until the stick is released.
-    public void horizontalAxisMoved(float value) {       // -1 to 1
+    public void steeringAxisMoved(float value) {       // -1 to 1
 
-        stickHorizontal = value;
+        stickSteering = value;
     }
 
-    public void verticalAxisMoved(float value) {       // -1 to 1
-        stickVertical = value;
-        if(Settings.invertLook)
-            stickVertical *= -1;
+    public void throttleAxisMoved(float value) {       // 0 to 1
+        Gdx.app.log("throttle", ""+value);
+        stickThrottle = value;
+    }
+
+    public void brakingAxisMoved(float value) {       // 0 to 1
+        Gdx.app.log("braking", ""+value);
+        stickBraking = value;
     }
 
     public void reverseAxisMoved(float value) {       // 0 to 1
+        Gdx.app.log("reverse", ""+value);
         stickReverse = value;
     }
 

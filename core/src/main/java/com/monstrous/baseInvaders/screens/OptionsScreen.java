@@ -6,17 +6,14 @@ import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerPowerLevel;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.monstrous.baseInvaders.Settings;
-import de.golfgl.gdx.controllers.ControllerMenuStage;
 
 
 // todo handle F11 key presses on web by reflecting the correct state of the fullscreen checkbox
@@ -25,7 +22,6 @@ import de.golfgl.gdx.controllers.ControllerMenuStage;
 public class OptionsScreen extends MenuScreen {
     private GameScreen gameScreen;    // to keep track where we were called from
     private Controller controller;
-    private Label controllerLabel;
 
     public OptionsScreen(Main game, GameScreen gameScreen) {
         super(game);
@@ -79,10 +75,6 @@ public class OptionsScreen extends MenuScreen {
            } else
                Gdx.app.log("current controller", "none");
 
-           if(controller != null)
-               controllerLabel.setText(controller.getName());
-           else
-               controllerLabel.setText("None");
        }
    }
 
@@ -114,10 +106,6 @@ public class OptionsScreen extends MenuScreen {
 
        TextButton done = new TextButton("Done", skin);
 
-       controllerLabel = new Label("None", skin);
-       if(controller != null)
-           controllerLabel.setText(controller.getName());
-
 
        int pad = 10;
 
@@ -129,10 +117,6 @@ public class OptionsScreen extends MenuScreen {
        screenTable.add(music).pad(pad).left().row();
 
        screenTable.add(done).pad(20).row();
-
-       screenTable.add(new Label("Controller:", skin)).pad(pad).right();
-       screenTable.add(controllerLabel).left().row();
-
 
        screenTable.pack();
        screenTable.validate();
@@ -153,9 +137,9 @@ public class OptionsScreen extends MenuScreen {
            stage.addFocusableActor(scenery);
            stage.addFocusableActor(music);
            stage.addFocusableActor(done);
-           stage.setFocusedActor(fullScreen);
+           stage.setFocusedActor(done);
            stage.setEscapeActor(done);
-           super.focusActor(stage, fullScreen);    // highlight focused actor
+           super.focusActor(stage, done);    // highlight focused actor
        }
 
        fullScreen.addListener(new ChangeListener() {
