@@ -52,10 +52,16 @@ v1.0.6
 v1.0.7
 - Changed controller buttons
 
+v1.0.8
+- Fixed leaderboard in web version
+- antialiasing in web version
+- HTML title in web version
+- changed key for leaderboard from L to F2 to avoid issues when typing name
+
+Known Issues:
+- rear wheels sometimes turn e.g. when doing donuts, even though they are supposed to be locked.
+- lots of code duplicated between CarBehaviour and JeepBehaviour
+- controller configuration would be nicer if it was more graphical
+- engine sound doesn't loop nicely on web.
 
 
-things to do:
-- would it be possible to do frustum culling on the model cache that holds the scenery?
-- should terrain go in a model cache?
-- on resize the icons of collected artifacts clear
-- configure controller settings?

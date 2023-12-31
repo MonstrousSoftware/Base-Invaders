@@ -21,8 +21,6 @@ public class MusicManager implements Disposable {
 
 
     public void startMusic(String name, boolean looping) {
-//        if(music != null)
-//            return;
         music = assets.get(name);
         music.setLooping(looping);
         music.setVolume(musicVolume);

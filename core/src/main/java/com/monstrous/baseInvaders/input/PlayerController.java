@@ -186,10 +186,6 @@ public class PlayerController extends InputAdapter  {
 
         linearForce.scl(120);
         player.body.applyForce(linearForce);
-
-        // note: as the player body is a capsule it is not necessary to rotate it
-        // (and in fact it causes problems due to errors building up)
-        // so we don't rotate the rigid body, but we rotate the modelInstance in World.syncToPhysics()
     }
 
 

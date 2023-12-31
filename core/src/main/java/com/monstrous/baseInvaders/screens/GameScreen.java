@@ -54,6 +54,7 @@ public class GameScreen extends StdScreenAdapter {
         Gdx.input.setCursorCatched(true);
         Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 
+        Gdx.input.setCatchKey(Input.Keys.F2, true);
         Gdx.input.setCatchKey(Input.Keys.F4, true);
         Gdx.input.setCatchKey(Input.Keys.F9, true);
         Gdx.input.setCatchKey(Input.Keys.F10, true);
@@ -139,7 +140,7 @@ public class GameScreen extends StdScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F9)) {
             Settings.showFPS = !Settings.showFPS;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             showLeaderBoard();
         }
 

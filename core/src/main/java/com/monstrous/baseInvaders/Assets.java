@@ -34,7 +34,6 @@ public class Assets implements Disposable {
     public AssetSounds sounds;
     public Skin skin;
     public SceneAsset sceneAsset;
-    //public BitmapFont uiFont;
     public Music gameMusic;
 
     private AssetManager assets;
@@ -44,8 +43,6 @@ public class Assets implements Disposable {
         assets = new AssetManager();
 
         assets.load("skin/invaders.json", Skin.class);
-
-  //      assets.load("font/Gasoek32.fnt", BitmapFont.class);
 
         assets.setLoader(SceneAsset.class, ".gltf", new GLTFAssetLoader());
         assets.load( Settings.GLTF_FILE, SceneAsset.class);

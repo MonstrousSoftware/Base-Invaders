@@ -83,7 +83,7 @@ public class LeaderBoardWindow extends Window {
             add(nameEntry).pad(10);
             row();
         }
-        add(okButton).width(100);
+        add(okButton);
         pack();
 
 

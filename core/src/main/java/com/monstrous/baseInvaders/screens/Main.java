@@ -11,6 +11,7 @@ import com.monstrous.baseInvaders.input.MyControllerMappings;
 import com.monstrous.baseInvaders.leaderboard.GameJolt;
 import com.monstrous.baseInvaders.leaderboard.LeaderBoardEntry;
 import com.monstrous.baseInvaders.terrain.Terrain;
+import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 import de.golfgl.gdx.controllers.mapping.ControllerToInputAdapter;
 
 import static com.badlogic.gdx.Application.ApplicationType.Desktop;
@@ -49,10 +50,10 @@ public class Main extends Game {
         userName = preferences.getString("username", "Player 1");
 
         leaderBoard = new Array<>();
-        if( Gdx.app.getType() != Application.ApplicationType.WebGL) {
+ //       if( Gdx.app.getType() != Application.ApplicationType.WebGL) {
             gameJolt = new GameJolt();              // disabled because doesn't work on web (teavm) version
             gameJolt.init(leaderBoard);
-        }
+ //       }
 
         setScreen( new LoadAssetsScreen(this) );
     }

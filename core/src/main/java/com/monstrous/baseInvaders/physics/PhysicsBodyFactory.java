@@ -22,13 +22,7 @@ import com.badlogic.gdx.math.collision.BoundingBox;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.antzGames.gdx.ode4j.math.DQuaternion;
-import com.github.antzGames.gdx.ode4j.math.DVector3C;
 import com.github.antzGames.gdx.ode4j.ode.*;
-import com.monstrous.baseInvaders.Car;
-import com.monstrous.baseInvaders.Settings;
-import com.monstrous.baseInvaders.worlddata.GameObject;
-
-import static com.github.antzGames.gdx.ode4j.ode.OdeConstants.*;
 
 
 public class PhysicsBodyFactory implements Disposable {

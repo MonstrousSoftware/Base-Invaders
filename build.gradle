@@ -28,7 +28,7 @@ configure(subprojects) {
 }
 
 subprojects {
-  version = '1.0.6'
+  version = '1.0.8'
   ext.appName = 'BaseInvaders'
   repositories {
     mavenCentral()

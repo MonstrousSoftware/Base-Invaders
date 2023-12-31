@@ -15,7 +15,7 @@ public class KeysScreen extends MenuScreen {
         { "S", "brake"}, {"D", "right"},
         { "Esc", "return to menu" },
         { "Home", "restart" },
-        { "L", "leaderboard" },
+        { "F2", "leaderboard" },
         { "F4", "debug view" },
         { "F9", "show fps" },
         { "F10", "toggle camera control" },

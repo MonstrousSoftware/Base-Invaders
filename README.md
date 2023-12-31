@@ -5,7 +5,10 @@ A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://git
 
 Car racing with a code structure based off the 3d tutorial. Using ODE4j.
 
+Entry for LibGDX game jam December 2023.
+https://monstrous-software.itch.io/base-invaders
 
+![screenshot2.png](screenshot2.png)
 
 ## Platforms
 

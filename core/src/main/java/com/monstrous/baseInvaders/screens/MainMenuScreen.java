@@ -27,8 +27,6 @@ public class MainMenuScreen extends MenuScreen {
     @Override
     protected void rebuild() {
        stage.clear();
-
-
        Table screenTable = new Table();
        screenTable.setFillParent(true);
 

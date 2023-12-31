@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.MathUtils;
-import com.monstrous.baseInvaders.Car;
 
 //  captures key presses and updates car control variables
 
@@ -14,6 +13,9 @@ public class UserCarController implements InputProcessor {
     public static float STEER_SPEED = 150;
     public static float MAX_STEER_ANGLE =  45;        // degrees
     public static float BRAKE_RPM_SCALE = 5f;
+
+    public static float MAX_RPM = 8000;
+    public static float RPM_REV = 2000f;     // rpm increase per second
 
     // variables for export to car
     public float steerAngle;
@@ -69,11 +71,11 @@ public class UserCarController implements InputProcessor {
         braking = (backwardPressed && !reversing) || (forwardPressed && reversing);
         if(forwardPressed) {
             if(!reversing){
-                if(rpm < Car.MAX_RPM)
-                    rpm += Car.RPM_REV * deltaTime;
+                if(rpm < MAX_RPM)
+                    rpm += RPM_REV * deltaTime;
             }else {
                 if( rpm > 0) {
-                    rpm-=BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
+                    rpm-=BRAKE_RPM_SCALE * RPM_REV * deltaTime;
                 }
                 else {
                     //gear = 1;
@@ -84,11 +86,11 @@ public class UserCarController implements InputProcessor {
         else {
             if (backwardPressed) {
                 if (reversing) {
-                    if (rpm < Car.MAX_RPM)
-                        rpm += Car.RPM_REV * deltaTime;
+                    if (rpm < MAX_RPM)
+                        rpm += RPM_REV * deltaTime;
                 } else {
                     if (rpm > 0)    // braking
-                        rpm -= BRAKE_RPM_SCALE * Car.RPM_REV * deltaTime;
+                        rpm -= BRAKE_RPM_SCALE * RPM_REV * deltaTime;
                     else {
                         //gear = -1;
                         reversing = true;
@@ -97,16 +99,16 @@ public class UserCarController implements InputProcessor {
             } else {
 
                 if(stickThrottle > 0.1f) {  // beyond dead zone
-                    rpm = stickThrottle * Car.MAX_RPM;
+                    rpm = stickThrottle * MAX_RPM;
                     reversing = false;
                 }
                 braking = false;
                 if(stickBraking > 0.1f) {
                     braking = true;
-                    rpm = -stickBraking * Car.MAX_RPM;
+                    rpm = -stickBraking * MAX_RPM;
                 }
                 if (stickThrottle <= 0.1f && stickBraking <= 0.1f && rpm > 0) {  // coasting
-                    rpm -= Car.RPM_REV * 3f * deltaTime;
+                    rpm -= RPM_REV * 3f * deltaTime;
                 }
             }
         }
@@ -118,7 +120,7 @@ public class UserCarController implements InputProcessor {
         }
 
 
-        rpm = MathUtils.clamp(rpm, 0, Car.MAX_RPM);
+        rpm = MathUtils.clamp(rpm, 0, MAX_RPM);
     }
 
 

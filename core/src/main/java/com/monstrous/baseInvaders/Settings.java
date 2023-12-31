@@ -6,7 +6,9 @@ import com.badlogic.gdx.Gdx;
 
 public class Settings {
     static public boolean release = true;
-    static public String version = "v1.0.7 Dec 2023";       // keep in synch with build.gradle
+    static public String title = "Base Invaders";
+
+    static public String version = "v1.0.8 Dec 2023";       // keep in synch with build.gradle
     static public String preferencesName = "base-invaders";
 
     static public boolean musicOn = true;
@@ -16,7 +18,7 @@ public class Settings {
 
     // performance
     static public boolean showShadows = true;
-    static public boolean extraScenery = true;     // sparse is default for performance
+    static public boolean extraScenery = true;     // big performance impact
     static public boolean particleFX = true;
 
     static public float verticalReadjustSpeed = 4f;

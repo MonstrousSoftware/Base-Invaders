@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 
-// post-processing effect to render an FBO to screen applying underwater shader effects
+// post-processing effect to render an FBO to screen applying shader effects
 
 public class PostFilter implements Disposable {
 

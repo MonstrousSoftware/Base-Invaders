@@ -1,5 +1,6 @@
 package com.monstrous.baseInvaders.behaviours;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.github.antzGames.gdx.ode4j.math.DVector3C;
@@ -70,7 +71,7 @@ public class CarBehaviour extends Behaviour {
             brakeSound = false;
         prevRPM = rpm;
 
-        if(rpm > 0) {
+        if(Gdx.app.getType() == Application.ApplicationType.Desktop && rpm > 0) {   // no pitch control on web
             Main.assets.sounds.ENGINE.setPitch(engineId, rpm / 6000f  );
         }
 

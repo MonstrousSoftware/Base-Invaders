@@ -33,9 +33,9 @@ public class MyControllerAdapter extends ControllerAdapter {
         if(buttonIndex == controller.getMapping().buttonDpadRight)
             carController.keyDown(Input.Keys.D);
 
-        if(buttonIndex == controller.getMapping().buttonL1) // jump
+        if(buttonIndex == controller.getMapping().buttonL1)
             carController.keyDown(Input.Keys.UP);
-        if(buttonIndex == controller.getMapping().buttonR1) // crouch
+        if(buttonIndex == controller.getMapping().buttonR1)
             carController.keyDown(Input.Keys.UP);
         return super.buttonDown(controller, buttonIndex);
     }

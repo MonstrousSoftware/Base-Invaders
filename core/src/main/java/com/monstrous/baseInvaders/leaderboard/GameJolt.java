@@ -27,14 +27,14 @@ public class GameJolt {
         this.leaderBoard = leaderBoard;
 
         try {
-            FileHandle handle = Gdx.files.internal("noise.png");
+            FileHandle handle = Gdx.files.internal("textures/noise.bin");
 
             String text = handle.readString();
             String words[] = text.split("\\r?\\n");
             suffix = mix(words[0], md5("It Came From Above"));
             getScores();
         } catch (GdxRuntimeException e) {
-            Gdx.app.error("Cannot read file", "noise.png");
+            Gdx.app.error("Cannot read file", "textures/noise.bin");
         }
     }
 
@@ -192,27 +192,4 @@ public class GameJolt {
         return MD5.toHexString(MD5.computeMD5(s.getBytes()));
     }
 
-
-    protected String md5ori(String s)  {
-
-        final StringBuffer sb = new StringBuffer();
-        try {
-            final MessageDigest md = MessageDigest.getInstance("MD5");
-            try {
-                final byte[] bytes = s.getBytes("UTF-8");
-
-                final byte[] digest = md.digest(bytes);
-
-                for (int i = 0; i < digest.length; ++i) {
-                    sb.append(Integer.toHexString((digest[i] & 0xFF) | 0x100).substring(1, 3));
-                }
-
-            } catch (Exception e) {
-                Gdx.app.log("Encoding not supported", "UTF-8");
-            }
-        }  catch (Exception e) {
-            Gdx.app.log("Message Digest not supported", "MD5");
-        }
-        return sb.toString();
-    }
 }

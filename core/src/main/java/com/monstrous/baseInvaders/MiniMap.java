@@ -20,13 +20,11 @@ public class MiniMap implements Disposable {
     private SpriteBatch batch;
     private SpriteBatch fboBatch;
     private FrameBuffer fboMiniMap;
-   // private Texture mapFrame;
+
     private Rectangle miniMapRect;
     private Rectangle mapFrameRect;
     private int viewWidth;
     private int viewHeight;
-    //private Vector3 screenCorners[];		// XZ of screen corners in world coordinates
-    //private Texture heightMap;
     private final Vector3 position;
     private Texture carMarker;
     private Texture jeepMarker;
@@ -37,7 +35,6 @@ public class MiniMap implements Disposable {
         mapSize = 200;  // pixels
         border = 10;    // pixels
         fboMiniMap = new FrameBuffer(Pixmap.Format.RGBA8888, mapSize, mapSize, true);
-        //mapFrame = new Texture(Gdx.files.internal("images/frame220.png"));
         carMarker = new Texture(Gdx.files.internal("textures/orangeMarker.png"));
         jeepMarker = new Texture(Gdx.files.internal("textures/purpleMarker.png"));
         techMarker = new Texture(Gdx.files.internal("textures/greenMarker.png"));
@@ -58,15 +55,9 @@ public class MiniMap implements Disposable {
         orthoCam.lookAt(0,0,0);
         orthoCam.up.set(0,0,1);
         orthoCam.near = 1;
-        // use far clipping plane to clip terrain below water level
         orthoCam.far = 500;
         orthoCam.update();
 
-//        screenCorners = new Vector3[4];
-//        for(int i = 0; i < 4; i++)
-//            screenCorners[i] = new Vector3();
-
-        //heightMap = new Texture(Gdx.files.internal("images/roundedRect.png"));
         position = new Vector3();
     }
 
@@ -95,14 +86,12 @@ public class MiniMap implements Disposable {
 
     public void update(Camera cam , World world) {
 
-        //setScreenCorners(cam);
 
         fboMiniMap.begin();
             Gdx.gl.glClearColor(0,0,0, 0.5f);
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
             batch.begin();
-           // batch.draw(heightMap,0,0, viewWidth, viewHeight);
 
             float cx = viewWidth/2f;
             float cy = viewHeight/2f;
@@ -149,16 +138,13 @@ public class MiniMap implements Disposable {
 		TextureRegion s = new TextureRegion(fboMiniMap.getColorBufferTexture());
 		s.flip(false, true); // coordinate system in buffer differs from screen
 
-		//batch.draw(mapFrame, mapFrameRect.x,  mapFrameRect.y,  mapFrameRect.width,  mapFrameRect.height);
 		batch.draw(s, miniMapRect.x,  miniMapRect.y,  miniMapRect.width,  miniMapRect.height);
-
-
 		batch.end();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
-        //mapFrame.dispose();
+
     }
 }

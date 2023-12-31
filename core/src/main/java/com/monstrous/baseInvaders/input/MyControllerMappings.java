@@ -5,6 +5,8 @@ import com.badlogic.gdx.controllers.ControllerMapping;
 import de.golfgl.gdx.controllers.mapping.ConfiguredInput;
 import de.golfgl.gdx.controllers.mapping.ControllerMappings;
 
+// MOST OF THIS IS NOT USED
+
 public class MyControllerMappings extends ControllerMappings {
 
     // define input events you need in the game or menu's and give each a unique code
