@@ -69,10 +69,12 @@ public class PhysicsWorld implements Disposable {
     // update the physics with fixed time steps
     public void update(float deltaTime) {
 
+        //Gdx.app.log("numGeoms", ""+space.getNumGeoms());
+
         timeElapsed += deltaTime;
         while(timeElapsed > TIME_STEP) {
             space.collide(null, nearCallback);
-            world.quickStep(1.5f*TIME_STEP);
+            world.quickStep(TIME_STEP);
             contactGroup.empty();
 
             timeElapsed -= TIME_STEP;

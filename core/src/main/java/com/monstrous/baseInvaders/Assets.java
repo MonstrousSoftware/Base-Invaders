@@ -55,7 +55,6 @@ public class Assets implements Disposable {
         assets.load("images/title.png", Texture.class);
 
         assets.load("music/sunny-day-copyright-free-background-rock-music-for-vlog-129471.mp3", Music.class);
-
     }
 
 

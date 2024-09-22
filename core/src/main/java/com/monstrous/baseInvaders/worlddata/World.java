@@ -225,6 +225,8 @@ public class World implements Disposable {
         Vector3 wheelPos = new Vector3();
         wheelPos.set(chassisPos.x + dx, chassisPos.y + dy, chassisPos.z + dz);
 
+        //GameObject go = spawnObject(GameObjectType.TYPE_WHEEL, "wheel", null, CollisionShapeType.SPHERE, true, wheelPos, Settings.wheelDensity);
+
         GameObject go = spawnObject(GameObjectType.TYPE_WHEEL, "wheel", null, CollisionShapeType.CYLINDER, true, wheelPos, Settings.wheelDensity);
 
         // turn cylinder axis from Z to X axis, as the car is oriented towards Z, and cylinder by default points to Z
